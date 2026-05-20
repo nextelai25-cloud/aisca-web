@@ -94,7 +94,7 @@ export default function BoardSection() {
                 {currentTeam.members.slice(0, 2).map((m: any) => (
                   <div
                     key={m.name}
-                    className="board-card flex flex-col md:flex-row rounded-3xl overflow-hidden text-left h-auto md:h-[280px]"
+                    className="board-card flex flex-col md:flex-row rounded-3xl overflow-hidden text-left h-auto md:h-[280px] max-w-[280px] md:max-w-none mx-auto w-full"
                     style={{
                       background: 'rgba(255,255,255,0.02)',
                       border: '1px solid rgba(255,255,255,0.06)',
@@ -103,7 +103,7 @@ export default function BoardSection() {
                   >
                     {/* Image Left */}
                     <div 
-                      className="relative w-full md:w-[280px] h-[280px] md:h-full shrink-0 bg-gradient-to-br from-[#151515] to-[#0a0a0a] flex items-center justify-center text-4xl text-white/10 overflow-hidden"
+                      className="relative w-full md:w-[280px] h-[220px] md:h-full shrink-0 bg-gradient-to-br from-[#151515] to-[#0a0a0a] flex items-center justify-center text-4xl text-white/10 overflow-hidden"
                     >
                       {m.photo ? (
                         <img
