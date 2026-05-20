@@ -52,7 +52,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head><meta name="theme-color" content="#030303" /></head>
       <body className="min-h-screen antialiased" suppressHydrationWarning>
         <AnalyticsTracker />
-        {/* <Preloader /> */}
+        <Preloader />
         <div className="page-content">
           {children}
         </div>
