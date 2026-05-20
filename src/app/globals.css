@@ -998,7 +998,7 @@ html, body {
 
 /* Core Leadership custom spacing between photo and text details */
 .core-card-text {
-  padding: 24px !important;
+  padding: 16px !important;
 }
 @media (min-width: 768px) {
   .core-card-text {

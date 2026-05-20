@@ -94,7 +94,7 @@ export default function BoardSection() {
                 {currentTeam.members.slice(0, 2).map((m: any) => (
                   <div
                     key={m.name}
-                    className="board-card flex flex-col md:flex-row rounded-3xl overflow-hidden text-left h-auto md:h-[280px] max-w-[280px] md:max-w-none mx-auto w-full"
+                    className="board-card flex flex-col md:flex-row rounded-3xl overflow-hidden text-left h-auto md:h-[280px] max-w-[240px] md:max-w-none mx-auto w-full"
                     style={{
                       background: 'rgba(255,255,255,0.02)',
                       border: '1px solid rgba(255,255,255,0.06)',
@@ -103,7 +103,7 @@ export default function BoardSection() {
                   >
                     {/* Image Left */}
                     <div 
-                      className="relative w-full md:w-[280px] h-[220px] md:h-full shrink-0 bg-gradient-to-br from-[#151515] to-[#0a0a0a] flex items-center justify-center text-4xl text-white/10 overflow-hidden"
+                      className="relative w-full md:w-[280px] h-[170px] md:h-full shrink-0 bg-gradient-to-br from-[#151515] to-[#0a0a0a] flex items-center justify-center text-4xl text-white/10 overflow-hidden"
                     >
                       {m.photo ? (
                         <img
@@ -119,17 +119,17 @@ export default function BoardSection() {
 
                     {/* Text Details Right */}
                     <div className="flex flex-col justify-center flex-grow core-card-text">
-                      <h3 className="text-2xl md:text-3xl font-semibold text-white mb-1.5 font-sans" style={{ lineHeight: '1.2' }}>
+                      <h3 className="text-xl md:text-3xl font-semibold text-white mb-1.5 font-sans" style={{ lineHeight: '1.2' }}>
                         {m.name}
                       </h3>
-                      <p className="text-[11px] tracking-[0.2em] uppercase text-white/40 font-normal mb-4 font-sans">
+                      <p className="text-[11px] tracking-[0.2em] uppercase text-white/40 font-normal mb-3 md:mb-4 font-sans">
                         {m.role}
                       </p>
                       
                       {/* Separator line */}
-                      <div className="h-px w-10 bg-white/[0.08] mb-4" />
+                      <div className="h-px w-10 bg-white/[0.08] mb-3 md:mb-4" />
 
-                      <p className="text-xs md:text-sm text-white/60 leading-relaxed font-light italic">
+                      <p className="text-[11px] md:text-sm text-white/60 leading-relaxed font-light italic">
                         &ldquo;{m.quote}&rdquo;
                       </p>
                     </div>
