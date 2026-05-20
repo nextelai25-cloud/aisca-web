@@ -1,0 +1,1027 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme inline {
+  --color-bg-primary:   #050505;
+  --color-bg-secondary: #0a0a0a;
+  --color-bg-tertiary:  #111111;
+  --color-surface:             rgba(255,255,255,0.015);
+  --color-surface-hover:       rgba(255,255,255,0.030);
+  --color-border-subtle:       rgba(255,255,255,0.04);
+  --color-border-strong:       rgba(255,255,255,0.08);
+  --color-text-primary:        rgba(255,255,255,0.94);
+  --color-text-secondary:      rgba(255,255,255,0.60);
+  --color-text-muted:          rgba(255,255,255,0.40);
+  --color-text-caption:        rgba(255,255,255,0.25);
+  --font-sans:    'Inter',         system-ui, -apple-system, sans-serif;
+  --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+}
+
+/* ── RESET ── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
+  background: #050505;
+  color: rgba(255,255,255,0.60);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+::selection { background: rgba(255,255,255,0.10); color:#fff; }
+
+/* ── UTILITY ── */
+.hide-scrollbar                     { -ms-overflow-style:none; scrollbar-width:none; }
+.hide-scrollbar::-webkit-scrollbar  { display:none; }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   TYPOGRAPHY — precise hierarchy
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* Hero: 42px mobile → 64px tablet → 88px desktop */
+.type-display-xl {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size:   2.625rem;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: rgba(255,255,255,0.96);
+}
+@media (min-width:768px)  { .type-display-xl { font-size:4rem; } }
+@media (min-width:1024px) { .type-display-xl { font-size:5.5rem; } }
+
+/* Section title: 28px mobile → 36px tablet → 52px desktop */
+.type-display-lg {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size:   1.75rem;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: rgba(255,255,255,0.94);
+}
+@media (min-width:768px)  { .type-display-lg { font-size:2.25rem; } }
+@media (min-width:1024px) { .type-display-lg { font-size:3.25rem; } }
+
+/* Sub-section: 20px mobile → 26px tablet → 36px desktop */
+.type-heading-xl {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size:   1.25rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: rgba(255,255,255,0.92);
+}
+@media (min-width:768px)  { .type-heading-xl { font-size:1.625rem; } }
+@media (min-width:1024px) { .type-heading-xl { font-size:2.25rem; } }
+
+/* Card heading: 18px mobile → 20px tablet → 26px desktop */
+.type-heading-lg {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size:   1.125rem;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: rgba(255,255,255,0.90);
+}
+@media (min-width:768px)  { .type-heading-lg { font-size:1.25rem; } }
+@media (min-width:1024px) { .type-heading-lg { font-size:1.625rem; } }
+
+/* Body copy: 15px mobile → 18px desktop */
+.type-body-lg {
+  font-size:   0.9375rem;
+  font-weight: 300;
+  line-height: 1.75;
+  color: rgba(255,255,255,0.60);
+}
+@media (min-width:1024px) { .type-body-lg { font-size:1.125rem; } }
+
+.type-body-md {
+  font-size:   0.875rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.60);
+}
+@media (min-width:1024px) { .type-body-md { font-size:1rem; } }
+
+/* Label / caption */
+.type-caption {
+  font-size:   0.8125rem;
+  font-weight: 400;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.40);
+}
+@media (min-width:1024px) { .type-caption { font-size:0.875rem; } }
+
+/* Eyebrow overline — globally very subtle */
+.type-overline {
+  font-size:      0.6875rem;
+  font-weight:    400;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+}
+@media (min-width:1024px) { .type-overline { font-size:0.6875rem; } }
+
+/* ── Section separator ── */
+.sep {
+  display:block;
+  height:1px;
+  background: linear-gradient(90deg,transparent,rgba(255,255,255,0.04) 50%,transparent);
+  width:100%;
+}
+
+section {
+  padding-top: 96px;
+  padding-bottom: 96px;
+}
+
+@media (max-width: 768px) {
+  section {
+    padding-top: 64px;
+    padding-bottom: 64px;
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   LEGACY UTILITY CLASSES
+   (used by ProblemsSection / SocialSection
+    which still reference the old system)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.section-padding {
+  padding-left:   1.5rem;
+  padding-right:  1.5rem;
+  padding-top:    6rem;
+  padding-bottom: 6rem;
+  background: #0a0a0a;
+}
+@media (min-width: 768px) {
+  .section-padding {
+    padding-left:   3rem;
+    padding-right:  3rem;
+    padding-top:    8rem;
+    padding-bottom: 8rem;
+  }
+}
+@media (min-width: 1024px) {
+  .section-padding {
+    padding-left:   5rem;
+    padding-right:  5rem;
+  }
+}
+
+.container-default {
+  max-width: 1280px;
+  margin-left:  auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+.container-narrow {
+  max-width: 900px;
+  margin-left:  auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+.glass-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 1.25rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.glass-card-glow {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 1.25rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 0 60px -20px rgba(255,255,255,0.04);
+}
+
+/* Legacy text utilities */
+.text-body    { color: rgba(255,255,255,0.55); font-size:0.9375rem; font-weight:300; line-height:1.75; }
+.text-headline { font-family: var(--font-display, 'Space Grotesk', sans-serif); font-size:2rem; font-weight:600; line-height:1.15; letter-spacing:-0.025em; color:rgba(255,255,255,0.94); }
+.text-subtitle { color: rgba(255,255,255,0.55); font-size:1rem; font-weight:300; line-height:1.7; }
+.text-caption  { font-size:0.6875rem; font-weight:400; letter-spacing:0.25em; text-transform:uppercase; color:rgba(255,255,255,0.25); }
+.text-label    { font-size:0.6875rem; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:rgba(255,255,255,0.20); }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SEMANTIC TYPOGRAPHY SYSTEM — clamp() based
+   Fluid scaling, never overflows on any viewport
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* Hero title — forces exactly 2 lines on all devices */
+.hero-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.8rem, 6.5vw, 7.5rem) !important;
+  white-space: normal !important;
+  text-align: center !important;
+  width: 100% !important;
+  overflow: hidden !important;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+/* Section main title — scales 32px → 56px, always centered */
+.section-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+/* Section subtitle — text under section title */
+.section-subtitle {
+  font-size: clamp(0.875rem, 2vw, 1.0625rem);
+  color: rgba(255,255,255,0.50);
+  font-weight: 300;
+  line-height: 1.7;
+  text-align: center;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 48px;
+}
+
+/* Section eyebrow — OUR PURPOSE, FOUNDATION, etc */
+.section-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  color: rgba(255,255,255,0.28);
+  text-transform: uppercase;
+  font-weight: 400;
+  text-align: center;
+  margin-bottom: 12px;
+  display: block;
+}
+
+
+/* ── Hide Next.js dev overlay indicator ── */
+[data-nextjs-toast],
+.__next-build-watcher,
+[class*="__next-build"],
+[id*="__next-build"],
+nextjs-portal {
+  display: none !important;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   RESPONSIVE GRID CLASSES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* Board member grid */
+.board-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+@media (min-width: 640px) {
+  .board-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .board-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Register form field grid */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 640px) {
+  .form-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+}
+
+/* Products grid */
+.products-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 640px) {
+  .products-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+
+/* Vision/Mission cards grid */
+.vision-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 768px) {
+  .vision-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Pillars grid */
+.pillars-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+@media (min-width: 640px) {
+  .pillars-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Stats grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px) {
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Footer columns grid */
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+}
+@media (min-width: 768px) {
+  .footer-grid {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px;
+  }
+}
+
+/* Footer headline mobile scaling */
+.footer-headline {
+  font-size: clamp(2rem, 8vw, 4.5rem) !important;
+  white-space: normal !important;
+  text-align: center;
+}
+/* Board grid desktop flex centering styling */
+.board-grid {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  gap: 24px !important;
+}
+
+.board-grid .member-card {
+  width: 200px !important;
+  flex-shrink: 0 !important;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   MOBILE GLOBAL OVERRIDES
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+@media (max-width: 768px) {
+
+  /* Prevent horizontal overflow site-wide */
+  html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
+  /* All grids go single column on mobile */
+  .grid-2col {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Section padding on mobile */
+  section {
+    padding-top: 64px !important;
+    padding-bottom: 64px !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+}
+
+.header-logo {
+  height: 44px;
+  width: auto;
+}
+
+/* Mobile hamburger / desktop nav visibility */
+@media (max-width: 768px) {
+  .mobile-menu-btn { display: flex !important; align-items: center; justify-content: center; }
+  .desktop-nav { display: none !important; }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   MOBILE-ONLY RESPONSIVE STYLES (MAX-WIDTH: 767PX)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+@media (max-width: 767px) {
+  
+  .header-logo {
+    height: 30px !important;
+    width: auto !important;
+  }
+
+  /* Prevent ALL horizontal overflow */
+  html, body, #__next, main {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+  }
+  
+  /* All sections get consistent mobile padding */
+  section {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    padding-top: 60px !important;
+    padding-bottom: 60px !important;
+  }
+  
+  /* Section titles on mobile */
+  .section-title {
+    font-size: clamp(1.6rem, 7vw, 2.2rem) !important;
+    line-height: 1.15 !important;
+  }
+  
+  /* Section subtitles on mobile */
+  .section-subtitle {
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+  }
+  
+  /* All cards should not overflow */
+  * {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* Images never overflow */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+  
+  /* Stats grid on mobile — keep 3 columns but smaller font */
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+  
+  .stats-grid .stat-number {
+    font-size: clamp(1.8rem, 6vw, 3rem) !important;
+  }
+  
+  .stats-grid .stat-label {
+    font-size: 8px !important;
+    letter-spacing: 0.08em !important;
+  }
+  
+  /* Chairman section on mobile */
+  .chairman-layout {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 32px !important;
+  }
+  
+  .chairman-photo {
+    width: 180px !important;
+    height: 220px !important;
+    margin: 0 auto !important;
+  }
+  
+  .chairman-quote {
+    font-size: 1rem !important;
+    text-align: center !important;
+    line-height: 1.7 !important;
+  }
+
+  /* Fix 1: Hero */
+  .hero-title {
+    font-size: clamp(1.5rem, 8.5vw, 3.2rem) !important;
+  }
+  
+  .hero-section {
+    padding-top: 80px !important;
+    padding-bottom: 40px !important;
+    min-height: auto !important;
+  }
+  
+  .hero-content {
+    padding: 0 20px !important;
+  }
+
+  /* Fix 2: Board */
+  .board-grid-core {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+  .board-grid-core .deputy-card {
+    width: 100% !important;
+    max-width: 260px !important;
+    margin: 0 auto !important;
+    flex-shrink: 0 !important;
+  }
+  .board-grid-core .regular-card {
+    width: calc(50% - 5px) !important;
+    min-width: 130px !important;
+    max-width: 180px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .member-card .card-info {
+    position: relative !important;
+    bottom: auto !important;
+    padding: 16px !important;
+    background: transparent !important;
+    border-top: 1px solid rgba(255,255,255,0.06) !important;
+  }
+
+  .member-card .card-info p:first-child {
+    color: #ffffff !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+  }
+
+  .member-card .card-info p:last-child {
+    color: rgba(255,255,255,0.35) !important;
+    font-size: 10px !important;
+  }
+  
+  .board-grid {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 10px !important;
+  }
+  .board-grid .member-card {
+    width: calc(50% - 5px) !important;
+    min-width: 130px !important;
+    max-width: 180px !important;
+    flex-shrink: 0 !important;
+  }
+  
+  .board-tabs {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
+    padding-bottom: 12px !important;
+    margin-bottom: 24px !important;
+    scrollbar-width: none !important;
+  }
+  
+  .board-tabs::-webkit-scrollbar {
+    display: none !important;
+  }
+  
+  .board-tabs button {
+    font-size: 11px !important;
+    padding: 8px 16px !important;
+    flex-shrink: 0 !important;
+    scroll-snap-align: start !important;
+  }
+
+  /* Fix 3: Products */
+  .products-grid {
+    grid-template-columns: 1fr !important;
+    max-width: 400px !important;
+    margin: 0 auto !important;
+    gap: 20px !important;
+  }
+  
+  .product-card {
+    width: 100% !important;
+    max-width: 340px !important;
+    margin: 0 auto !important;
+  }
+  
+
+  
+  .product-card-info {
+    padding: 16px !important;
+  }
+  
+  .product-name {
+    font-size: 16px !important;
+    margin-bottom: 6px !important;
+  }
+  
+  .product-price {
+    font-size: 14px !important;
+  }
+  
+  .product-description {
+    font-size: 13px !important;
+    line-height: 1.6 !important;
+  }
+  
+  .product-order-btn {
+    padding: 14px 20px !important;
+    font-size: 14px !important;
+    white-space: nowrap !important;
+  }
+
+  /* Fix 4: Registration forms */
+  .form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+  
+  .form-grid > * {
+    grid-column: 1 / -1 !important;
+  }
+  
+  .form-panel {
+    padding: 24px 16px !important;
+    border-radius: 16px !important;
+  }
+  
+  .form-tab-container {
+    flex-direction: column !important;
+    gap: 8px !important;
+    width: 100% !important;
+    border-radius: 16px !important;
+    padding: 6px !important;
+  }
+  
+  .form-tab-btn {
+    width: 100% !important;
+    text-align: center !important;
+    padding: 12px 16px !important;
+    font-size: 14px !important;
+  }
+  
+  .form-submit-btn {
+    font-size: 15px !important;
+    padding: 16px !important;
+  }
+
+  /* Fix 5: Events section */
+  .events-layout {
+    flex-direction: column !important;
+    gap: 20px !important;
+  }
+  
+  .events-featured {
+    width: 100% !important;
+    min-height: 280px !important;
+  }
+  
+  .events-sidebar {
+    width: 100% !important;
+  }
+  
+  .events-sidebar-card {
+    flex-direction: row !important;
+    gap: 12px !important;
+  }
+  
+  .events-sidebar-card img,
+  .events-sidebar-card .event-image {
+    width: 100px !important;
+    height: 80px !important;
+    flex-shrink: 0 !important;
+  }
+  
+  .event-title {
+    font-size: 1.2rem !important;
+    line-height: 1.2 !important;
+  }
+
+  /* Fix 6: Footer */
+  .footer-headline {
+    font-size: clamp(2.2rem, 10vw, 3.5rem) !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    text-align: center !important;
+    line-height: 1.1 !important;
+    padding: 0 16px !important;
+  }
+  
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+    padding: 0 4px !important;
+  }
+  
+  .footer-section {
+    padding-top: 60px !important;
+    padding-bottom: 40px !important;
+  }
+  
+  .footer-bottom {
+    flex-direction: column !important;
+    gap: 8px !important;
+    text-align: center !important;
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   PRELOADER ANIMATIONS & TRANSITIONS
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+@keyframes aisca-pulse {
+  0%   { opacity: 0.5; transform: scale(0.97); }
+  50%  { opacity: 1;   transform: scale(1.02); }
+  100% { opacity: 0.5; transform: scale(0.97); }
+}
+
+@keyframes aisca-load {
+  0%   { width: 0%; }
+  60%  { width: 80%; }
+  85%  { width: 92%; }
+  100% { width: 100%; }
+}
+
+/* Page content starts hidden, fades in after preloader */
+.page-content {
+  opacity: 0;
+  animation: page-reveal 0.6s ease 2.4s forwards;
+}
+
+@keyframes page-reveal {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── PREMIUM MICRO-ANIMATIONS ── */
+
+/* Board and Product card hovers */
+.board-card, .product-card {
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+.board-card:hover, .product-card:hover {
+  transform: translateY(-6px) scale(1.02) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Sliding Underline Desktop Nav Links */
+.nav-link {
+  position: relative !important;
+  color: rgba(255, 255, 255, 0.75) !important;
+  transition: color 0.3s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+.nav-link:hover {
+  color: #ffffff !important;
+}
+
+.nav-link::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 16px !important;
+  right: 16px !important;
+  height: 2px !important;
+  background: #ffffff !important;
+  transform: scaleX(0) !important;
+  transform-origin: right !important;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+.nav-link:hover::after {
+  transform: scaleX(1) !important;
+  transform-origin: left !important;
+}
+
+/* ── ACCESSIBILITY & TAP TARGET BOUNDS ── */
+button,
+a,
+input,
+select,
+textarea {
+  min-height: 44px;
+}
+
+/* Custom override for elements that should remain inline or styled differently */
+.nav-link,
+.desktop-nav button,
+.board-tabs button {
+  min-height: 36px;
+}
+
+/* Global overflow reset */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+* {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   TABLET RESPONSIVE FIXES (768PX–1024PX)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+@media (min-width: 768px) and (max-width: 1024px) {
+  /* Product cards: 2-column grid centered */
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    justify-content: center !important;
+    max-width: 720px !important;
+    margin: 0 auto !important;
+    gap: 24px !important;
+  }
+
+
+
+  /* Board team grids: should be 2-column minimum, not single column */
+  .board-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+  }
+
+  /* Stats section: 2x2 grid or single row — no overflow */
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  /* Footer columns: 2-column layout minimum, not stacked awkwardly */
+  .footer-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 32px !important;
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   DESKTOP RESPONSIVE AUDITS (1025PX+)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+@media (min-width: 1025px) {
+  /* Header logo correctly sized at height 40px */
+  .header-logo {
+    height: 40px !important;
+    width: auto !important;
+  }
+
+  /* Spacing in desktop nav to prevent crowding */
+  .desktop-nav {
+    gap: 16px !important;
+  }
+}
+
+/* Footer logo visible at height 52px */
+.footer-logo {
+  height: 52px !important;
+  width: auto !important;
+}
+
+.hero-line-mobile { display: none; }
+.hero-line-desktop { display: block; }
+
+@media (max-width: 767px) {
+  .hero-line-mobile { display: block !important; }
+  .hero-line-desktop { display: none !important; }
+
+  .hero-section {
+    padding-top: 100px !important;
+    min-height: 100svh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    overflow: hidden !important;
+  }
+
+  .hero-title {
+    font-size: clamp(1.4rem, 8vw, 2.8rem) !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    text-align: center !important;
+    padding: 0 20px !important;
+    line-height: 1.1 !important;
+  }
+
+  .hero-line-mobile span {
+    display: block !important;
+    text-align: center !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+  }
+
+  .stats-grid, .stats-container {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+    width: 100% !important;
+  }
+  .stat-item {
+    text-align: center !important;
+    align-items: center !important;
+    flex: 1 !important;
+    padding: 16px 8px !important;
+  }
+
+  /* Deputy Chairs centering override */
+  .deputy-chairs-grid > div {
+    width: 100% !important;
+    max-width: 240px !important;
+    margin: 0 auto;
+  }
+
+  /* Force image fitting within container to prevent cropping on mobile */
+  .product-card img {
+    height: 100% !important;
+    object-fit: contain !important;
+  }
+  .member-card img {
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  /* Stack product name and price vertically on mobile to prevent overlaps */
+  .product-card-info > div:first-child {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 4px !important;
+  }
+  .product-price {
+    margin-left: 0 !important;
+  }
+}
+
+/* Fix 2: Logo custom styling */
+.header-logo {
+  height: 56px !important;
+  width: auto !important;
+  object-fit: contain !important;
+}
+@media (max-width: 767px) {
+  .header-logo {
+    height: 28px !important;
+  }
+}
+.footer-logo {
+  height: 72px !important;
+  width: auto !important;
+  object-fit: contain !important;
+  opacity: 1 !important;
+}
+@media (max-width: 767px) {
+  .footer-logo {
+    height: 44px !important;
+  }
+}
+
+.product-input::placeholder {
+  color: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Core Leadership custom spacing between photo and text details */
+.core-card-text {
+  padding: 24px !important;
+}
+@media (min-width: 768px) {
+  .core-card-text {
+    padding: 32px 40px 32px 48px !important; /* Larger left padding to clear the portrait card */
+  }
+}
+
+.secretary-card-text {
+  padding: 20px !important;
+}
+@media (min-width: 768px) {
+  .secretary-card-text {
+    padding: 24px 32px 24px 36px !important; /* Larger left padding to clear the portrait card */
+  }
+}
+
+
+/* Product page mobile responsive */
+@media (max-width: 767px) {
+  .product-page-wrapper {
+    padding: 100px 20px 60px !important;
+  }
+  .product-layout {
+    flex-direction: column !important;
+  }
+}
