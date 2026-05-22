@@ -495,10 +495,6 @@ nextjs-portal {
   }
   
   /* Chairman section on mobile */
-  .chairman-section {
-    padding: 60px 24px !important;
-  }
-
   .chairman-layout {
     flex-direction: column !important;
     align-items: center !important;
@@ -506,15 +502,16 @@ nextjs-portal {
   }
   
   .chairman-photo {
-    width: 140px !important;
-    height: 170px !important;
+    width: 180px !important;
+    height: 220px !important;
     margin: 0 auto !important;
   }
   
   .chairman-quote {
     font-size: 1rem !important;
+    text-align: center !important;
+    line-height: 1.7 !important;
   }
-
 
   /* Fix 1: Hero */
   .hero-title {
