@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import Preloader from '@/components/Preloader';
 import AnalyticsTracker from '@/components/AnalyticsTracker';
-
-const inter = Inter({ variable: "--font-inter", subsets: ["latin"], weight: ["300","400","500","600","700","800"], display: "swap" });
-const spaceGrotesk = Space_Grotesk({ variable: "--font-display", subsets: ["latin"], weight: ["400","500","600","700"], display: "swap" });
 
 export const metadata: Metadata = {
   title: 'AISCA | All Island Schools Commerce Association',
@@ -48,7 +44,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`} suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head><meta name="theme-color" content="#030303" /></head>
       <body className="min-h-screen antialiased" suppressHydrationWarning>
         <AnalyticsTracker />

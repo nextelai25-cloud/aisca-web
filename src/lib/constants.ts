@@ -150,8 +150,8 @@ export const boardTeams = [
     id: 'pr',
     label: 'Public Relations Team',
     members: [
-      { initials: 'TI', name: 'Thulja Imandi', role: 'Public Relations Manager', photo: '/board/thulja.webp' },
-      { initials: 'PY', name: 'Pawani Yashoda', role: 'Public Relations Manager', photo: '/board/pawani.webp' },
+      { initials: 'TI', name: 'Thulja Imandi', role: 'Public Relations Manager', photo: '/board/Thulja.webp' },
+      { initials: 'PY', name: 'Pawani Yashoda', role: 'Public Relations Manager', photo: '/board/Pawani.webp' },
       { initials: 'RT', name: 'Ranuth Thewmitha', role: 'Public Relations Manager', photo: '/board/Ranuth.webp' },
       { initials: 'LR', name: 'Lehara Rajapakse', role: 'Public Relations Manager', photo: '/board/Lehara.webp' },
     ]

@@ -90,51 +90,70 @@ export default function BoardSection() {
           >
             {activeTab === 'core' ? (
               <div className="flex flex-col gap-6 max-w-[900px] mx-auto w-full px-4 md:px-0">
-                {/* Deputy Chairpersons (Horizontal Rows) */}
-                {currentTeam.members.slice(0, 2).map((m: any) => (
-                  <div
-                    key={m.name}
-                    className="board-card flex flex-col md:flex-row rounded-3xl overflow-hidden text-left h-auto md:h-[280px] max-w-[240px] md:max-w-none mx-auto w-full"
-                    style={{
-                      background: 'rgba(255,255,255,0.02)',
-                      border: '1px solid rgba(255,255,255,0.06)',
-                      width: '100%'
-                    }}
-                  >
-                    {/* Image Left */}
-                    <div 
-                      className="relative w-full md:w-[280px] h-[170px] md:h-full shrink-0 bg-gradient-to-br from-[#151515] to-[#0a0a0a] flex items-center justify-center text-4xl text-white/10 overflow-hidden"
+                {/* Deputy Chairpersons Grid Container */}
+                <div style={{
+                  display: 'flex',
+                  gap: '20px',
+                  justifyContent: 'center',
+                  flexWrap: 'wrap',
+                  marginBottom: '24px'
+                }}>
+                  {currentTeam.members.slice(0, 2).map((m: any) => (
+                    <div
+                      key={m.name}
+                      className="board-card"
+                      style={{
+                        width: '240px',
+                        flexShrink: 0,
+                        background: 'rgba(255,255,255,0.03)',
+                        border: '1px solid rgba(255,255,255,0.08)',
+                        borderRadius: '16px',
+                        overflow: 'hidden'
+                      }}
                     >
-                      {m.photo ? (
-                        <img
-                          src={m.photo}
-                          alt={m.name}
-                          className="absolute inset-0 w-full h-full object-cover"
-                          style={{ objectPosition: 'center top' }}
-                        />
-                      ) : (
-                        <span className="relative z-10 font-light">{m.initials}</span>
-                      )}
-                    </div>
+                      {/* Photo area */}
+                      <div style={{
+                        width: '100%',
+                        aspectRatio: '1/1',
+                        overflow: 'hidden',
+                        position: 'relative'
+                      }}>
+                        {m.photo ? (
+                          <img
+                            src={m.photo}
+                            alt={m.name}
+                            className="absolute inset-0 w-full h-full object-cover"
+                            style={{ objectPosition: 'center top' }}
+                          />
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#151515] to-[#0a0a0a] text-4xl text-white/10">
+                            <span className="font-light">{m.initials}</span>
+                          </div>
+                        )}
+                      </div>
 
-                    {/* Text Details Right */}
-                    <div className="flex flex-col justify-center flex-grow core-card-text">
-                      <h3 className="text-xl md:text-3xl font-semibold text-white mb-1.5 font-sans" style={{ lineHeight: '1.2' }}>
-                        {m.name}
-                      </h3>
-                      <p className="text-[11px] tracking-[0.2em] uppercase text-white/40 font-normal mb-3 md:mb-4 font-sans">
-                        {m.role}
-                      </p>
-                      
-                      {/* Separator line */}
-                      <div className="h-px w-10 bg-white/[0.08] mb-3 md:mb-4" />
-
-                      <p className="text-[11px] md:text-sm text-white/60 leading-relaxed font-light italic">
-                        &ldquo;{m.quote}&rdquo;
-                      </p>
+                      {/* Info area — name and role only, NO quote */}
+                      <div style={{
+                        padding: '16px',
+                        borderTop: '1px solid rgba(255,255,255,0.06)'
+                      }}>
+                        <p style={{
+                          fontSize: '14px',
+                          fontWeight: '600',
+                          color: '#ffffff',
+                          marginBottom: '4px'
+                        }}>{m.name}</p>
+                        <p style={{
+                          fontSize: '11px',
+                          letterSpacing: '0.12em',
+                          textTransform: 'uppercase',
+                          color: 'rgba(255,255,255,0.35)',
+                          fontWeight: '400'
+                        }}>{m.role}</p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
 
                 {/* Co-Secretaries Row */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
