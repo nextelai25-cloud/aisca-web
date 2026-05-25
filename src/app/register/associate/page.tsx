@@ -130,6 +130,7 @@ export default function AssociateRegisterPage() {
   const [indActiveProject, setIndActiveProject] = useState('');
   const [indHearAbout, setIndHearAbout] = useState('');
   const [projectIdeas, setProjectIdeas] = useState('');
+  const [agreed, setAgreed] = useState(false);
 
   // Submit flow states
   const [loading, setLoading] = useState(false);
@@ -156,6 +157,10 @@ export default function AssociateRegisterPage() {
     e.preventDefault();
     if (!indProvince || !indWhoAreYou || !commerceStream || !indActiveProject || !indHearAbout) {
       setErrorMsg('Please select all required dropdown fields.');
+      return;
+    }
+    if (!agreed) {
+      setErrorMsg('You must agree to the AISCA Rules and Regulations.');
       return;
     }
     
@@ -486,6 +491,51 @@ export default function AssociateRegisterPage() {
                         value={projectIdeas}
                         onChange={e => setProjectIdeas(e.target.value)}
                       />
+                    </div>
+                    <div style={fullWidthStyle}>
+                      {/* Custom checkbox */}
+                      <div 
+                        className="form-checkbox-wrapper"
+                        onClick={() => setAgreed(!agreed)}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'flex-start',
+                          gap: '14px',
+                          cursor: 'pointer',
+                          padding: '4px 0'
+                        }}
+                      >
+                        <div 
+                          className="custom-checkbox"
+                          style={{
+                            width: '22px',
+                            height: '22px',
+                            minWidth: '22px',
+                            borderRadius: '6px',
+                            border: agreed ? '2px solid #ffffff' : '2px solid rgba(255,255,255,0.25)',
+                            background: agreed ? '#ffffff' : 'transparent',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            transition: 'all 0.2s ease',
+                            marginTop: '1px'
+                          }}
+                        >
+                          {agreed && (
+                            <svg width="12" height="9" viewBox="0 0 12 9" fill="none">
+                              <path d="M1 4L4.5 7.5L11 1" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                          )}
+                        </div>
+                        <span style={{
+                          fontSize: '13px',
+                          color: 'rgba(255,255,255,0.5)',
+                          lineHeight: '1.5',
+                          userSelect: 'none'
+                        }}>
+                          I agree to AISCA Rules and Regulations and confirm all information provided is accurate.
+                        </span>
+                      </div>
                     </div>
                   </div>
 

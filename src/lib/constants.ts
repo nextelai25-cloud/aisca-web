@@ -93,8 +93,8 @@ export const boardTeams = [
     id: 'core',
     label: 'Core Leadership',
     members: [
-      { initials: 'RG', name: 'Risindi Gunesekara', role: 'Deputy Chairwoman', quote: 'We started AISCA because we realized how much talent was going unnoticed. This isn\'t just an organization; it\'s a support system built by students, for students.', photo: '/board/Risindi.webp' },
-      { initials: 'SG', name: 'Sathis Gangaboda', role: 'Deputy Chairman', quote: 'The connections you make in school shouldn\'t end at the school gates. By linking commerce societies across the island, we\'re creating a network that actually helps you long after you graduate.', photo: '/board/Sathis.webp' },
+      { initials: 'RG', name: 'Risindi Gunesekara', role: 'Deputy Chairwoman', photo: '/board/Risindi.webp' },
+      { initials: 'SG', name: 'Sathis Gangaboda', role: 'Deputy Chairman', photo: '/board/Sathis.webp' },
       { initials: 'NB', name: 'Nipun Baranage', role: 'Co Secretary', photo: '/board/nipun.webp' },
       { initials: 'JW', name: 'Janiru Wijekoon', role: 'Co Secretary', photo: '/board/Janiru.webp' },
     ]

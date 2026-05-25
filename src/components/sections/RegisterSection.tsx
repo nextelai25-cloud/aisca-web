@@ -144,6 +144,7 @@ export default function RegisterSection() {
   const [schMicContact, setSchMicContact] = useState('');
   const [schPresContact, setSchPresContact] = useState('');
   const [schSecContact, setSchSecContact] = useState('');
+  const [agreed, setAgreed] = useState(false);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -155,6 +156,9 @@ export default function RegisterSection() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!agreed) {
+      return;
+    }
     setSubmitted(true);
   };
 
@@ -396,6 +400,51 @@ export default function RegisterSection() {
                           style={fieldStyle}
                         />
                       </div>
+                      <div style={fullWidthStyle}>
+                        {/* Custom checkbox */}
+                        <div 
+                          className="form-checkbox-wrapper"
+                          onClick={() => setAgreed(!agreed)}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'flex-start',
+                            gap: '14px',
+                            cursor: 'pointer',
+                            padding: '4px 0'
+                          }}
+                        >
+                          <div 
+                            className="custom-checkbox"
+                            style={{
+                              width: '22px',
+                              height: '22px',
+                              minWidth: '22px',
+                              borderRadius: '6px',
+                              border: agreed ? '2px solid #ffffff' : '2px solid rgba(255,255,255,0.25)',
+                              background: agreed ? '#ffffff' : 'transparent',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              transition: 'all 0.2s ease',
+                              marginTop: '1px'
+                            }}
+                          >
+                            {agreed && (
+                              <svg width="12" height="9" viewBox="0 0 12 9" fill="none">
+                                <path d="M1 4L4.5 7.5L11 1" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                              </svg>
+                            )}
+                          </div>
+                          <span style={{
+                            fontSize: '13px',
+                            color: 'rgba(255,255,255,0.5)',
+                            lineHeight: '1.5',
+                            userSelect: 'none'
+                          }}>
+                            I agree to AISCA Rules and Regulations and confirm all information provided is accurate.
+                          </span>
+                        </div>
+                      </div>
                     </>
                   ) : (
                     <>
@@ -482,13 +531,49 @@ export default function RegisterSection() {
                         <input type="text" placeholder="e.g. 2025" required style={fieldStyle} />
                       </div>
                       <div style={fullWidthStyle}>
-                        <label style={{ display:'flex', gap:'12px', alignItems:'flex-start', cursor:'pointer', marginTop: '10px' }}>
-                          <input type="checkbox" required 
-                            style={{ marginTop:'3px', accentColor:'#ffffff', width:'16px', height:'16px' }} />
-                          <span style={{ fontSize:'13px', color:'rgba(255,255,255,0.60)', lineHeight:'1.5', textTransform: 'none', letterSpacing: 'normal' }}>
+                        {/* Custom checkbox */}
+                        <div 
+                          className="form-checkbox-wrapper"
+                          onClick={() => setAgreed(!agreed)}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'flex-start',
+                            gap: '14px',
+                            cursor: 'pointer',
+                            padding: '4px 0'
+                          }}
+                        >
+                          <div 
+                            className="custom-checkbox"
+                            style={{
+                              width: '22px',
+                              height: '22px',
+                              minWidth: '22px',
+                              borderRadius: '6px',
+                              border: agreed ? '2px solid #ffffff' : '2px solid rgba(255,255,255,0.25)',
+                              background: agreed ? '#ffffff' : 'transparent',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              transition: 'all 0.2s ease',
+                              marginTop: '1px'
+                            }}
+                          >
+                            {agreed && (
+                              <svg width="12" height="9" viewBox="0 0 12 9" fill="none">
+                                <path d="M1 4L4.5 7.5L11 1" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                              </svg>
+                            )}
+                          </div>
+                          <span style={{
+                            fontSize: '13px',
+                            color: 'rgba(255,255,255,0.5)',
+                            lineHeight: '1.5',
+                            userSelect: 'none'
+                          }}>
                             I agree to AISCA Rules and Regulations and confirm all information provided is accurate.
                           </span>
-                        </label>
+                        </div>
                       </div>
                     </>
                   )}

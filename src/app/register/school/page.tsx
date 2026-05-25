@@ -124,7 +124,7 @@ export default function SchoolRegisterPage() {
   const [commerceSocietyName, setCommerceSocietyName] = useState('');
   const [commerceSocietyEmail, setCommerceSocietyEmail] = useState('');
   const [masterInChargeName, setMasterInChargeName] = useState('');
-  const [masterInChargeEmail, setMasterInChargeEmail] = useState('');
+  const [agreed, setAgreed] = useState(false);
   const [schMicContact, setSchMicContact] = useState('');
   const [studentPresidentName, setStudentPresidentName] = useState('');
   const [studentPresidentEmail, setStudentPresidentEmail] = useState('');
@@ -161,6 +161,10 @@ export default function SchoolRegisterPage() {
       setErrorMsg('Please select your Province.');
       return;
     }
+    if (!agreed) {
+      setErrorMsg('You must agree to the AISCA Rules and Regulations.');
+      return;
+    }
     
     setLoading(true);
     setErrorMsg('');
@@ -173,7 +177,6 @@ export default function SchoolRegisterPage() {
         commerce_society_name: commerceSocietyName,
         commerce_society_email: commerceSocietyEmail,
         master_in_charge_name: masterInChargeName,
-        master_in_charge_email: masterInChargeEmail,
         master_in_charge_phone: schMicContact,
         student_president_name: studentPresidentName,
         student_president_email: studentPresidentEmail,
@@ -380,18 +383,7 @@ export default function SchoolRegisterPage() {
                         onChange={e => setMasterInChargeName(e.target.value)}
                       />
                     </div>
-                    <div>
-                      <label style={labelStyle}>Master-In-Charge Email*</label>
-                      <input 
-                        type="email" 
-                        placeholder="mic@school.com" 
-                        required 
-                        style={fieldStyle}
-                        value={masterInChargeEmail}
-                        onChange={e => setMasterInChargeEmail(e.target.value)}
-                      />
-                    </div>
-                    <div>
+                     <div>
                       <label style={labelStyle}>Master-In-Charge Contact*</label>
                       <input 
                         type="tel" 
@@ -491,13 +483,49 @@ export default function SchoolRegisterPage() {
                       />
                     </div>
                     <div style={fullWidthStyle}>
-                      <label style={{ display:'flex', gap:'12px', alignItems:'flex-start', cursor:'pointer', marginTop: '10px' }}>
-                        <input type="checkbox" required 
-                          style={{ marginTop:'3px', accentColor:'#ffffff', width:'16px', height:'16px' }} />
-                        <span style={{ fontSize:'13px', color:'rgba(255,255,255,0.60)', lineHeight:'1.5', textTransform: 'none', letterSpacing: 'normal' }}>
+                      {/* Custom checkbox */}
+                      <div 
+                        className="form-checkbox-wrapper"
+                        onClick={() => setAgreed(!agreed)}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'flex-start',
+                          gap: '14px',
+                          cursor: 'pointer',
+                          padding: '4px 0'
+                        }}
+                      >
+                        <div 
+                          className="custom-checkbox"
+                          style={{
+                            width: '22px',
+                            height: '22px',
+                            minWidth: '22px',
+                            borderRadius: '6px',
+                            border: agreed ? '2px solid #ffffff' : '2px solid rgba(255,255,255,0.25)',
+                            background: agreed ? '#ffffff' : 'transparent',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            transition: 'all 0.2s ease',
+                            marginTop: '1px'
+                          }}
+                        >
+                          {agreed && (
+                            <svg width="12" height="9" viewBox="0 0 12 9" fill="none">
+                              <path d="M1 4L4.5 7.5L11 1" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                          )}
+                        </div>
+                        <span style={{
+                          fontSize: '13px',
+                          color: 'rgba(255,255,255,0.5)',
+                          lineHeight: '1.5',
+                          userSelect: 'none'
+                        }}>
                           I agree to AISCA Rules and Regulations and confirm all information provided is accurate.
                         </span>
-                      </label>
+                      </div>
                     </div>
                   </div>
 

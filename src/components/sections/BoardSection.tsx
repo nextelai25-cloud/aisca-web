@@ -98,17 +98,16 @@ export default function BoardSection() {
                   flexWrap: 'wrap',
                   marginBottom: '24px'
                 }}>
-                  {currentTeam.members.slice(0, 2).map((m: any) => (
+                  {currentTeam.members.slice(0, 2).map((member: any) => (
                     <div
-                      key={m.name}
-                      className="board-card"
+                      key={member.name}
                       style={{
                         width: '240px',
-                        flexShrink: 0,
                         background: 'rgba(255,255,255,0.03)',
                         border: '1px solid rgba(255,255,255,0.08)',
                         borderRadius: '16px',
-                        overflow: 'hidden'
+                        overflow: 'hidden',
+                        flexShrink: 0
                       }}
                     >
                       {/* Photo area */}
@@ -116,40 +115,33 @@ export default function BoardSection() {
                         width: '100%',
                         aspectRatio: '1/1',
                         overflow: 'hidden',
-                        position: 'relative'
+                        background: '#111'
                       }}>
-                        {m.photo ? (
+                        {member.photo ? (
                           <img
-                            src={m.photo}
-                            alt={m.name}
-                            className="absolute inset-0 w-full h-full object-cover"
-                            style={{ objectPosition: 'center top' }}
+                            src={member.photo}
+                            alt={member.name}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
                           />
                         ) : (
-                          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#151515] to-[#0a0a0a] text-4xl text-white/10">
-                            <span className="font-light">{m.initials}</span>
-                          </div>
+                          <div style={{
+                            width: '100%', height: '100%',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            fontSize: '2rem', fontWeight: '300', color: 'rgba(255,255,255,0.18)'
+                          }}>{member.initials}</div>
                         )}
                       </div>
-
-                      {/* Info area — name and role only, NO quote */}
+                      {/* Info — name and role ONLY, NO quote */}
                       <div style={{
                         padding: '16px',
                         borderTop: '1px solid rgba(255,255,255,0.06)'
                       }}>
-                        <p style={{
-                          fontSize: '14px',
-                          fontWeight: '600',
-                          color: '#ffffff',
-                          marginBottom: '4px'
-                        }}>{m.name}</p>
-                        <p style={{
-                          fontSize: '11px',
-                          letterSpacing: '0.12em',
-                          textTransform: 'uppercase',
-                          color: 'rgba(255,255,255,0.35)',
-                          fontWeight: '400'
-                        }}>{m.role}</p>
+                        <p style={{ fontSize: '15px', fontWeight: '600', color: '#ffffff', marginBottom: '4px' }}>
+                          {member.name}
+                        </p>
+                        <p style={{ fontSize: '10px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)' }}>
+                          {member.role}
+                        </p>
                       </div>
                     </div>
                   ))}

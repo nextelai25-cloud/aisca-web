@@ -1025,3 +1025,17 @@ html, body {
     flex-direction: column !important;
   }
 }
+
+/* Large tap targets for mobile forms */
+@media (max-width: 767px) {
+  .form-checkbox-wrapper {
+    padding: 12px 0 !important;
+    min-height: 48px !important;
+  }
+  
+  .custom-checkbox {
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+  }
+}

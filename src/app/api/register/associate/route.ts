@@ -7,6 +7,7 @@ import { sendWelcomeEmail } from '@/lib/email'
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
+    console.log('[Associate API] Starting registration for:', body.full_name)
     
     // Generate random membership number
     const randomNum = Math.floor(10000 + Math.random() * 90000)
@@ -24,27 +25,9 @@ export async function POST(req: NextRequest) {
     }
     
     // Send Telegram notification
-    console.log('Sending Telegram notification for:', membershipNumber)
-    try {
-      const tgResult = await sendTelegram(
-        `🎓 *NEW ASSOCIATE REGISTRATION*\n\n` +
-        `👤 *Name*: ${body.full_name}\n` +
-        `🔢 *Membership No*: ${membershipNumber}\n` +
-        `📧 *Email*: ${body.email}\n` +
-        `📱 *WhatsApp*: ${body.whatsapp}\n` +
-        `🏫 *School*: ${body.school}\n` +
-        `📍 *District*: ${body.district}\n` +
-        `🗂 *Province*: ${body.province}\n` +
-        `👥 *Who they are*: ${body.who_are_you}\n` +
-        `✅ *Actively participate*: ${body.actively_participate ? 'Yes' : 'No'}\n` +
-        `📣 *How they heard*: ${body.how_heard || 'N/A'}\n` +
-        `💡 *Project ideas*: ${body.project_ideas || 'None'}\n` +
-        `🕐 *Submitted*: ${new Date().toLocaleString('en-LK', { timeZone: 'Asia/Colombo' })}`
-      )
-      console.log('Telegram done, result ok:', tgResult?.ok)
-    } catch (tgErr) {
-      console.error("Telegram notification failed in associate route:", tgErr);
-    }
+    console.log('[Associate API] Sending Telegram notification...')
+    await sendTelegram(`🎓 *NEW ASSOCIATE REGISTRATION*\n\n👤 Name: ${body.full_name}\n📧 Email: ${body.email}\n📱 WhatsApp: ${body.whatsapp}\n🏫 School: ${body.school}\n📍 District: ${body.district}, ${body.province}\n👥 Who: ${body.who_are_you}\n✅ Active: ${body.actively_participate ? 'Yes' : 'No'}\n📣 Heard via: ${body.how_heard || 'N/A'}\n🕐 Time: ${new Date().toLocaleString('en-LK', {timeZone: 'Asia/Colombo'})}`)
+    console.log('[Associate API] Telegram done')
     
     // Generate membership card PDF asynchronously
     let cardUrl: string | null = null
