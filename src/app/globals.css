@@ -1039,3 +1039,15 @@ html, body {
     min-width: 28px !important;
   }
 }
+
+* {
+  font-family: inherit !important;
+}
+
+.stats-number {
+  font-family: inherit !important;
+}
+
+.chairman-quote {
+  font-family: inherit !important;
+}
