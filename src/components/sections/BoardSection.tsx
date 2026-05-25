@@ -115,7 +115,7 @@ export default function BoardSection() {
                         width: '100%',
                         aspectRatio: '1/1',
                         overflow: 'hidden',
-                        background: '#111'
+                        position: 'relative'
                       }}>
                         {member.photo ? (
                           <img
