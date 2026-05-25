@@ -15,10 +15,12 @@ export async function POST(req: NextRequest) {
       commerce_society_name: body.commerce_society_name,
       commerce_society_email: body.commerce_society_email,
       master_in_charge_name: body.master_in_charge_name,
+      master_in_charge_email: body.master_in_charge_email || '',
       master_in_charge_phone: body.master_in_charge_phone,
       student_president_name: body.student_president_name,
-      student_president_email: body.student_president_email,
-      student_president_phone: body.student_president_phone
+      student_president_email: body.student_president_email || '',
+      student_president_phone: body.student_president_phone,
+      status: 'pending'
     }
     
     const { data, error } = await supabaseAdmin
