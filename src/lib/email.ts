@@ -41,7 +41,7 @@ export async function sendWelcomeEmail({
   }
 
   const { data, error } = await resend.emails.send({
-    from: 'AISCA <onboarding@resend.dev>',
+    from: 'AISCA <noreply@aisca.lk>',
     to,
     subject: `Welcome to AISCA, ${name}! Your Membership Card is Ready 🎓`,
     attachments,
