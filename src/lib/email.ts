@@ -1,7 +1,5 @@
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 export async function sendWelcomeEmail({
   to,
   name,
@@ -15,17 +13,37 @@ export async function sendWelcomeEmail({
   cardUrl: string | null
   pdfBytes?: Buffer | null
 }) {
-  const attachments = pdfBytes ? [
-    {
-      filename: `AISCA_Membership_Card_${membershipNumber}.pdf`,
-      content: pdfBytes
+  const resend = new Resend(process.env.RESEND_API_KEY)
+  
+  // Fetch PDF for attachment if cardUrl exists
+  let attachments: any[] = []
+  if (pdfBytes) {
+    attachments = [{
+      filename: `AISCA-Membership-Card-${membershipNumber}.pdf`,
+      content: pdfBytes,
+      type: 'application/pdf'
+    }]
+  } else if (cardUrl) {
+    try {
+      const pdfResponse = await fetch(cardUrl)
+      if (pdfResponse.ok) {
+        const pdfBuffer = await pdfResponse.arrayBuffer()
+        const pdfBase64 = Buffer.from(pdfBuffer).toString('base64')
+        attachments = [{
+          filename: `AISCA-Membership-Card-${membershipNumber}.pdf`,
+          content: pdfBase64,
+          type: 'application/pdf'
+        }]
+      }
+    } catch (err) {
+      console.error('Failed to fetch PDF for attachment:', err)
     }
-  ] : []
+  }
 
   const { data, error } = await resend.emails.send({
-    from: 'AISCA <noreply@aisca.lk>',
+    from: 'AISCA <onboarding@resend.dev>',
     to,
-    subject: `Welcome to AISCA, ${name}!`,
+    subject: `Welcome to AISCA, ${name}! Your Membership Card is Ready 🎓`,
     attachments,
     html: `
 <!DOCTYPE html>
@@ -35,18 +53,20 @@ export async function sendWelcomeEmail({
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Welcome to AISCA</title>
 </head>
-<body style="margin:0;padding:0;background:#ebebeb;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+<body style="margin:0;padding:0;background:#080808;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
 
   <div style="max-width:580px;margin:32px auto;background:#ffffff;border-radius:4px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.10);">
 
     <!-- Header -->
-    <div style="padding:32px 40px;text-align:center;border-bottom:1px solid #1a1a1a;background:#000000;">
+    <div style="padding:32px 40px;text-align:center;border-bottom:1px solid #e5e5e5;background:#ffffff;">
       <img 
         src="https://aisca.lk/aisca-logo.webp" 
-        alt="AISCA" 
-        style="height:48px;width:auto;object-fit:contain;"
+        alt="AISCA"
+        width="120"
+        height="auto"
+        style="width:120px;height:auto;display:block;margin:0 auto;object-fit:contain;"
       />
-      <p style="color:rgba(255,255,255,0.3);font-size:10px;letter-spacing:0.15em;margin:8px 0 0;text-transform:uppercase;">
+      <p style="color:#999999;font-size:10px;letter-spacing:0.15em;margin:12px 0 0;text-transform:uppercase;font-family:Arial,sans-serif;">
         All Island Schools Commerce Association
       </p>
     </div>
@@ -78,6 +98,37 @@ export async function sendWelcomeEmail({
           </table>
         </div>
       </div>
+
+      <!-- Download Card Button -->
+      ${cardUrl ? `
+      <div style="text-align:center;margin:28px 0;">
+        <p style="color:#888888;font-size:13px;margin:0 0 16px;font-family:Arial,sans-serif;">
+          Your official digital membership card is ready:
+        </p>
+        <a 
+          href="${cardUrl}" 
+          target="_blank"
+          style="
+            display:inline-block;
+            background:#ffffff;
+            color:#000000;
+            padding:14px 36px;
+            border:1px solid #000000;
+            border-radius:8px;
+            font-weight:700;
+            font-size:15px;
+            text-decoration:none;
+            font-family:Arial,sans-serif;
+            letter-spacing:0.02em;
+          "
+        >
+          Download Membership Card →
+        </a>
+        <p style="color:#666666;font-size:11px;margin:12px 0 0;font-family:Arial,sans-serif;">
+          Your card is also attached to this email as a PDF
+        </p>
+      </div>
+      ` : ''}
 
       <!-- Section label -->
       <div style="font-size:9px;font-weight:700;color:#999999;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:4px;border-top:1px solid #eeeeee;padding-top:28px;">
@@ -138,7 +189,7 @@ export async function sendWelcomeEmail({
     `
   })
 
-  if (error) console.error('Resend send error:', JSON.stringify(error))
-  else console.log('Email sent successfully, id:', data?.id)
+  if (error) console.error('Resend error:', JSON.stringify(error))
+  else console.log('Email sent:', data?.id)
   return { data, error }
 }
