@@ -43,150 +43,131 @@ export async function sendWelcomeEmail({
   const { data, error } = await resend.emails.send({
     from: 'AISCA <noreply@aisca.lk>',
     to,
-    subject: `Welcome to AISCA, ${name}! Your Membership Card is Ready 🎓`,
+    subject: `Welcome to AISCA, ${name}. Your Membership Card is Ready`,
     attachments,
     html: `
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome to AISCA</title>
-</head>
-<body style="margin:0;padding:0;background:#080808;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f4f4f4;font-family:Arial,Helvetica,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;padding:20px 0;">
+<tr><td align="center">
+<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#0d0d0d;border-radius:12px;overflow:hidden;">
 
-  <div style="max-width:580px;margin:32px auto;background:#ffffff;border-radius:4px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.10);">
+  <!-- HEADER -->
+  <tr>
+    <td align="center" style="background:#ffffff;padding:28px 40px;border-bottom:3px solid #000000;">
+      <img src="https://aisca.lk/aisca-logo.webp" alt="AISCA" width="90" height="90" style="display:block;margin:0 auto;width:90px;height:90px;object-fit:contain;" />
+      <p style="margin:10px 0 0;font-size:9px;letter-spacing:0.18em;color:#888888;text-transform:uppercase;font-family:Arial,sans-serif;">All Island Schools Commerce Association</p>
+    </td>
+  </tr>
 
-    <!-- Header -->
-    <div style="padding:32px 40px;text-align:center;border-bottom:1px solid #e5e5e5;background:#ffffff;">
-      <img 
-        src="https://aisca.lk/aisca-logo.webp" 
-        alt="AISCA"
-        width="120"
-        height="auto"
-        style="width:120px;height:auto;display:block;margin:0 auto;object-fit:contain;"
-      />
-      <p style="color:#999999;font-size:10px;letter-spacing:0.15em;margin:12px 0 0;text-transform:uppercase;font-family:Arial,sans-serif;">
-        All Island Schools Commerce Association
-      </p>
-    </div>
-
-    <!-- BODY -->
-    <div style="padding:44px 40px 36px;">
-
-      <h1 style="margin:0 0 12px;font-size:26px;font-weight:800;color:#0a0a0a;letter-spacing:-0.02em;line-height:1.2;">
+  <!-- WELCOME -->
+  <tr>
+    <td style="padding:40px 40px 0;">
+      <h1 style="color:#ffffff;font-size:26px;font-weight:700;margin:0 0 16px;line-height:1.3;font-family:Arial,sans-serif;">
         Welcome to AISCA,<br>${name}.
       </h1>
-      <p style="margin:0 0 36px;font-size:14px;color:#555555;line-height:1.7;">
+      <p style="color:#888888;font-size:15px;line-height:1.7;margin:0 0 32px;font-family:Arial,sans-serif;">
         Your membership has been confirmed. You are now officially part of Sri Lanka's national student commerce movement. Your digital membership card is attached to this email.
       </p>
+    </td>
+  </tr>
 
-      <!-- Membership Info Box -->
-      <div style="background:#f6f6f6;border:1px solid #e2e2e2;border-radius:4px;padding:22px 26px;margin:0 0 36px;">
-        <div style="font-size:9px;font-weight:700;color:#999999;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:8px;">Membership Number</div>
-        <div style="font-size:22px;font-weight:800;color:#0a0a0a;letter-spacing:0.05em;margin-bottom:14px;">${membershipNumber}</div>
-        <div style="border-top:1px solid #e0e0e0;padding-top:12px;">
-          <table style="width:100%;border-collapse:collapse;">
-            <tr>
-              <td style="font-size:12px;color:#888888;padding:3px 0;">Membership Type</td>
-              <td style="font-size:12px;color:#0a0a0a;font-weight:600;text-align:right;padding:3px 0;">Associate Member</td>
-            </tr>
-            <tr>
-              <td style="font-size:12px;color:#888888;padding:3px 0;">Status</td>
-              <td style="font-size:12px;color:#0a0a0a;font-weight:600;text-align:right;padding:3px 0;">Active &#10003;</td>
-            </tr>
-          </table>
-        </div>
-      </div>
-
-      <!-- Download Card Button -->
-      ${cardUrl ? `
-      <div style="text-align:center;margin:28px 0;">
-        <p style="color:#888888;font-size:13px;margin:0 0 16px;font-family:Arial,sans-serif;">
-          Your official digital membership card is ready:
-        </p>
-        <a 
-          href="${cardUrl}" 
-          target="_blank"
-          style="
-            display:inline-block;
-            background:#ffffff;
-            color:#000000;
-            padding:14px 36px;
-            border:1px solid #000000;
-            border-radius:8px;
-            font-weight:700;
-            font-size:15px;
-            text-decoration:none;
-            font-family:Arial,sans-serif;
-            letter-spacing:0.02em;
-          "
-        >
-          Download Membership Card →
-        </a>
-        <p style="color:#666666;font-size:11px;margin:12px 0 0;font-family:Arial,sans-serif;">
-          Your card is also attached to this email as a PDF
-        </p>
-      </div>
-      ` : ''}
-
-      <!-- Section label -->
-      <div style="font-size:9px;font-weight:700;color:#999999;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:4px;border-top:1px solid #eeeeee;padding-top:28px;">
-        What this means for you
-      </div>
-
-      <!-- Benefits Table -->
-      <table style="width:100%;border-collapse:collapse;margin-bottom:36px;">
-        <tr style="border-bottom:1px solid #eeeeee;">
-          <td style="padding:13px 0;font-size:13px;color:#0a0a0a;font-weight:500;">Island-wide student network</td>
-          <td style="padding:13px 0;font-size:13px;color:#777777;text-align:right;">2,000+ students</td>
-        </tr>
-        <tr style="border-bottom:1px solid #eeeeee;">
-          <td style="padding:13px 0;font-size:13px;color:#0a0a0a;font-weight:500;">Commerce society coverage</td>
-          <td style="padding:13px 0;font-size:13px;color:#777777;text-align:right;">80+ schools</td>
-        </tr>
-        <tr style="border-bottom:1px solid #eeeeee;">
-          <td style="padding:13px 0;font-size:13px;color:#0a0a0a;font-weight:500;">National events &amp; competitions</td>
-          <td style="padding:13px 0;font-size:13px;color:#777777;text-align:right;">Members only</td>
-        </tr>
+  <!-- MEMBERSHIP NUMBER CARD -->
+  <tr>
+    <td style="padding:0 40px;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#1a1a1a;border:1px solid #333333;border-radius:10px;padding:24px;">
         <tr>
-          <td style="padding:13px 0;font-size:13px;color:#0a0a0a;font-weight:500;">Official digital membership card</td>
-          <td style="padding:13px 0;font-size:13px;color:#777777;text-align:right;">See attachment</td>
+          <td>
+            <p style="color:#666666;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;margin:0 0 10px;font-family:Arial,sans-serif;">Membership Number</p>
+            <p style="color:#ffffff;font-size:24px;font-weight:700;margin:0 0 16px;font-family:Arial,sans-serif;">${membershipNumber}</p>
+            <table width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #333333;padding-top:14px;margin-top:4px;">
+              <tr>
+                <td style="color:#666666;font-size:13px;font-family:Arial,sans-serif;">Membership Type</td>
+                <td align="right" style="color:#ffffff;font-size:13px;font-weight:700;font-family:Arial,sans-serif;">Associate Member</td>
+              </tr>
+              <tr>
+                <td style="color:#666666;font-size:13px;padding-top:8px;font-family:Arial,sans-serif;">Status</td>
+                <td align="right" style="color:#ffffff;font-size:13px;font-weight:700;padding-top:8px;font-family:Arial,sans-serif;">Active</td>
+              </tr>
+            </table>
+          </td>
         </tr>
       </table>
+    </td>
+  </tr>
 
-      <p style="font-size:13px;color:#666666;line-height:1.7;margin:0 0 28px;">
-        Join the AISCA WhatsApp channel to stay connected with commerce students across the island and receive updates on upcoming events and opportunities.
-      </p>
-
-      <!-- CTA -->
-      <a href="https://whatsapp.com/channel/0029Vak5dvg4IBhIrk1DsK3i"
-         style="display:inline-block;background:#000000;color:#ffffff;padding:14px 30px;border-radius:4px;font-weight:700;font-size:12px;text-decoration:none;letter-spacing:0.1em;text-transform:uppercase;">
-        Join WhatsApp Channel
+  <!-- DOWNLOAD CARD BUTTON -->
+  ${cardUrl ? `
+  <tr>
+    <td align="center" style="padding:32px 40px 0;">
+      <p style="color:#666666;font-size:13px;margin:0 0 16px;font-family:Arial,sans-serif;">Your official digital membership card is ready:</p>
+      <a href="${cardUrl}" target="_blank" style="display:inline-block;background:#ffffff;color:#000000;padding:14px 36px;border-radius:8px;font-weight:700;font-size:14px;text-decoration:none;font-family:Arial,sans-serif;">
+        Download Membership Card
       </a>
+      <p style="color:#444444;font-size:11px;margin:12px 0 0;font-family:Arial,sans-serif;">Card is also attached to this email as a PDF</p>
+    </td>
+  </tr>
+  ` : ''}
 
-      <p style="margin:24px 0 0;font-size:11px;color:#aaaaaa;line-height:1.6;">
-        Follow us for daily updates &nbsp;&mdash;&nbsp;
-        <a href="https://www.instagram.com/aisca.lk/" style="color:#0a0a0a;font-weight:700;text-decoration:none;">@aisca.lk</a>
-        on Instagram.
-      </p>
-    </div>
+  <!-- WHAT THIS MEANS -->
+  <tr>
+    <td style="padding:32px 40px 0;">
+      <p style="color:#444444;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;margin:0 0 16px;border-top:1px solid #222222;padding-top:24px;font-family:Arial,sans-serif;">What This Means For You</p>
+      <table width="100%" cellpadding="0" cellspacing="0">
+        <tr><td style="color:#cccccc;font-size:13px;padding:8px 0;border-bottom:1px solid #1a1a1a;font-family:Arial,sans-serif;">Island-wide student network</td><td align="right" style="color:#666666;font-size:13px;padding:8px 0;border-bottom:1px solid #1a1a1a;font-family:Arial,sans-serif;">2,000+ students</td></tr>
+        <tr><td style="color:#cccccc;font-size:13px;padding:8px 0;border-bottom:1px solid #1a1a1a;font-family:Arial,sans-serif;">Commerce society coverage</td><td align="right" style="color:#666666;font-size:13px;padding:8px 0;border-bottom:1px solid #1a1a1a;font-family:Arial,sans-serif;">80+ schools</td></tr>
+        <tr><td style="color:#cccccc;font-size:13px;padding:8px 0;border-bottom:1px solid #1a1a1a;font-family:Arial,sans-serif;">National events and competitions</td><td align="right" style="color:#666666;font-size:13px;padding:8px 0;border-bottom:1px solid #1a1a1a;font-family:Arial,sans-serif;">Members only</td></tr>
+        <tr><td style="color:#cccccc;font-size:13px;padding:8px 0;font-family:Arial,sans-serif;">Official digital membership card</td><td align="right" style="color:#666666;font-size:13px;padding:8px 0;font-family:Arial,sans-serif;">See attachment</td></tr>
+      </table>
+    </td>
+  </tr>
 
-    <!-- FOOTER -->
-    <div style="background:#f4f4f4;border-top:1px solid #e6e6e6;padding:22px 40px;text-align:center;">
-      <p style="margin:0 0 4px;font-size:10px;color:#aaaaaa;letter-spacing:0.03em;">
-        AISCA &mdash; The national platform for Sri Lanka's commerce students.
-      </p>
-      <p style="margin:0;font-size:10px;color:#bbbbbb;">
-        This is an automated message. Please do not reply. &nbsp;&middot;&nbsp;
-        <a href="https://aisca.lk" style="color:#888888;text-decoration:none;">aisca.lk</a>
-      </p>
-    </div>
+  <!-- WHATSAPP -->
+  <tr>
+    <td style="padding:28px 40px 0;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#111111;border:1px solid #222222;border-radius:10px;padding:20px;">
+        <tr>
+          <td>
+            <p style="color:#ffffff;font-size:14px;font-weight:600;margin:0 0 8px;font-family:Arial,sans-serif;">Join the AISCA Associate Group</p>
+            <p style="color:#666666;font-size:13px;margin:0 0 16px;font-family:Arial,sans-serif;">Connect directly with fellow associates across Sri Lanka</p>
+            <a href="https://chat.whatsapp.com/Li5UyOvxKRjH33PCLhId1o" target="_blank" style="display:inline-block;background:#ffffff;color:#000000;padding:10px 24px;border-radius:6px;font-weight:600;font-size:13px;text-decoration:none;font-family:Arial,sans-serif;">
+              Join WhatsApp Group
+            </a>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
 
-  </div>
+  <!-- SOCIAL -->
+  <tr>
+    <td style="padding:24px 40px 0;">
+      <p style="color:#444444;font-size:12px;margin:0;font-family:Arial,sans-serif;">
+        Follow us: 
+        <a href="https://www.instagram.com/aisca.lk/" style="color:#888888;">Instagram</a> &nbsp;|&nbsp;
+        <a href="https://www.linkedin.com/company/all-island-schools-commerce-association-aisca/" style="color:#888888;">LinkedIn</a> &nbsp;|&nbsp;
+        <a href="https://web.facebook.com/profile.php?id=61586432106049" style="color:#888888;">Facebook</a>
+      </p>
+    </td>
+  </tr>
+
+  <!-- FOOTER -->
+  <tr>
+    <td align="center" style="padding:28px 40px;border-top:1px solid #1a1a1a;margin-top:28px;">
+      <p style="color:#333333;font-size:11px;margin:0;font-family:Arial,sans-serif;">
+        2026 All Island Schools Commerce Association · Colombo, Sri Lanka · <a href="https://aisca.lk" style="color:#444444;">aisca.lk</a>
+      </p>
+    </td>
+  </tr>
+
+</table>
+</td></tr>
+</table>
 </body>
 </html>
-    `
+`
   })
 
   if (error) console.error('Resend error:', JSON.stringify(error))
