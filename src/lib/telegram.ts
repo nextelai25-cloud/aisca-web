@@ -1,3 +1,10 @@
+function escapeHTML(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+}
+
 export async function sendTelegram(message: string): Promise<void> {
   const token = process.env.TELEGRAM_BOT_TOKEN
   const chatId = process.env.TELEGRAM_GROUP_CHAT_ID
@@ -7,6 +14,9 @@ export async function sendTelegram(message: string): Promise<void> {
     return
   }
 
+  // Convert markdown bold (*text*) to HTML bold (<b>text</b>) safely after escaping HTML special chars
+  const htmlMessage = escapeHTML(message).replace(/\*([^*]+)\*/g, '<b>$1</b>')
+
   const url = `https://api.telegram.org/bot${token}/sendMessage`
   
   try {
@@ -15,8 +25,8 @@ export async function sendTelegram(message: string): Promise<void> {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         chat_id: chatId,
-        text: message,
-        parse_mode: 'Markdown'
+        text: htmlMessage,
+        parse_mode: 'HTML'
       }),
       signal: AbortSignal.timeout(10000)
     })
@@ -32,3 +42,4 @@ export async function sendTelegram(message: string): Promise<void> {
     console.error('[Telegram] Fetch error:', err.message)
   }
 }
+
