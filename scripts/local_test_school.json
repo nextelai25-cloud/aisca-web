@@ -1,0 +1,12 @@
+{
+  "school_name": "Robustness Test School",
+  "province": "Western Province",
+  "district": "Colombo",
+  "commerce_society_name": "Robustness Commerce Society",
+  "commerce_society_email": "robustness_society@example.com",
+  "master_in_charge_name": "Mr. Robust_Master",
+  "master_in_charge_phone": "0777123456",
+  "student_president_name": "Jane Robust_Student",
+  "student_president_email": "robust_president@example.com",
+  "student_president_phone": "0777654321"
+}

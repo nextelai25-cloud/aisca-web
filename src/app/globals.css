@@ -1039,3 +1039,14 @@ html, body {
     min-width: 28px !important;
   }
 }
+
+/* Gallery mobile responsive styles */
+@media (max-width: 767px) {
+  #gallery {
+    padding: 80px 20px !important;
+  }
+  
+  #gallery .events-grid {
+    grid-template-columns: 1fr !important;
+  }
+}

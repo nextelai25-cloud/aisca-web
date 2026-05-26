@@ -1,0 +1,58 @@
+{
+  "cawalk-2025": {
+    "coverPhoto": "/events/cawalk/WhatsApp Image 2026-05-20 at 13.51.11.webp",
+    "photos": [
+      "/events/cawalk/WhatsApp Image 2026-05-20 at 13.51.11.webp",
+      "/events/cawalk/WhatsApp Image 2026-05-20 at 13.51.12.webp"
+    ],
+    "count": 2
+  },
+  "legacy-night-2025": {
+    "coverPhoto": "/events/legacy25/WhatsApp Image 2026-05-20 at 13.51.35.webp",
+    "photos": [
+      "/events/legacy25/WhatsApp Image 2026-05-20 at 13.51.35.webp",
+      "/events/legacy25/WhatsApp Image 2026-05-20 at 13.51.36.webp"
+    ],
+    "count": 2
+  },
+  "gift-a-smile": {
+    "coverPhoto": "/events/giftasmile/WhatsApp Image 2026-05-20 at 13.52.06.webp",
+    "photos": [
+      "/events/giftasmile/WhatsApp Image 2026-05-20 at 13.52.06.webp",
+      "/events/giftasmile/WhatsApp Image 2026-05-20 at 13.52.07 (1).webp",
+      "/events/giftasmile/WhatsApp Image 2026-05-20 at 13.52.07.webp"
+    ],
+    "count": 3
+  },
+  "shoreline-2025": {
+    "coverPhoto": "/events/shoreline/WhatsApp Image 2026-05-20 at 13.52.31.webp",
+    "photos": [
+      "/events/shoreline/WhatsApp Image 2026-05-20 at 13.52.31.webp",
+      "/events/shoreline/WhatsApp Image 2026-05-20 at 13.52.32.webp"
+    ],
+    "count": 2
+  },
+  "board-getogether": {
+    "coverPhoto": "/events/boardlunch/WhatsApp Image 2026-05-20 at 13.52.54.webp",
+    "photos": [
+      "/events/boardlunch/WhatsApp Image 2026-05-20 at 13.52.54.webp",
+      "/events/boardlunch/WhatsApp Image 2026-05-20 at 13.52.55.webp"
+    ],
+    "count": 2
+  },
+  "legacy-night-2026": {
+    "coverPhoto": "/events/legacy26/WhatsApp Image 2026-05-20 at 13.58.44.webp",
+    "photos": [
+      "/events/legacy26/WhatsApp Image 2026-05-20 at 13.58.44.webp"
+    ],
+    "count": 1
+  },
+  "aisca-forum-inaugural": {
+    "coverPhoto": "/events/forum/5bf50579-0b8a-4428-afaa-e2c822f92596.webp",
+    "photos": [
+      "/events/forum/5bf50579-0b8a-4428-afaa-e2c822f92596.webp",
+      "/events/forum/WhatsApp Image 2026-05-20 at 13.59.15.webp"
+    ],
+    "count": 2
+  }
+}
