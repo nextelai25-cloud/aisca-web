@@ -1050,3 +1050,29 @@ html, body {
     grid-template-columns: 1fr !important;
   }
 }
+
+/* Gallery modal responsive */
+@media (max-width: 767px) {
+  .gallery-modal-inner {
+    border-radius: 12px !important;
+    margin: 10px !important;
+  }
+  
+  .gallery-modal-photo {
+    height: 280px !important;
+  }
+  
+  .gallery-modal-title {
+    font-size: 18px !important;
+  }
+
+  .gallery-modal-desc {
+    font-size: 13px !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .gallery-modal-photo {
+    height: 380px !important;
+  }
+}

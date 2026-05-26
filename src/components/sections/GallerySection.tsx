@@ -113,6 +113,11 @@ export default function GallerySection() {
                 fontSize: '16px', fontWeight: '700', color: '#ffffff',
                 margin: 0, lineHeight: '1.3'
               }}>{event.name}</p>
+              <p style={{
+                fontSize: '11px',
+                color: 'rgba(255,255,255,0.3)',
+                marginTop: '4px'
+              }}>{event.date}</p>
               {event.note && (
                 <p style={{
                   fontSize: '10px', color: 'rgba(255,255,255,0.35)',
@@ -130,21 +135,27 @@ export default function GallerySection() {
           onClick={() => setSelectedEvent(null)}
           style={{
             position: 'fixed', inset: 0, zIndex: 1000,
-            background: 'rgba(0,0,0,0.95)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            padding: '20px',
-            overflowY: 'auto'
+            background: 'rgba(0,0,0,0.96)',
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'center',
+            padding: '20px 16px',
+            overflowY: 'auto',
+            WebkitOverflowScrolling: 'touch'
           }}
         >
           <div
+            className="gallery-modal-inner"
             onClick={e => e.stopPropagation()}
             style={{
-              width: '100%', maxWidth: '900px',
+              width: '100%',
+              maxWidth: '900px',
               background: '#0d0d0d',
               border: '1px solid rgba(255,255,255,0.1)',
               borderRadius: '20px',
               overflow: 'hidden',
-              margin: 'auto'
+              margin: 'auto',
+              marginTop: '0'
             }}
           >
             {/* Close button */}
@@ -177,56 +188,76 @@ export default function GallerySection() {
               >×</button>
             </div>
 
-            {/* Main photo */}
-            <div style={{
-              width: '100%', height: '460px',
-              background: '#111', position: 'relative', overflow: 'hidden'
-            }}>
+            {/* Main photo container */}
+            <div
+              className="gallery-modal-photo"
+              style={{
+                width: '100%',
+                height: '500px',
+                background: '#000000',
+                position: 'relative',
+                overflow: 'hidden',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
               {selectedEvent.photos.length > 0 ? (
                 <img
                   src={selectedEvent.photos[activePhoto]}
                   alt={selectedEvent.name}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
+                  style={{
+                    maxWidth: '100%',
+                    maxHeight: '100%',
+                    width: 'auto',
+                    height: 'auto',
+                    objectFit: 'contain',
+                    display: 'block'
+                  }}
                 />
               ) : (
                 <div style={{
-                  width: '100%', height: '100%', display: 'flex',
-                  alignItems: 'center', justifyContent: 'center',
-                  color: 'rgba(255,255,255,0.1)', fontSize: '5rem', fontWeight: '800'
+                  color: 'rgba(255,255,255,0.1)',
+                  fontSize: '5rem',
+                  fontWeight: '800'
                 }}>AISCA</div>
               )}
 
-              {/* Photo navigation arrows */}
+              {/* Navigation arrows - only show if multiple photos */}
               {selectedEvent.photos.length > 1 && (
                 <>
                   <button
-                    onClick={() => setActivePhoto(p => p > 0 ? p - 1 : selectedEvent.photos.length - 1)}
+                    onClick={(e) => { e.stopPropagation(); setActivePhoto(p => p > 0 ? p - 1 : selectedEvent.photos.length - 1) }}
                     style={{
                       position: 'absolute', left: '16px', top: '50%',
                       transform: 'translateY(-50%)',
-                      background: 'rgba(0,0,0,0.7)', border: '1px solid rgba(255,255,255,0.2)',
-                      borderRadius: '50%', width: '44px', height: '44px',
-                      color: '#fff', cursor: 'pointer', fontSize: '20px',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center'
+                      background: 'rgba(0,0,0,0.8)',
+                      border: '1px solid rgba(255,255,255,0.2)',
+                      borderRadius: '50%', width: '48px', height: '48px',
+                      color: '#fff', cursor: 'pointer', fontSize: '22px',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      zIndex: 10
                     }}
                   >‹</button>
                   <button
-                    onClick={() => setActivePhoto(p => p < selectedEvent.photos.length - 1 ? p + 1 : 0)}
+                    onClick={(e) => { e.stopPropagation(); setActivePhoto(p => p < selectedEvent.photos.length - 1 ? p + 1 : 0) }}
                     style={{
                       position: 'absolute', right: '16px', top: '50%',
                       transform: 'translateY(-50%)',
-                      background: 'rgba(0,0,0,0.7)', border: '1px solid rgba(255,255,255,0.2)',
-                      borderRadius: '50%', width: '44px', height: '44px',
-                      color: '#fff', cursor: 'pointer', fontSize: '20px',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center'
+                      background: 'rgba(0,0,0,0.8)',
+                      border: '1px solid rgba(255,255,255,0.2)',
+                      borderRadius: '50%', width: '48px', height: '48px',
+                      color: '#fff', cursor: 'pointer', fontSize: '22px',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      zIndex: 10
                     }}
                   >›</button>
 
-                  {/* Photo counter */}
                   <div style={{
-                    position: 'absolute', bottom: '16px', right: '16px',
+                    position: 'absolute', bottom: '12px', right: '16px',
                     background: 'rgba(0,0,0,0.7)', borderRadius: '6px',
-                    padding: '4px 10px', fontSize: '12px', color: 'rgba(255,255,255,0.6)'
+                    padding: '4px 10px', fontSize: '12px',
+                    color: 'rgba(255,255,255,0.6)'
                   }}>
                     {activePhoto + 1} / {selectedEvent.photos.length}
                   </div>
@@ -265,7 +296,7 @@ export default function GallerySection() {
 
             {/* Event details */}
             <div style={{ padding: '28px 24px' }}>
-              <h3 style={{
+              <h3 className="gallery-modal-title" style={{
                 fontSize: '24px', fontWeight: '700', color: '#ffffff',
                 marginBottom: '16px', lineHeight: '1.2'
               }}>{selectedEvent.name}</h3>
@@ -283,7 +314,7 @@ export default function GallerySection() {
               )}
 
               {selectedEvent.description.split('\n\n').map((para, i) => (
-                <p key={i} style={{
+                <p key={i} className="gallery-modal-desc" style={{
                   fontSize: '14px', color: 'rgba(255,255,255,0.55)',
                   lineHeight: '1.8', marginBottom: '16px'
                 }}>{para}</p>
