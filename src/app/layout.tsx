@@ -79,13 +79,13 @@ export const metadata: Metadata = {
   category: 'education',
   icons: {
     icon: [
-      { url: '/favicon.ico', sizes: '32x32' },
-      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' }
+      { url: '/favicon.ico', type: 'image/x-icon', sizes: '32x32' },
+      { url: '/icon-192.png', type: 'image/png', sizes: '192x192' }
     ],
     apple: [
       { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }
     ],
-    shortcut: '/favicon.ico'
+    shortcut: [{ url: '/favicon.ico' }]
   },
   manifest: '/manifest.json'
 };
@@ -93,7 +93,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head><meta name="theme-color" content="#080808" /></head>
+      <head>
+        <meta name="theme-color" content="#080808" />
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+      </head>
       <body className="min-h-screen antialiased" suppressHydrationWarning>
         <script
           type="application/ld+json"
