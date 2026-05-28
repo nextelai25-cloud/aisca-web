@@ -79,6 +79,13 @@ export default function BoardSection() {
           ))}
         </div>
 
+        <div style={{
+          width: '100%',
+          height: '1px',
+          background: 'rgba(255,255,255,0.06)',
+          marginBottom: '40px'
+        }} />
+
         {/* Tab Content */}
         <AnimatePresence mode="wait">
           <motion.div
@@ -188,80 +195,100 @@ export default function BoardSection() {
                     </div>
                   ))}
                 </div>
+
+                {/* Divider after co-secretaries */}
+                <div style={{
+                  width: '100%',
+                  maxWidth: '900px',
+                  margin: '32px auto 0',
+                  height: '1px',
+                  background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent)'
+                }} />
               </div>
             ) : (
-              <div
-                className="board-grid"
-                style={currentTeam.members.length <= 3 ? {
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
-                  gap: '16px',
-                  justifyItems: 'center',
-                  justifyContent: 'center',
-                  maxWidth: '900px',
-                  margin: '0 auto'
-                } : {
-                  maxWidth: '900px',
-                  margin: '0 auto'
-                }}
-              >
-                {currentTeam.members.map((m) => (
-                  <div
-                    key={m.name}
-                    className="board-card member-card"
-                    style={{
-                      background: 'rgba(255,255,255,0.03)',
-                      border: '1px solid rgba(255,255,255,0.08)',
-                      borderRadius: '16px',
-                      overflow: 'hidden',
-                      display: 'flex',
-                      flexDirection: 'column'
-                    }}
-                  >
-                    {/* Photo area */}
-                    <div style={{
-                      width: '100%',
-                      aspectRatio: '3/4',
-                      background: 'linear-gradient(160deg, #1c1c1c 0%, #0f0f0f 100%)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '2rem',
-                      fontWeight: '300',
-                      color: 'rgba(255,255,255,0.18)',
-                      letterSpacing: '0.05em',
-                      position: 'relative'
-                    }}>
-                      {m.photo ? (
-                        <img 
-                          src={m.photo} 
-                          alt={m.name} 
-                          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }} 
-                        />
-                      ) : m.initials}
+              <>
+                <div
+                  className="board-grid"
+                  style={currentTeam.members.length <= 3 ? {
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
+                    gap: '16px',
+                    justifyItems: 'center',
+                    justifyContent: 'center',
+                    maxWidth: '900px',
+                    margin: '0 auto'
+                  } : {
+                    maxWidth: '900px',
+                    margin: '0 auto'
+                  }}
+                >
+                  {currentTeam.members.map((m) => (
+                    <div
+                      key={m.name}
+                      className="board-card member-card"
+                      style={{
+                        background: 'rgba(255,255,255,0.03)',
+                        border: '1px solid rgba(255,255,255,0.08)',
+                        borderRadius: '16px',
+                        overflow: 'hidden',
+                        display: 'flex',
+                        flexDirection: 'column'
+                      }}
+                    >
+                      {/* Photo area */}
+                      <div style={{
+                        width: '100%',
+                        aspectRatio: '3/4',
+                        background: 'linear-gradient(160deg, #1c1c1c 0%, #0f0f0f 100%)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '2rem',
+                        fontWeight: '300',
+                        color: 'rgba(255,255,255,0.18)',
+                        letterSpacing: '0.05em',
+                        position: 'relative'
+                      }}>
+                        {m.photo ? (
+                          <img 
+                            src={m.photo} 
+                            alt={m.name} 
+                            style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }} 
+                          />
+                        ) : m.initials}
+                      </div>
+                      {/* Info area */}
+                      <div className="card-info" style={{
+                        padding: '16px',
+                        borderTop: '1px solid rgba(255,255,255,0.06)'
+                      }}>
+                        <p style={{
+                          fontSize: '14px',
+                          fontWeight: '600',
+                          color: '#ffffff',
+                          marginBottom: '4px'
+                        }}>{m.name}</p>
+                        <p style={{
+                          fontSize: '11px',
+                          letterSpacing: '0.12em',
+                          textTransform: 'uppercase',
+                          color: 'rgba(255,255,255,0.35)',
+                          fontWeight: '400'
+                        }}>{m.role}</p>
+                      </div>
                     </div>
-                    {/* Info area */}
-                    <div className="card-info" style={{
-                      padding: '16px',
-                      borderTop: '1px solid rgba(255,255,255,0.06)'
-                    }}>
-                      <p style={{
-                        fontSize: '14px',
-                        fontWeight: '600',
-                        color: '#ffffff',
-                        marginBottom: '4px'
-                      }}>{m.name}</p>
-                      <p style={{
-                        fontSize: '11px',
-                        letterSpacing: '0.12em',
-                        textTransform: 'uppercase',
-                        color: 'rgba(255,255,255,0.35)',
-                        fontWeight: '400'
-                      }}>{m.role}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+
+                {/* Divider after tab content */}
+                <div style={{
+                  width: '100%',
+                  maxWidth: '900px',
+                  margin: '32px auto 0',
+                  height: '1px',
+                  background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent)'
+                }} />
+              </>
             )}
           </motion.div>
         </AnimatePresence>

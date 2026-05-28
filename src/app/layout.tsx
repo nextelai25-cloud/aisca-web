@@ -79,15 +79,17 @@ export const metadata: Metadata = {
   category: 'education',
   icons: {
     icon: [
-      { url: '/favicon.ico', type: 'image/x-icon', sizes: '32x32' },
-      { url: '/icon-192.png', type: 'image/png', sizes: '192x192' }
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/android-chrome-192x192.png', sizes: '192x192', type: 'image/png' }
     ],
     apple: [
       { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }
     ],
-    shortcut: [{ url: '/favicon.ico' }]
+    shortcut: '/favicon.ico'
   },
-  manifest: '/manifest.json'
+  manifest: '/site.webmanifest'
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -96,7 +98,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <meta name="theme-color" content="#080808" />
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
       </head>
       <body className="min-h-screen antialiased" suppressHydrationWarning>
