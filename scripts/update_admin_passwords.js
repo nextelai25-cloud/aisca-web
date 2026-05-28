@@ -28,11 +28,10 @@ const ADMINS = [
   { email: 'chairman@aisca.lk', name: 'Isira Chirayu' },
   { email: 'sathis@aisca.lk', name: 'Sathis Gangaboda' },
   { email: 'risindi@aisca.lk', name: 'Risindi Gunesekara' },
-  { email: 'okitha@aisca.lk', name: 'Okitha Wijesiri' },
-  { email: 'imesh@aisca.lk', name: 'Imesh Weerasinghe' },
-  { email: 'janiru@aisca.lk', name: 'Janiru Wijekoon' },
-  { email: 'gavin@aisca.lk', name: 'Gavin Aluwihare' },
-  { email: 'kovida@aisca.lk', name: 'Kovida Guwani' }
+  { email: 'marketing@aisca.lk', name: 'AISCA Marketing' },
+  { email: 'finance@aisca.lk', name: 'AISCA Finance' },
+  { email: 'secretary@aisca.lk', name: 'AISCA Secretary' },
+  { email: 'vishmi@aisca.lk', name: 'Vishmi Wijayamanne' }
 ];
 
 function generatePassword() {

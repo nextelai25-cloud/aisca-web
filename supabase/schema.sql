@@ -97,11 +97,9 @@ INSERT INTO admin_users (email, name, role) VALUES
 ('chairman@aisca.lk', 'Isira Chirayu', 'chairman'),
 ('sathis@aisca.lk', 'Sathis Gangaboda', 'deputy_chairman'),
 ('risindi@aisca.lk', 'Risindi Gunesekara', 'deputy_chairman'),
-('okitha@aisca.lk', 'Okitha Wijesiri', 'cfo'),
-('imesh@aisca.lk', 'Imesh Weerasinghe', 'cfo'),
-('janiru@aisca.lk', 'Janiru Wijekoon', 'co_secretary'),
-('gavin@aisca.lk', 'Gavin Aluwihare', 'marketing_manager'),
-('kovida@aisca.lk', 'Kovida Guwani', 'marketing_manager');
+('marketing@aisca.lk', 'AISCA Marketing', 'marketing_manager'),
+('finance@aisca.lk', 'AISCA Finance', 'cfo'),
+('secretary@aisca.lk', 'AISCA Secretary', 'co_secretary');
 
 -- Enable Row Level Security
 ALTER TABLE admin_users ENABLE ROW LEVEL SECURITY;

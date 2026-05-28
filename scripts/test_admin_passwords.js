@@ -25,11 +25,10 @@ const ADMINS = [
   'chairman@aisca.lk',
   'sathis@aisca.lk',
   'risindi@aisca.lk',
-  'okitha@aisca.lk',
-  'imesh@aisca.lk',
-  'janiru@aisca.lk',
-  'gavin@aisca.lk',
-  'kovida@aisca.lk'
+  'marketing@aisca.lk',
+  'finance@aisca.lk',
+  'secretary@aisca.lk',
+  'vishmi@aisca.lk'
 ];
 
 const DEFAULT_PASSWORD = 'AISCA@2026!';
