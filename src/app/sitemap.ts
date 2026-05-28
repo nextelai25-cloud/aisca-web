@@ -14,6 +14,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1.0
     },
     {
+      url: `${baseUrl}/about`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.85
+    },
+    {
+      url: `${baseUrl}/#gallery`,
+      lastModified: now,
+      changeFrequency: 'weekly',
+      priority: 0.7
+    },
+    {
+      url: `${baseUrl}/#contact`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.75
+    },
+    {
       url: `${baseUrl}/register/associate`,
       lastModified: now,
       changeFrequency: 'monthly',

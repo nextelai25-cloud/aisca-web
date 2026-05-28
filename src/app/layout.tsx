@@ -107,29 +107,98 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "Organization",
-              "name": "All Island Schools Commerce Association",
-              "alternateName": "AISCA",
-              "url": "https://aisca.lk",
-              "logo": "https://aisca.lk/aisca-logo.webp",
-              "description": "Sri Lanka's largest student-led commerce network uniting 2,000+ students across 25 educational districts",
-              "foundingDate": "2024",
-              "foundingLocation": "Colombo, Sri Lanka",
-              "areaServed": "Sri Lanka",
-              "sameAs": [
-                "https://www.instagram.com/aisca.lk/",
-                "https://web.facebook.com/profile.php?id=61586432106049",
-                "https://www.linkedin.com/company/all-island-schools-commerce-association-aisca/"
-              ],
-              "contactPoint": {
-                "@type": "ContactPoint",
-                "contactType": "membership",
-                "url": "https://aisca.lk/register/associate"
-              },
-              "memberOf": {
-                "@type": "EducationalOrganization",
-                "name": "Sri Lanka School Commerce Network"
-              }
+              "@graph": [
+                {
+                  "@type": "Organization",
+                  "@id": "https://aisca.lk/#organization",
+                  "name": "All Island Schools Commerce Association",
+                  "alternateName": ["AISCA", "AISCA Sri Lanka"],
+                  "url": "https://aisca.lk",
+                  "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://aisca.lk/android-chrome-512x512.png",
+                    "width": 512,
+                    "height": 512
+                  },
+                  "description": "Sri Lanka's largest student-led commerce network uniting 2,000+ students across all 25 educational districts. Founded to connect school commerce societies islandwide.",
+                  "foundingDate": "2024",
+                  "foundingLocation": {
+                    "@type": "Place",
+                    "name": "Colombo, Sri Lanka"
+                  },
+                  "areaServed": {
+                    "@type": "Country",
+                    "name": "Sri Lanka"
+                  },
+                  "sameAs": [
+                    "https://www.instagram.com/aisca.lk/",
+                    "https://web.facebook.com/profile.php?id=61586432106049",
+                    "https://www.linkedin.com/company/all-island-schools-commerce-association-aisca/"
+                  ],
+                  "contactPoint": [
+                    {
+                      "@type": "ContactPoint",
+                      "contactType": "membership",
+                      "url": "https://aisca.lk/register/associate",
+                      "areaServed": "LK"
+                    },
+                    {
+                      "@type": "ContactPoint",
+                      "contactType": "customer support",
+                      "url": "https://aisca.lk/#contact",
+                      "areaServed": "LK"
+                    }
+                  ]
+                },
+                {
+                  "@type": "WebSite",
+                  "@id": "https://aisca.lk/#website",
+                  "url": "https://aisca.lk",
+                  "name": "AISCA | All Island Schools Commerce Association",
+                  "description": "Sri Lanka's largest student-led commerce network",
+                  "publisher": { "@id": "https://aisca.lk/#organization" },
+                  "potentialAction": {
+                    "@type": "SearchAction",
+                    "target": {
+                      "@type": "EntryPoint",
+                      "urlTemplate": "https://aisca.lk/?q={search_term_string}"
+                    },
+                    "query-input": "required name=search_term_string"
+                  }
+                },
+                {
+                  "@type": "WebPage",
+                  "@id": "https://aisca.lk/#webpage",
+                  "url": "https://aisca.lk",
+                  "name": "AISCA | All Island Schools Commerce Association Sri Lanka",
+                  "isPartOf": { "@id": "https://aisca.lk/#website" },
+                  "about": { "@id": "https://aisca.lk/#organization" },
+                  "description": "Join AISCA — Sri Lanka's largest student commerce network. 2,000+ students. 80+ schools. All 25 educational districts.",
+                  "breadcrumb": {
+                    "@type": "BreadcrumbList",
+                    "itemListElement": [
+                      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aisca.lk" },
+                      { "@type": "ListItem", "position": 2, "name": "Join AISCA", "item": "https://aisca.lk/register/associate" },
+                      { "@type": "ListItem", "position": 3, "name": "Register School", "item": "https://aisca.lk/register/school" },
+                      { "@type": "ListItem", "position": 4, "name": "Products", "item": "https://aisca.lk/products/tshirt" },
+                      { "@type": "ListItem", "position": 5, "name": "Contact", "item": "https://aisca.lk/#contact" }
+                    ]
+                  }
+                },
+                {
+                  "@type": "EducationalOrganization",
+                  "@id": "https://aisca.lk/#educationalorg",
+                  "name": "All Island Schools Commerce Association",
+                  "url": "https://aisca.lk",
+                  "description": "Connecting school commerce societies across Sri Lanka's 25 educational districts",
+                  "numberOfStudents": 2000,
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Colombo",
+                    "addressCountry": "LK"
+                  }
+                }
+              ]
             })
           }}
         />

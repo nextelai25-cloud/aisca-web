@@ -85,6 +85,14 @@ export default function BlazerPinPage() {
   return (
     <div style={{ background: '#080808', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Navbar />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {"@type":"ListItem","position":1,"name":"Home","item":"https://aisca.lk"},
+          {"@type":"ListItem","position":2,"name":"Products","item":"https://aisca.lk/products/blazer-pin"}
+        ]
+      })}} />
       
       <main className="product-page-wrapper" style={{ flex: 1, background: '#080808', paddingTop: '120px', paddingBottom: '80px', paddingLeft: '40px', paddingRight: '40px' }}>
         <Container>

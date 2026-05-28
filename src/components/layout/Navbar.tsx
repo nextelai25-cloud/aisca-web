@@ -18,7 +18,9 @@ export default function Navbar() {
 
   const nav = (href: string) => { 
     setOpen(false); 
-    if (window.location.pathname === '/') {
+    if (href.startsWith('/')) {
+      window.location.href = href;
+    } else if (window.location.pathname === '/') {
       document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' }); 
     } else {
       window.location.href = '/' + href;
