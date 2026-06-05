@@ -63,7 +63,7 @@ export const events: Event[] = [
   {
     id: '5',
     slug: 'board-getogether',
-    name: 'Board Getogether — Lunch',
+    name: 'Board Getogether: Lunch',
     tag: 'Internal',
     year: '2026',
     date: 'April 05, 2026',
@@ -77,7 +77,7 @@ export const events: Event[] = [
   {
     id: '4',
     slug: 'shoreline-2025',
-    name: 'Shoreline — Beach Cleanup',
+    name: 'Shoreline: Beach Cleanup',
     tag: 'Environment',
     year: '2026',
     date: 'February 21, 2026',

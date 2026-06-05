@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
+import Link from 'next/link'
 
 interface Post {
   id: string
@@ -280,6 +281,28 @@ export default function IdeaNetPage() {
       {/* ───── Header ───── */}
       <div style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '32px 0 0', marginBottom: '32px' }}>
         <div style={{ maxWidth: '800px', margin: '0 auto', padding: '0 20px 24px' }}>
+          
+          {/* Return to Home link */}
+          <div style={{ marginBottom: '20px' }}>
+            <Link 
+              href="/" 
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                color: 'rgba(255, 255, 255, 0.45)',
+                fontSize: '13px',
+                textDecoration: 'none',
+                fontWeight: '500',
+                transition: 'color 0.2s ease'
+              }}
+              onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = '#ffffff'}
+              onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = 'rgba(255, 255, 255, 0.45)'}
+            >
+              ← Return to Website Home
+            </Link>
+          </div>
+
           <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
