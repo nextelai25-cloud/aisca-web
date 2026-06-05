@@ -54,6 +54,7 @@ export default function IdeaNetPage() {
   const [postImages, setPostImages] = useState<string[]>([])
   const [uploadingImg, setUploadingImg] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const [formError, setFormError] = useState('')
 
   // Comment state
   const [commentText, setCommentText] = useState('')
@@ -109,9 +110,44 @@ export default function IdeaNetPage() {
     setUploadingImg(false)
   }
 
+  // Regex to detect emojis, em-dash (—), en-dash (–)
+  const hasBlockedChars = (text: string) => {
+    const regex = /[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\u{1F300}-\u{1F9FF}\u2014\u2013]/gu
+    return regex.test(text)
+  }
+
+  const cleanBlockedChars = (text: string) => {
+    const regex = /[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\u{1F300}-\u{1F9FF}\u2014\u2013]/gu
+    return text.replace(regex, '')
+  }
+
+  const handleTitleChange = (val: string) => {
+    if (hasBlockedChars(val)) {
+      setFormError('Emojis and dashes (—, –) are not allowed by AISCA rules')
+      setPostTitle(cleanBlockedChars(val))
+    } else {
+      setFormError('')
+      setPostTitle(val)
+    }
+  }
+
+  const handleDescChange = (val: string) => {
+    if (hasBlockedChars(val)) {
+      setFormError('Emojis and dashes (—, –) are not allowed by AISCA rules')
+      setPostDesc(cleanBlockedChars(val))
+    } else {
+      setFormError('')
+      setPostDesc(val)
+    }
+  }
+
   const handleSubmitPost = async () => {
     if (!member) return
     if (!postTitle.trim() || !postDesc.trim()) { alert('Title and description required'); return }
+    if (hasBlockedChars(postTitle) || hasBlockedChars(postDesc)) {
+      alert('Please remove emojis and dashes before submitting');
+      return
+    }
     setSubmitting(true)
     const res = await fetch('/api/ideanet/posts', {
       method: 'POST',
@@ -131,7 +167,10 @@ export default function IdeaNetPage() {
       setPostTitle('')
       setPostDesc('')
       setPostImages([])
+      setFormError('')
       loadPosts()
+    } else {
+      alert(data.error || 'Failed to submit post')
     }
     setSubmitting(false)
   }
@@ -523,7 +562,7 @@ export default function IdeaNetPage() {
                 background: 'rgba(255,255,255,0.04)', border: `1px solid ${authError ? 'rgba(255,80,80,0.4)' : 'rgba(255,255,255,0.1)'}`,
                 borderRadius: '12px', overflow: 'hidden', transition: 'border-color 0.2s ease'
               }}>
-                <span style={{ padding: '14px 16px', color: 'rgba(255,255,255,0.25)', fontSize: '13px', borderRight: '1px solid rgba(255,255,255,0.07)', whiteSpace: 'nowrap', fontWeight: '500' }}>
+                <span style={{ padding: '14px 16px', color: 'rgba(255,255,255,0.25)', fontSize: '13px', borderRight: '1px solid rgba(255,255,255,0.07)', whiteSpace: 'nowrap', fontWeight: '500', flexShrink: 0 }}>
                   AISCA-2026-
                 </span>
                 <input
@@ -538,9 +577,9 @@ export default function IdeaNetPage() {
                   maxLength={5}
                   autoFocus
                   style={{
-                    flex: 1, padding: '14px 16px', background: 'transparent',
-                    border: 'none', color: '#fff', fontSize: '18px',
-                    fontWeight: '700', letterSpacing: '0.2em', outline: 'none'
+                    flex: 1, padding: '14px 12px', background: 'transparent',
+                    border: 'none', color: '#fff', fontSize: '16px',
+                    fontWeight: '700', letterSpacing: '0.15em', outline: 'none'
                   }}
                 />
               </div>
@@ -612,10 +651,25 @@ export default function IdeaNetPage() {
                 </div>
               </div>
 
+              {formError && (
+                <div style={{
+                  padding: '12px 16px',
+                  background: 'rgba(255,90,90,0.08)',
+                  border: '1px solid rgba(255,90,90,0.25)',
+                  borderRadius: '10px',
+                  fontSize: '13px',
+                  color: 'rgba(255,100,100,0.95)',
+                  marginBottom: '18px',
+                  lineHeight: '1.5'
+                }}>
+                  ⚠ {formError}
+                </div>
+              )}
+
               {/* Title */}
               <input
                 value={postTitle}
-                onChange={e => setPostTitle(e.target.value)}
+                onChange={e => handleTitleChange(e.target.value)}
                 placeholder="Project idea title..."
                 maxLength={120}
                 style={{
@@ -632,7 +686,7 @@ export default function IdeaNetPage() {
               {/* Description */}
               <textarea
                 value={postDesc}
-                onChange={e => setPostDesc(e.target.value)}
+                onChange={e => handleDescChange(e.target.value)}
                 placeholder="Describe your project idea... What problem does it solve? How would it work? Who would benefit?"
                 rows={5}
                 style={{

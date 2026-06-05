@@ -37,6 +37,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
   }
 
+  // Server-side validation for emojis and dashes
+  const blockedRegex = /[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\u{1F300}-\u{1F9FF}\u2014\u2013]/gu
+  if (blockedRegex.test(title) || blockedRegex.test(description)) {
+    return NextResponse.json({ error: 'Emojis and dashes (—, –) are not allowed by AISCA rules' }, { status: 400 })
+  }
+
   const now = new Date().toISOString()
   const hotScore = calcHotScore(0, 0, now)
 
