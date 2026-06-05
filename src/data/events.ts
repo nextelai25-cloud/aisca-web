@@ -18,6 +18,21 @@ export interface Event {
 
 export const events: Event[] = [
   {
+    id: '8',
+    slug: 'ice-cream-dansela-2026',
+    name: 'AISCA Ice Cream Dansela',
+    tag: 'Community',
+    year: '2026',
+    date: 'May 31, 2026',
+    coverPhoto: '/events/icecream/photo1.webp',
+    photos: [
+      '/events/icecream/photo1.webp',
+      '/events/icecream/photo2.webp',
+      '/events/icecream/photo3.webp'
+    ],
+    description: `A sweet initiative that brought our community together.. The AISCA Ice Cream Dansela was a heartwarming community project that saw the AISCA family come together to spread joy and sweetness across the community.\n\nTrue to the spirit of giving that defines our association, this initiative was about more than just ice cream — it was about connection, warmth, and the simple joy of making someone's day brighter. \n\nAnother proud moment for the All Island Schools Commerce Association as we continue to make meaningful impact beyond the classroom.`
+  },
+  {
     id: '7',
     slug: 'aisca-forum-inaugural',
     name: 'AISCA Forum: Inaugural Edition',
