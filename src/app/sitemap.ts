@@ -60,6 +60,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: 'monthly',
       priority: 0.8
+    },
+    {
+      url: `${baseUrl}/ideanet`,
+      lastModified: now,
+      changeFrequency: 'hourly',
+      priority: 0.9
     }
   ]
 }

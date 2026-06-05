@@ -39,7 +39,9 @@ export default function Footer() {
   };
 
   const nav = (href: string) => {
-    if (window.location.pathname === '/') {
+    if (href.startsWith('/')) {
+      window.location.href = href;
+    } else if (window.location.pathname === '/') {
       document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
     } else {
       window.location.href = '/' + href;

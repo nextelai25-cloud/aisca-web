@@ -4,6 +4,7 @@ export const NAV_LINKS = [
   { label: 'Products', href: '#products' },
   { label: 'Officials', href: '#board' },
   { label: 'Gallery', href: '#gallery' },
+  { label: 'IdeaNet', href: '/ideanet' },
 ] as const;
 
 export const STATS = [
