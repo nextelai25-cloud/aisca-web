@@ -18,6 +18,23 @@ export interface Event {
 
 export const events: Event[] = [
   {
+    id: '9',
+    slug: 'economics-day-2026',
+    name: 'AISCA FREE SEMINAR SERIES - Economics Day',
+    tag: 'Education',
+    year: '2026',
+    date: 'June 06, 2026',
+    coverPhoto: '/events/seminar/main-image.webp',
+    photos: [
+      '/events/seminar/main-image.webp',
+      '/events/seminar/photo1.webp',
+      '/events/seminar/photo2.webp',
+      '/events/seminar/photo3.webp',
+      '/events/seminar/photo4.webp'
+    ],
+    description: 'Held on 06.06.2026 at the AICPA & CIMA Auditorium, Colombo 05, the event saw over 150+ students participate. Prof. Gamini Weerasinghe lectured the students.'
+  },
+  {
     id: '8',
     slug: 'ice-cream-dansela-2026',
     name: 'AISCA Ice Cream Dansela',

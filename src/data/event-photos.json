@@ -54,5 +54,25 @@
       "/events/forum/WhatsApp Image 2026-05-20 at 13.59.15.webp"
     ],
     "count": 2
+  },
+  "ice-cream-dansela-2026": {
+    "coverPhoto": "/events/icecream/photo1.webp",
+    "photos": [
+      "/events/icecream/photo1.webp",
+      "/events/icecream/photo2.webp",
+      "/events/icecream/photo3.webp"
+    ],
+    "count": 3
+  },
+  "economics-day-2026": {
+    "coverPhoto": "/events/seminar/main-image.webp",
+    "photos": [
+      "/events/seminar/main-image.webp",
+      "/events/seminar/photo1.webp",
+      "/events/seminar/photo2.webp",
+      "/events/seminar/photo3.webp",
+      "/events/seminar/photo4.webp"
+    ],
+    "count": 5
   }
 }

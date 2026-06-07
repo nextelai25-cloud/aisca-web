@@ -8,7 +8,9 @@ const eventFolders = {
   'shoreline': 'shoreline-2025',
   'boardlunch': 'board-getogether',
   'legacy26': 'legacy-night-2026',
-  'forum': 'aisca-forum-inaugural'
+  'forum': 'aisca-forum-inaugural',
+  'icecream': 'ice-cream-dansela-2026',
+  'seminar': 'economics-day-2026'
 }
 
 const result = {}
