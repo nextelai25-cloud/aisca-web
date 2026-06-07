@@ -32,7 +32,7 @@ export const events: Event[] = [
       '/events/seminar/photo3.webp',
       '/events/seminar/photo4.webp'
     ],
-    description: 'Held on 06.06.2026 at the AICPA & CIMA Auditorium, Colombo 05, the event saw over 150+ students participate. Prof. Gamini Weerasinghe lectured the students.'
+    description: `Empowering the next generation of commerce leaders.. We are thrilled to share the success of the AISCA FREE SEMINAR SERIES - Economics Day, held on June 06, 2026, at the AICPA & CIMA Auditorium in Colombo 05. The seminar marked a significant milestone in our educational outreach, bringing together eager minds from across the island to dive deep into the subject of Economics.\n\nWith an overwhelming turnout of over 150+ enthusiastic students, the atmosphere was charged with curiosity and academic drive. We were privileged to have the renowned Prof. Gamini Weerasinghe lecture the session, delivering a masterclass that demystified complex economic theories and provided students with invaluable practical insights. His engaging delivery style not only prepared students for academic excellence but also inspired a broader appreciation for the subject.\n\nThis seminar stands as a testament to the All Island Schools Commerce Association's commitment to bridging academic gaps and providing world-class learning opportunities for commerce students. We are proud to continue making a meaningful impact beyond the classroom!`
   },
   {
     id: '8',
