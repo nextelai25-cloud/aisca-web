@@ -4,62 +4,79 @@ import LockButton from './LockButton';
 
 export default function Bs360Home() {
   return (
-    <div className="min-h-screen px-6 py-16 md:py-20 relative overflow-hidden">
+    <div style={{ minHeight: '100vh', position: 'relative', overflow: 'hidden' }}>
       <div
-        className="pointer-events-none fixed inset-0"
         style={{
-          background:
-            'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(56,189,248,0.10), transparent 70%)',
+          pointerEvents: 'none',
+          position: 'fixed',
+          inset: 0,
+          background: 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(56,189,248,0.10), transparent 70%)',
         }}
       />
 
-      <div className="relative max-w-5xl mx-auto">
-        <div className="text-center mb-14">
+      <div style={{ position: 'relative', maxWidth: 780, margin: '0 auto', padding: '56px 24px 64px' }}>
+        <div style={{ textAlign: 'center', marginBottom: 44 }}>
           <img
             src="/bs360-logo.png"
             alt="BS360"
-            className="mx-auto mb-6 w-full max-w-[160px] h-auto"
+            style={{ display: 'block', margin: '0 auto 20px', width: '100%', maxWidth: 140, height: 'auto' }}
           />
           <p
-            className="uppercase mb-3"
-            style={{ fontSize: '11px', letterSpacing: '0.3em', color: 'rgba(56,189,248,0.7)' }}
+            style={{
+              textTransform: 'uppercase',
+              marginBottom: 10,
+              fontSize: 11,
+              letterSpacing: '0.3em',
+              color: 'rgba(56,189,248,0.75)',
+              fontWeight: 600,
+            }}
           >
             AISCA · Quiz Grid
           </p>
           <h1
-            className="font-bold text-white"
-            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.75rem, 5vw, 3rem)' }}
+            style={{
+              fontFamily: 'var(--font-display, "Space Grotesk", sans-serif)',
+              fontWeight: 800,
+              color: '#fff',
+              fontSize: 'clamp(1.6rem, 5vw, 2.4rem)',
+              marginBottom: 10,
+            }}
           >
             Select Your Classroom
           </h1>
-          <p className="text-white/40 text-sm mt-3 max-w-md mx-auto">
+          <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13.5, maxWidth: 420, margin: '0 auto' }}>
             Each classroom plays independently — opening a box here never affects any other classroom.
           </p>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-5">
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+            gap: 14,
+          }}
+        >
           {CLASSROOMS.map((n) => (
-            <Link key={n} href={`/bs360quizgrid/c/${n}`} className="group block">
-              <div
-                className="relative rounded-[20px] p-6 md:p-8 text-center transition-all duration-300 group-hover:-translate-y-1"
-                style={{
-                  background: 'rgba(255,255,255,0.03)',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                }}
-              >
-                <div
-                  className="pointer-events-none absolute inset-0 rounded-[20px] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{ boxShadow: '0 0 40px -8px rgba(56,189,248,0.5)' }}
-                />
+            <Link key={n} href={`/bs360quizgrid/c/${n}`} style={{ display: 'block', textDecoration: 'none' }}>
+              <div className="bs360-tile">
                 <p
-                  className="mb-2"
-                  style={{ fontSize: '11px', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.3)' }}
+                  style={{
+                    marginBottom: 8,
+                    fontSize: 10.5,
+                    letterSpacing: '0.2em',
+                    color: 'rgba(255,255,255,0.35)',
+                    fontWeight: 600,
+                  }}
                 >
                   CLASSROOM
                 </p>
                 <p
-                  className="font-bold text-white group-hover:text-[#7dd3fc] transition-colors"
-                  style={{ fontFamily: 'var(--font-display)', fontSize: '2.25rem' }}
+                  style={{
+                    fontFamily: 'var(--font-display, "Space Grotesk", sans-serif)',
+                    fontWeight: 800,
+                    color: '#fff',
+                    fontSize: '1.9rem',
+                  }}
                 >
                   {String(n).padStart(2, '0')}
                 </p>
@@ -68,10 +85,30 @@ export default function Bs360Home() {
           ))}
         </div>
 
-        <div className="text-center mt-16">
+        <div style={{ textAlign: 'center', marginTop: 48 }}>
           <LockButton />
         </div>
       </div>
+
+      <style>{`
+        .bs360-tile {
+          position: relative;
+          border-radius: 16px;
+          padding: 24px 16px;
+          text-align: center;
+          background: rgba(255,255,255,0.035);
+          border: 1px solid rgba(255,255,255,0.08);
+          transition: transform 0.25s cubic-bezier(.22,1,.36,1), border-color 0.25s, box-shadow 0.25s;
+        }
+        .bs360-tile:hover {
+          transform: translateY(-4px);
+          border-color: rgba(56,189,248,0.5);
+          box-shadow: 0 10px 40px -12px rgba(56,189,248,0.4);
+        }
+        .bs360-tile:hover p:last-child {
+          color: #7dd3fc;
+        }
+      `}</style>
     </div>
   );
 }

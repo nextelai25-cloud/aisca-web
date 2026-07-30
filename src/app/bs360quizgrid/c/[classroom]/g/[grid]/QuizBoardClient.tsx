@@ -16,11 +16,20 @@ const DIFFICULTY_STYLE: Record<
   'Super Hard': { accent: '#f43f5e', glow: 'rgba(244,63,94,0.45)', bg: 'rgba(244,63,94,0.08)', label: 'SUPER HARD' },
 };
 
+const SUBJECTS_ORDER = ['Economics', 'Business Studies', 'Accounting', 'General Knowledge'] as const;
+
 const SUBJECT_ICON: Record<string, string> = {
   Economics: '📈',
   'Business Studies': '💼',
   Accounting: '📊',
   'General Knowledge': '🧠',
+};
+
+const SUBJECT_SHORT: Record<string, string> = {
+  Economics: 'Economics',
+  'Business Studies': 'Business',
+  Accounting: 'Accounting',
+  'General Knowledge': 'Gen. Knowledge',
 };
 
 const LANG_LABEL: Record<'en' | 'si' | 'ta', string> = {
@@ -146,73 +155,119 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
   }
 
   const activeBox = modalBox !== null ? grid.boxes[modalBox] : null;
+  const activeStyle = activeBox ? DIFFICULTY_STYLE[activeBox.difficulty] : null;
 
   return (
-    <div className="min-h-screen px-4 md:px-6 py-10 md:py-16 relative overflow-hidden">
+    <div style={{ minHeight: '100vh', position: 'relative', overflow: 'hidden' }}>
       <div
-        className="pointer-events-none fixed inset-0"
         style={{
-          background:
-            'radial-gradient(ellipse 70% 45% at 50% 0%, rgba(56,189,248,0.10), transparent 70%)',
+          pointerEvents: 'none',
+          position: 'fixed',
+          inset: 0,
+          background: 'radial-gradient(ellipse 70% 45% at 50% 0%, rgba(56,189,248,0.09), transparent 70%)',
         }}
       />
 
-      <div className="relative max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
+      <div style={{ position: 'relative', maxWidth: 620, margin: '0 auto', padding: '24px 16px 48px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
           <Link
             href={`/bs360quizgrid/c/${classroom}`}
-            className="inline-flex items-center gap-2 text-white/40 hover:text-white/70 transition-colors"
-            style={{ fontSize: '13px' }}
+            className="bs360-back-link"
+            style={{ fontSize: 13 }}
           >
             ← Grid list
           </Link>
           <button
             onClick={handleReset}
             disabled={resetting}
-            className="text-white/25 hover:text-white/50 transition-colors disabled:opacity-40"
-            style={{ fontSize: '11px', letterSpacing: '0.1em', textTransform: 'uppercase' }}
+            className="bs360-reset-link"
+            style={{
+              fontSize: 11,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              background: 'none',
+              border: 'none',
+              cursor: resetting ? 'default' : 'pointer',
+              opacity: resetting ? 0.5 : 1,
+            }}
           >
             {resetting ? 'Resetting…' : 'Reset (testing)'}
           </button>
         </div>
 
-        <div className="text-center mb-10">
+        <div style={{ textAlign: 'center', marginBottom: 18 }}>
           <p
-            className="uppercase mb-2"
-            style={{ fontSize: '11px', letterSpacing: '0.3em', color: 'rgba(56,189,248,0.7)' }}
+            style={{
+              textTransform: 'uppercase',
+              marginBottom: 4,
+              fontSize: 11,
+              letterSpacing: '0.3em',
+              color: 'rgba(56,189,248,0.75)',
+              fontWeight: 600,
+            }}
           >
             Classroom {String(classroom).padStart(2, '0')}
           </p>
           <h1
-            className="font-bold text-white"
-            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.5rem, 4.5vw, 2.5rem)' }}
+            style={{
+              fontFamily: 'var(--font-display, "Space Grotesk", sans-serif)',
+              fontWeight: 800,
+              color: '#fff',
+              fontSize: 'clamp(1.4rem, 4.5vw, 2rem)',
+            }}
           >
             {grid.label}
           </h1>
         </div>
 
         {!grid.available && (
-          <p className="text-center text-white/40 text-sm mb-8">
+          <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.45)', fontSize: 13, marginBottom: 20 }}>
             This grid&apos;s questions haven&apos;t been uploaded yet.
           </p>
         )}
 
-        {/* legend */}
-        <div className="flex flex-wrap justify-center gap-3 mb-8">
+        {/* difficulty legend */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 16, marginBottom: 16 }}>
           {Object.entries(DIFFICULTY_STYLE).map(([diff, style]) => (
-            <div key={diff} className="flex items-center gap-1.5">
+            <div key={diff} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
               <span
-                className="inline-block w-2 h-2 rounded-full"
-                style={{ background: style.accent }}
+                style={{
+                  display: 'inline-block',
+                  width: 8,
+                  height: 8,
+                  borderRadius: '50%',
+                  background: style.accent,
+                }}
               />
-              <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)', letterSpacing: '0.05em' }}>
+              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.05em', fontWeight: 500 }}>
                 {style.label}
               </span>
             </div>
           ))}
         </div>
 
-        <div className="grid grid-cols-4 gap-2.5 md:gap-4">
+        {/* subject column headers */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 8 }}>
+          {SUBJECTS_ORDER.map((s) => (
+            <div key={s} style={{ textAlign: 'center' }}>
+              <p style={{ fontSize: 15, lineHeight: 1, marginBottom: 4 }}>{SUBJECT_ICON[s]}</p>
+              <p
+                style={{
+                  fontSize: 9.5,
+                  color: 'rgba(255,255,255,0.45)',
+                  letterSpacing: '0.02em',
+                  fontWeight: 600,
+                  lineHeight: 1.2,
+                }}
+              >
+                {SUBJECT_SHORT[s]}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* 4x4 board */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
           {grid.boxes.map((box, index) => {
             const style = DIFFICULTY_STYLE[box.difficulty];
             const isRevealed = Boolean(revealed[index]);
@@ -225,37 +280,49 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
                 key={index}
                 onClick={() => handleBoxClick(index)}
                 disabled={disabled}
-                whileHover={!disabled ? { y: -4 } : undefined}
+                whileHover={!disabled ? { y: -3 } : undefined}
                 whileTap={!disabled ? { scale: 0.96 } : undefined}
                 transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-                className="relative aspect-square rounded-xl md:rounded-2xl flex flex-col items-center justify-center overflow-hidden"
+                className={disabled ? '' : 'bs360-box'}
                 style={{
-                  background: isRevealed || isPending ? 'rgba(255,255,255,0.02)' : style.bg,
-                  border: `1px solid ${
-                    isRevealed || isPending ? 'rgba(255,255,255,0.05)' : style.accent + '55'
-                  }`,
-                  boxShadow: !disabled ? `0 0 0 rgba(0,0,0,0)` : 'none',
+                  position: 'relative',
+                  aspectRatio: '1',
+                  borderRadius: 12,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  overflow: 'hidden',
+                  background: isRevealed || isPending ? 'rgba(255,255,255,0.025)' : style.bg,
+                  border: `1px solid ${isRevealed || isPending ? 'rgba(255,255,255,0.06)' : style.accent + '55'}`,
                   cursor: disabled ? (isPending ? 'default' : 'not-allowed') : 'pointer',
-                  opacity: isPending ? 0.35 : 1,
+                  opacity: isPending ? 0.4 : 1,
                 }}
               >
-                {!disabled && (
-                  <div
-                    className="pointer-events-none absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300"
-                    style={{ boxShadow: `0 0 30px -6px ${style.glow}` }}
-                  />
-                )}
-
                 {isLoading && (
-                  <div className="w-5 h-5 rounded-full border-2 border-white/15 border-t-white/60 animate-spin" />
+                  <div
+                    style={{
+                      width: 18,
+                      height: 18,
+                      borderRadius: '50%',
+                      border: '2px solid rgba(255,255,255,0.15)',
+                      borderTopColor: 'rgba(255,255,255,0.65)',
+                      animation: 'bs360-spin 0.7s linear infinite',
+                    }}
+                  />
                 )}
 
                 {!isLoading && isRevealed && (
                   <>
-                    <span style={{ fontSize: '20px', color: 'rgba(255,255,255,0.15)' }}>✕</span>
+                    <span style={{ fontSize: 18, color: 'rgba(255,255,255,0.22)' }}>✕</span>
                     <span
-                      className="mt-1"
-                      style={{ fontSize: '9px', color: 'rgba(255,255,255,0.2)', letterSpacing: '0.1em' }}
+                      style={{
+                        marginTop: 4,
+                        fontSize: 9,
+                        color: 'rgba(255,255,255,0.3)',
+                        letterSpacing: '0.1em',
+                        fontWeight: 600,
+                      }}
                     >
                       USED
                     </span>
@@ -264,15 +331,16 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
 
                 {!isLoading && !isRevealed && (
                   <>
-                    <span style={{ fontSize: 'clamp(16px, 3.2vw, 22px)' }}>
+                    <span style={{ fontSize: 'clamp(15px, 4.2vw, 20px)', lineHeight: 1 }}>
                       {isPending ? '⏳' : SUBJECT_ICON[box.subject]}
                     </span>
                     <span
-                      className="mt-1.5 font-bold"
                       style={{
-                        fontFamily: 'var(--font-display)',
-                        fontSize: 'clamp(13px, 2.6vw, 18px)',
-                        color: isPending ? 'rgba(255,255,255,0.3)' : style.accent,
+                        marginTop: 5,
+                        fontFamily: 'var(--font-display, "Space Grotesk", sans-serif)',
+                        fontWeight: 800,
+                        fontSize: 'clamp(12px, 3.4vw, 16px)',
+                        color: isPending ? 'rgba(255,255,255,0.35)' : style.accent,
                       }}
                     >
                       {isPending ? '—' : box.points}
@@ -283,14 +351,6 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
             );
           })}
         </div>
-
-        <div className="mt-8 grid grid-cols-4 gap-2.5 md:gap-4 text-center">
-          {['Economics', 'Business Studies', 'Accounting', 'General Knowledge'].map((s) => (
-            <p key={s} style={{ fontSize: '10px', color: 'rgba(255,255,255,0.25)', letterSpacing: '0.03em' }}>
-              {SUBJECT_ICON[s]} {s}
-            </p>
-          ))}
-        </div>
       </div>
 
       {/* toast */}
@@ -300,15 +360,25 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50"
+            style={{
+              position: 'fixed',
+              bottom: 24,
+              left: '50%',
+              transform: 'translateX(-50%)',
+              zIndex: 50,
+              maxWidth: '90vw',
+            }}
           >
             <div
-              className="px-5 py-3 rounded-xl text-white/80"
               style={{
-                background: 'rgba(20,20,20,0.95)',
+                padding: '12px 20px',
+                borderRadius: 12,
+                color: 'rgba(255,255,255,0.85)',
+                background: 'rgba(20,20,20,0.96)',
                 border: '1px solid rgba(255,255,255,0.1)',
-                fontSize: '13px',
+                fontSize: 13,
                 backdropFilter: 'blur(10px)',
+                textAlign: 'center',
               }}
             >
               {toast}
@@ -319,13 +389,22 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
 
       {/* question modal */}
       <AnimatePresence>
-        {activeBox && (
+        {activeBox && activeStyle && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center px-4 py-8"
-            style={{ background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(6px)' }}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 50,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '24px 16px',
+              background: 'rgba(0,0,0,0.78)',
+              backdropFilter: 'blur(6px)',
+            }}
             onClick={() => setModalBox(null)}
           >
             <motion.div
@@ -334,60 +413,74 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
               exit={{ opacity: 0, scale: 0.96, y: 8 }}
               transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
               onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-[24px] p-6 md:p-10"
               style={{
+                position: 'relative',
+                width: '100%',
+                maxWidth: 560,
+                maxHeight: '85vh',
+                overflowY: 'auto',
+                borderRadius: 20,
+                padding: '28px 24px',
                 background: '#0a0a0a',
-                border: `1px solid ${DIFFICULTY_STYLE[activeBox.difficulty].accent}55`,
-                boxShadow: `0 0 100px -20px ${DIFFICULTY_STYLE[activeBox.difficulty].glow}`,
+                border: `1px solid ${activeStyle.accent}55`,
+                boxShadow: `0 0 100px -20px ${activeStyle.glow}`,
               }}
             >
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-2.5">
-                  <span style={{ fontSize: '20px' }}>{SUBJECT_ICON[activeBox.subject]}</span>
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 22 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <span style={{ fontSize: 22 }}>{SUBJECT_ICON[activeBox.subject]}</span>
                   <div>
-                    <p className="text-white font-semibold" style={{ fontSize: '14px' }}>
-                      {activeBox.subject}
-                    </p>
-                    <p
-                      style={{
-                        fontSize: '11px',
-                        letterSpacing: '0.1em',
-                        color: DIFFICULTY_STYLE[activeBox.difficulty].accent,
-                      }}
-                    >
-                      {DIFFICULTY_STYLE[activeBox.difficulty].label} · {activeBox.points} PTS
+                    <p style={{ color: '#fff', fontWeight: 700, fontSize: 15 }}>{activeBox.subject}</p>
+                    <p style={{ fontSize: 11, letterSpacing: '0.1em', color: activeStyle.accent, fontWeight: 600 }}>
+                      {activeStyle.label} · {activeBox.points} PTS
                     </p>
                   </div>
                 </div>
                 <button
                   onClick={() => setModalBox(null)}
-                  className="text-white/40 hover:text-white/80 transition-colors"
-                  style={{ fontSize: '22px', lineHeight: 1 }}
+                  className="bs360-close-btn"
+                  style={{
+                    fontSize: 22,
+                    lineHeight: 1,
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    color: 'rgba(255,255,255,0.45)',
+                    padding: 4,
+                  }}
                   aria-label="Close"
                 >
                   ×
                 </button>
               </div>
 
-              <div className="space-y-5">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                 {(['en', 'si', 'ta'] as const).map((lang) => (
                   <div
                     key={lang}
-                    className="rounded-2xl p-4 md:p-5"
-                    style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
+                    style={{
+                      borderRadius: 14,
+                      padding: '16px 18px',
+                      background: 'rgba(255,255,255,0.035)',
+                      border: '1px solid rgba(255,255,255,0.07)',
+                    }}
                   >
                     <span
-                      className="inline-block mb-2 px-2.5 py-1 rounded-full"
                       style={{
-                        fontSize: '10px',
+                        display: 'inline-block',
+                        marginBottom: 8,
+                        padding: '3px 10px',
+                        borderRadius: 999,
+                        fontSize: 10,
                         letterSpacing: '0.1em',
-                        color: DIFFICULTY_STYLE[activeBox.difficulty].accent,
-                        background: DIFFICULTY_STYLE[activeBox.difficulty].bg,
+                        fontWeight: 700,
+                        color: activeStyle.accent,
+                        background: activeStyle.bg,
                       }}
                     >
                       {LANG_LABEL[lang]}
                     </span>
-                    <p className="text-white/85" style={{ fontSize: '14.5px', lineHeight: 1.7, whiteSpace: 'pre-line' }}>
+                    <p style={{ color: 'rgba(255,255,255,0.88)', fontSize: 14.5, lineHeight: 1.7, whiteSpace: 'pre-line' }}>
                       {activeBox.question[lang]}
                     </p>
                   </div>
@@ -396,13 +489,18 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
 
               <button
                 onClick={() => setModalBox(null)}
-                className="w-full mt-7 rounded-xl font-semibold transition-transform active:scale-[0.98]"
+                className="bs360-close-full"
                 style={{
-                  padding: '14px',
-                  background: 'rgba(255,255,255,0.06)',
-                  border: '1px solid rgba(255,255,255,0.1)',
+                  width: '100%',
+                  marginTop: 22,
+                  padding: 14,
+                  borderRadius: 12,
+                  fontWeight: 700,
+                  fontSize: 14,
                   color: '#fff',
-                  fontSize: '14px',
+                  background: 'rgba(255,255,255,0.07)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  cursor: 'pointer',
                 }}
               >
                 Close — mark as used
@@ -411,6 +509,39 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <style>{`
+        @keyframes bs360-spin {
+          to { transform: rotate(360deg); }
+        }
+        .bs360-back-link {
+          color: rgba(255,255,255,0.45);
+          text-decoration: none;
+          transition: color 0.2s;
+        }
+        .bs360-back-link:hover {
+          color: rgba(255,255,255,0.8);
+        }
+        .bs360-reset-link {
+          color: rgba(255,255,255,0.3);
+          transition: color 0.2s;
+        }
+        .bs360-reset-link:hover:not(:disabled) {
+          color: rgba(255,255,255,0.6);
+        }
+        .bs360-box {
+          transition: box-shadow 0.25s ease;
+        }
+        .bs360-box:hover {
+          box-shadow: 0 8px 28px -10px rgba(56,189,248,0.35);
+        }
+        .bs360-close-btn:hover {
+          color: rgba(255,255,255,0.9) !important;
+        }
+        .bs360-close-full:hover {
+          background: rgba(255,255,255,0.11) !important;
+        }
+      `}</style>
     </div>
   );
 }

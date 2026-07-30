@@ -15,69 +15,96 @@ export default async function ClassroomPage({
   }
 
   return (
-    <div className="min-h-screen px-6 py-14 md:py-20 relative overflow-hidden">
+    <div style={{ minHeight: '100vh', position: 'relative', overflow: 'hidden' }}>
       <div
-        className="pointer-events-none fixed inset-0"
         style={{
-          background:
-            'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(56,189,248,0.10), transparent 70%)',
+          pointerEvents: 'none',
+          position: 'fixed',
+          inset: 0,
+          background: 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(56,189,248,0.10), transparent 70%)',
         }}
       />
 
-      <div className="relative max-w-5xl mx-auto">
+      <div style={{ position: 'relative', maxWidth: 780, margin: '0 auto', padding: '48px 24px 64px' }}>
         <Link
           href="/bs360quizgrid"
-          className="inline-flex items-center gap-2 text-white/40 hover:text-white/70 transition-colors mb-10"
-          style={{ fontSize: '13px' }}
+          className="bs360-back-link"
+          style={{ fontSize: 13, display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 36 }}
         >
           ← All classrooms
         </Link>
 
-        <div className="text-center mb-14">
+        <div style={{ textAlign: 'center', marginBottom: 40 }}>
           <p
-            className="uppercase mb-3"
-            style={{ fontSize: '11px', letterSpacing: '0.3em', color: 'rgba(56,189,248,0.7)' }}
+            style={{
+              textTransform: 'uppercase',
+              marginBottom: 8,
+              fontSize: 11,
+              letterSpacing: '0.3em',
+              color: 'rgba(56,189,248,0.75)',
+              fontWeight: 600,
+            }}
           >
             Classroom {String(classroom).padStart(2, '0')}
           </p>
           <h1
-            className="font-bold text-white"
-            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.75rem, 5vw, 3rem)' }}
+            style={{
+              fontFamily: 'var(--font-display, "Space Grotesk", sans-serif)',
+              fontWeight: 800,
+              color: '#fff',
+              fontSize: 'clamp(1.5rem, 4.5vw, 2.2rem)',
+              marginBottom: 10,
+            }}
           >
             Select a Grid
           </h1>
-          <p className="text-white/40 text-sm mt-3">
+          <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 13.5 }}>
             6 grids · 16 questions each · Easy → Super Hard
           </p>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 md:gap-5">
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+            gap: 14,
+          }}
+        >
           {BS360_GRIDS.map((grid) => {
-            const content = (
+            const tile = (
               <div
-                className="relative rounded-[20px] p-6 md:p-8 text-center transition-all duration-300"
-                style={{
-                  background: 'rgba(255,255,255,0.03)',
-                  border: `1px solid ${grid.available ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.04)'}`,
-                  opacity: grid.available ? 1 : 0.5,
-                }}
+                className={grid.available ? 'bs360-tile' : 'bs360-tile bs360-tile-disabled'}
               >
                 <p
-                  className="mb-2"
-                  style={{ fontSize: '11px', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.3)' }}
+                  style={{
+                    marginBottom: 8,
+                    fontSize: 10.5,
+                    letterSpacing: '0.2em',
+                    color: 'rgba(255,255,255,0.35)',
+                    fontWeight: 600,
+                  }}
                 >
                   GRID
                 </p>
                 <p
-                  className="font-bold text-white"
-                  style={{ fontFamily: 'var(--font-display)', fontSize: '2rem' }}
+                  style={{
+                    fontFamily: 'var(--font-display, "Space Grotesk", sans-serif)',
+                    fontWeight: 800,
+                    color: '#fff',
+                    fontSize: '1.7rem',
+                  }}
                 >
                   {String(grid.id).padStart(2, '0')}
                 </p>
                 {!grid.available && (
                   <p
-                    className="mt-2"
-                    style={{ fontSize: '10px', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.3)' }}
+                    style={{
+                      marginTop: 8,
+                      fontSize: 10,
+                      letterSpacing: '0.12em',
+                      color: 'rgba(255,255,255,0.4)',
+                      fontWeight: 600,
+                    }}
                   >
                     COMING SOON
                   </p>
@@ -87,22 +114,57 @@ export default async function ClassroomPage({
 
             if (!grid.available) {
               return (
-                <div key={grid.id} className="cursor-not-allowed select-none">
-                  {content}
+                <div key={grid.id} style={{ cursor: 'not-allowed', userSelect: 'none' }}>
+                  {tile}
                 </div>
               );
             }
 
             return (
-              <Link key={grid.id} href={`/bs360quizgrid/c/${classroom}/g/${grid.id}`} className="group block">
-                <div className="transition-transform duration-300 group-hover:-translate-y-1">
-                  {content}
-                </div>
+              <Link
+                key={grid.id}
+                href={`/bs360quizgrid/c/${classroom}/g/${grid.id}`}
+                style={{ display: 'block', textDecoration: 'none' }}
+              >
+                {tile}
               </Link>
             );
           })}
         </div>
       </div>
+
+      <style>{`
+        .bs360-back-link {
+          color: rgba(255,255,255,0.45);
+          text-decoration: none;
+          transition: color 0.2s;
+        }
+        .bs360-back-link:hover {
+          color: rgba(255,255,255,0.8);
+        }
+        .bs360-tile {
+          position: relative;
+          border-radius: 16px;
+          padding: 22px 14px;
+          text-align: center;
+          background: rgba(255,255,255,0.035);
+          border: 1px solid rgba(255,255,255,0.08);
+          transition: transform 0.25s cubic-bezier(.22,1,.36,1), border-color 0.25s, box-shadow 0.25s;
+        }
+        .bs360-tile:hover {
+          transform: translateY(-4px);
+          border-color: rgba(56,189,248,0.5);
+          box-shadow: 0 10px 40px -12px rgba(56,189,248,0.4);
+        }
+        .bs360-tile-disabled {
+          opacity: 0.45;
+        }
+        .bs360-tile-disabled:hover {
+          transform: none;
+          border-color: rgba(255,255,255,0.08);
+          box-shadow: none;
+        }
+      `}</style>
     </div>
   );
 }
