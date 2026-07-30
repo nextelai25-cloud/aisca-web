@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
+import { Breadcrumbs } from '@/components/ui/Breadcrumbs'
 
 interface Post {
   id: string
@@ -104,9 +105,11 @@ export default function IdeaNetPage() {
     for (const file of files) {
       const fd = new FormData()
       fd.append('file', file)
+      if (member) fd.append('membership_number', member.membership_number)
       const res = await fetch('/api/ideanet/upload', { method: 'POST', body: fd })
       const data = await res.json()
       if (data.url) setPostImages(prev => [...prev, data.url])
+      else if (data.error) setFormError(data.error)
     }
     setUploadingImg(false)
   }
@@ -284,23 +287,7 @@ export default function IdeaNetPage() {
           
           {/* Return to Home link */}
           <div style={{ marginBottom: '20px' }}>
-            <Link 
-              href="/" 
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                color: 'rgba(255, 255, 255, 0.45)',
-                fontSize: '13px',
-                textDecoration: 'none',
-                fontWeight: '500',
-                transition: 'color 0.2s ease'
-              }}
-              onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = '#ffffff'}
-              onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = 'rgba(255, 255, 255, 0.45)'}
-            >
-              ← Return to Website Home
-            </Link>
+            <Breadcrumbs items={[{ label: 'IdeaNet' }]} />
           </div>
 
           <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>

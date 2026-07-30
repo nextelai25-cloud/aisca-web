@@ -1,11 +1,13 @@
 export const NAV_LINKS = [
-  { label: 'Home', href: '#hero' },
+  { label: 'Home', href: '/' },
   { label: 'About', href: '/about' },
-  { label: 'Products', href: '#products' },
-  { label: 'Officials', href: '#board' },
-  { label: 'Gallery', href: '#gallery' },
+  { label: 'Officials', href: '/officials' },
+  { label: 'Events', href: '/events' },
+  { label: 'Products', href: '/#products' },
   { label: 'IdeaNet', href: '/ideanet' },
+  { label: 'Contact', href: '/contact' },
 ] as const;
+
 
 export const STATS = [
   {
@@ -174,7 +176,7 @@ export const SOCIAL_LINKS = [
   { platform: 'WhatsApp', url: 'https://whatsapp.com/channel/0029Vak5dvg4IBhIrk1DsK3i', icon: 'whatsapp' },
 ] as const;
 
-export const WHATSAPP_NUMBER = '94XXXXXXXXXX'; // Replace with actual AISCA WhatsApp number
+export const WHATSAPP_NUMBER = '94778132137'; // Official AISCA WhatsApp number
 
 export const CHAIRMAN = {
   name: 'Isira Chirayu',

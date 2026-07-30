@@ -40,8 +40,14 @@ export async function sendWelcomeEmail({
     }
   }
 
+  // Use the configured sender; falls back to noreply@aisca.lk (domain must be
+  // verified in the Resend dashboard, otherwise sends will fail).
+  const fromAddress = process.env.RESEND_FROM_EMAIL && !process.env.RESEND_FROM_EMAIL.includes('resend.dev')
+    ? `AISCA <${process.env.RESEND_FROM_EMAIL}>`
+    : 'AISCA <noreply@aisca.lk>'
+
   const { data, error } = await resend.emails.send({
-    from: 'AISCA <noreply@aisca.lk>',
+    from: fromAddress,
     to,
     subject: `Welcome to AISCA, ${name}. Your Membership Card is Ready`,
     attachments,
@@ -56,9 +62,8 @@ export async function sendWelcomeEmail({
 
   <!-- HEADER -->
   <tr>
-    <td align="center" style="background:#ffffff;padding:28px 40px;border-bottom:3px solid #000000;">
-      <img src="https://aisca.lk/aisca-logo.webp" alt="AISCA" width="90" height="90" style="display:block;margin:0 auto;width:90px;height:90px;object-fit:contain;" />
-      <p style="margin:10px 0 0;font-size:9px;letter-spacing:0.18em;color:#888888;text-transform:uppercase;font-family:Arial,sans-serif;">All Island Schools Commerce Association</p>
+    <td align="center" style="background:#0a0a0a;padding:36px 40px;border-bottom:3px solid #d4ad35;">
+      <img src="https://aisca.lk/aisca-email-logo.png" alt="AISCA — All Island Schools Commerce Association" width="240" style="display:block;margin:0 auto;max-width:240px;width:100%;height:auto;color:#ffffff;font-size:22px;font-weight:700;font-family:Arial,sans-serif;" />
     </td>
   </tr>
 

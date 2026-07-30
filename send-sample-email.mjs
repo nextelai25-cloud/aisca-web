@@ -5,7 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const resend = new Resend('re_5h5TkAhv_E2ZLiikHZrgWUA4fhzPpn1dT');
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // ── Sample member data ──────────────────────────────────────
 const member = {

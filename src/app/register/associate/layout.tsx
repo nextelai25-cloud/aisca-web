@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Become an Associate Member',
-  description: 'Join AISCA as an Individual Associate Member. Connect with 2,000+ commerce students across Sri Lanka. Register now.',
+  title: 'Become an Associate Member | AISCA',
+  description: 'Register as an individual Associate Member. Connect with 2,000+ commerce students across Sri Lanka\'s 25 educational districts.',
   alternates: { canonical: 'https://aisca.lk/register/associate' }
 }
 

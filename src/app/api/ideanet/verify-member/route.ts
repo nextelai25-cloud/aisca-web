@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
+import { rateLimit } from '@/lib/validate'
 
 export async function POST(req: NextRequest) {
+  if (!rateLimit(req, 'verify-member', 15, 10 * 60 * 1000)) {
+    return NextResponse.json({ error: 'Too many attempts. Please try again later.' }, { status: 429 })
+  }
+
   const { digits } = await req.json()
-  if (!digits || digits.length !== 5) {
+  if (typeof digits !== 'string' || !/^\d{5}$/.test(digits)) {
     return NextResponse.json({ error: 'Enter exactly 5 digits' }, { status: 400 })
   }
 

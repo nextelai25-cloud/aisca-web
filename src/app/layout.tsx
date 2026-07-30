@@ -6,10 +6,10 @@ import AnalyticsTracker from '@/components/AnalyticsTracker';
 export const metadata: Metadata = {
   metadataBase: new URL('https://aisca.lk'),
   title: {
-    default: 'AISCA | All Island Schools Commerce Association Sri Lanka',
+    default: 'AISCA | All Island Schools Commerce Association',
     template: '%s | AISCA'
   },
-  description: 'AISCA — All Island Schools Commerce Association. Sri Lanka\'s largest student-led commerce network uniting 2,000+ students across 25 educational districts. Join the islandwide movement.',
+  description: 'AISCA connects 2,000+ commerce students across 80+ schools and all 25 educational districts of Sri Lanka through leadership, education, networking and national initiatives.',
   keywords: [
     'AISCA',
     'All Island Schools Commerce Association',
@@ -40,8 +40,8 @@ export const metadata: Metadata = {
     locale: 'en_LK',
     url: 'https://aisca.lk',
     siteName: 'AISCA | All Island Schools Commerce Association',
-    title: 'AISCA | All Island Schools Commerce Association Sri Lanka',
-    description: 'Sri Lanka\'s largest student-led commerce network. Uniting 2,000+ commerce students across all 25 educational districts. Join AISCA today.',
+    title: 'AISCA | All Island Schools Commerce Association',
+    description: 'AISCA connects 2,000+ commerce students across 80+ schools and all 25 educational districts of Sri Lanka through leadership, education, networking and national initiatives.',
     images: [
       {
         url: 'https://aisca.lk/og-image.png',
@@ -56,8 +56,8 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@aisca.lk',
     creator: '@aisca.lk',
-    title: 'AISCA | All Island Schools Commerce Association Sri Lanka',
-    description: 'Sri Lanka\'s largest student-led commerce network. 2,000+ students. 80+ schools. Join AISCA.',
+    title: 'AISCA | All Island Schools Commerce Association',
+    description: 'AISCA connects 2,000+ commerce students across 80+ schools and all 25 educational districts of Sri Lanka through leadership, education, networking and national initiatives.',
     images: ['https://aisca.lk/og-image.png']
   },
   robots: {
@@ -74,7 +74,9 @@ export const metadata: Metadata = {
     }
   },
   alternates: {
-    canonical: 'https://aisca.lk'
+    // './' resolves against metadataBase per-page, so every page gets its own
+    // correct canonical URL instead of all pages pointing at the homepage.
+    canonical: './'
   },
   category: 'education',
   icons: {
@@ -120,8 +122,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     "width": 512,
                     "height": 512
                   },
-                  "description": "Sri Lanka's largest student-led commerce network uniting 2,000+ students across all 25 educational districts. Founded to connect school commerce societies islandwide.",
+                  "description": "AISCA connects 2,000+ commerce students across 80+ schools and all 25 educational districts of Sri Lanka through leadership, education, networking and national initiatives.",
                   "foundingDate": "2024",
+                  "founder": {
+                    "@type": "Person",
+                    "name": "Isira Chirayu"
+                  },
                   "foundingLocation": {
                     "@type": "Place",
                     "name": "Colombo, Sri Lanka"
@@ -145,7 +151,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     {
                       "@type": "ContactPoint",
                       "contactType": "customer support",
-                      "url": "https://aisca.lk/#contact",
+                      "url": "https://aisca.lk/contact",
                       "areaServed": "LK"
                     }
                   ]
@@ -155,7 +161,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   "@id": "https://aisca.lk/#website",
                   "url": "https://aisca.lk",
                   "name": "AISCA | All Island Schools Commerce Association",
-                  "description": "Sri Lanka's largest student-led commerce network",
+                  "description": "All Island Schools Commerce Association Sri Lanka",
                   "publisher": { "@id": "https://aisca.lk/#organization" },
                   "potentialAction": {
                     "@type": "SearchAction",
@@ -170,18 +176,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   "@type": "WebPage",
                   "@id": "https://aisca.lk/#webpage",
                   "url": "https://aisca.lk",
-                  "name": "AISCA | All Island Schools Commerce Association Sri Lanka",
+                  "name": "AISCA | All Island Schools Commerce Association",
                   "isPartOf": { "@id": "https://aisca.lk/#website" },
                   "about": { "@id": "https://aisca.lk/#organization" },
-                  "description": "Join AISCA — Sri Lanka's largest student commerce network. 2,000+ students. 80+ schools. All 25 educational districts.",
+                  "description": "AISCA connects 2,000+ commerce students across 80+ schools and all 25 educational districts of Sri Lanka.",
                   "breadcrumb": {
                     "@type": "BreadcrumbList",
                     "itemListElement": [
                       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aisca.lk" },
-                      { "@type": "ListItem", "position": 2, "name": "Join AISCA", "item": "https://aisca.lk/register/associate" },
-                      { "@type": "ListItem", "position": 3, "name": "Register School", "item": "https://aisca.lk/register/school" },
-                      { "@type": "ListItem", "position": 4, "name": "Products", "item": "https://aisca.lk/products/tshirt" },
-                      { "@type": "ListItem", "position": 5, "name": "Contact", "item": "https://aisca.lk/#contact" }
+                      { "@type": "ListItem", "position": 2, "name": "About", "item": "https://aisca.lk/about" },
+                      { "@type": "ListItem", "position": 3, "name": "Officials", "item": "https://aisca.lk/officials" },
+                      { "@type": "ListItem", "position": 4, "name": "Events", "item": "https://aisca.lk/events" },
+                      { "@type": "ListItem", "position": 5, "name": "Join", "item": "https://aisca.lk/join" },
+                      { "@type": "ListItem", "position": 6, "name": "IdeaNet", "item": "https://aisca.lk/ideanet" },
+                      { "@type": "ListItem", "position": 7, "name": "Contact", "item": "https://aisca.lk/contact" }
                     ]
                   }
                 },
@@ -196,6 +204,104 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     "@type": "PostalAddress",
                     "addressLocality": "Colombo",
                     "addressCountry": "LK"
+                  }
+                },
+                {
+                  "@type": "FAQPage",
+                  "@id": "https://aisca.lk/#faq",
+                  "isPartOf": { "@id": "https://aisca.lk/#website" },
+                  "mainEntity": [
+                    {
+                      "@type": "Question",
+                      "name": "What is AISCA?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "The All Island Schools Commerce Association (AISCA) is Sri Lanka's largest commerce network, connecting 2,000+ commerce students across 80+ schools in all 25 educational districts through leadership, education, networking, and national initiatives."
+                      }
+                    },
+                    {
+                      "@type": "Question",
+                      "name": "Who can join AISCA?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Any school student studying commerce subjects (Accounting, Business Studies, Economics) or interested in entrepreneurship and leadership in Sri Lanka can join AISCA as an Individual Associate Member."
+                      }
+                    },
+                    {
+                      "@type": "Question",
+                      "name": "How do schools register with AISCA?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "School commerce societies can affiliate with AISCA by submitting their details through the School Registry form at https://aisca.lk/register/school to participate in national commerce challenges and events."
+                      }
+                    },
+                    {
+                      "@type": "Question",
+                      "name": "Is AISCA free to join?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes, standard individual associate membership and school affiliation are free of charge. AISCA is committed to making commerce education and youth leadership resources accessible to all students across Sri Lanka."
+                      }
+                    },
+                    {
+                      "@type": "Question",
+                      "name": "How many schools are connected to AISCA?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "AISCA currently connects over 80 schools across all 25 educational districts in Sri Lanka, creating an islandwide community for peer learning and collaboration."
+                      }
+                    }
+                  ]
+                },
+                {
+                  "@type": "Event",
+                  "@id": "https://aisca.lk/events/#economics-day-2026",
+                  "name": "AISCA Free Seminar Series - Economics Day",
+                  "startDate": "2026-06-06T09:00:00+05:30",
+                  "endDate": "2026-06-06T15:00:00+05:30",
+                  "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+                  "eventStatus": "https://schema.org/EventScheduled",
+                  "location": {
+                    "@type": "Place",
+                    "name": "AICPA & CIMA Auditorium",
+                    "address": {
+                      "@type": "PostalAddress",
+                      "streetAddress": "Colombo 05",
+                      "addressLocality": "Colombo",
+                      "addressCountry": "LK"
+                    }
+                  },
+                  "image": [
+                    "https://aisca.lk/events/seminar/main-image.webp"
+                  ],
+                  "description": "Educational outreach seminar delivering key insights in economics to 150+ students with Prof. Gamini Weerasinghe.",
+                  "organizer": {
+                    "@id": "https://aisca.lk/#organization"
+                  }
+                },
+                {
+                  "@type": "Event",
+                  "@id": "https://aisca.lk/events/#legacy-night-2026",
+                  "name": "Legacy Night 2026",
+                  "startDate": "2026-04-25T18:00:00+05:30",
+                  "endDate": "2026-04-25T23:30:00+05:30",
+                  "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+                  "eventStatus": "https://schema.org/EventScheduled",
+                  "location": {
+                    "@type": "Place",
+                    "name": "Colombo",
+                    "address": {
+                      "@type": "PostalAddress",
+                      "addressLocality": "Colombo",
+                      "addressCountry": "LK"
+                    }
+                  },
+                  "image": [
+                    "https://aisca.lk/events/legacy26/WhatsApp Image 2026-05-20 at 13.58.44.webp"
+                  ],
+                  "description": "AISCA Signature annual social gathering for commerce society members and leadership associates.",
+                  "organizer": {
+                    "@id": "https://aisca.lk/#organization"
                   }
                 }
               ]

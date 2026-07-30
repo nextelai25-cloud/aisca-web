@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { Container } from '@/components/layout/Container';
+import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import dynamic from 'next/dynamic';
 
 const SmoothScrollProvider = dynamic(() => import('@/providers/SmoothScrollProvider'), { ssr: false });
@@ -272,6 +273,7 @@ export default function SchoolRegisterPage() {
         </div>
 
         <Container className="relative z-10 py-12">
+          <Breadcrumbs items={[{ label: 'Join', href: '/join' }, { label: 'School Affiliation' }]} className="mb-8 justify-center" />
           <div style={{ textAlign: 'center', marginBottom: '40px' }}>
             <span className="section-eyebrow">National Onboarding</span>
             <h1 className="section-title" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: '800', textTransform: 'uppercase', marginBottom: '16px' }}>Register Your School</h1>

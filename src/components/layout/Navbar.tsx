@@ -16,14 +16,15 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const nav = (href: string) => { 
-    setOpen(false); 
-    if (href.startsWith('/')) {
-      window.location.href = href;
-    } else if (window.location.pathname === '/') {
-      document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' }); 
-    } else {
-      window.location.href = '/' + href;
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    setOpen(false);
+    if (href.startsWith('/#') && window.location.pathname === '/') {
+      e.preventDefault();
+      const targetId = href.split('#')[1];
+      const targetEl = document.getElementById(targetId);
+      if (targetEl) {
+        targetEl.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
   
@@ -56,9 +57,10 @@ export default function Navbar() {
             {/* Desktop Navigation Links */}
             <div className="desktop-nav hidden lg:flex items-center gap-2">
               {NAV_LINKS.map(l => (
-                <button 
+                <a 
                   key={l.href} 
-                  onClick={() => nav(l.href)}
+                  href={l.href}
+                  onClick={(e) => handleNavClick(e, l.href)}
                   className="nav-link"
                   style={{
                     padding: '8px 16px',
@@ -70,11 +72,13 @@ export default function Navbar() {
                     background: 'transparent',
                     border: 'none',
                     cursor: 'pointer',
-                    transition: 'color 0.2s ease'
+                    transition: 'color 0.2s ease',
+                    textDecoration: 'none',
+                    display: 'inline-block'
                   }}
                 >
                   {l.label}
-                </button>
+                </a>
               ))}
             </div>
 
@@ -128,17 +132,19 @@ export default function Navbar() {
           >
             <div className="flex flex-col items-center justify-center flex-1 gap-8 px-8">
               {NAV_LINKS.map((l, i) => (
-                <motion.button 
+                <motion.a 
                   key={l.href} 
-                  onClick={() => nav(l.href)}
+                  href={l.href}
+                  onClick={(e) => handleNavClick(e, l.href)}
                   className="text-3xl text-zinc-400 hover:text-white transition-colors font-display font-bold tracking-tight cursor-pointer"
                   initial={{ opacity: 0, y: 20 }} 
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
                   transition={{ delay: i * 0.06, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                  style={{ textDecoration: 'none' }}
                 >
                   {l.label}
-                </motion.button>
+                </motion.a>
               ))}
               
               <motion.div

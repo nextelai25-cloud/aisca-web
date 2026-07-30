@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
+import { optStr, rateLimit } from '@/lib/validate'
 
 export async function POST(req: NextRequest) {
   try {
+    if (!rateLimit(req, 'analytics', 60, 10 * 60 * 1000)) {
+      return NextResponse.json({ success: true }) // silently drop
+    }
+
     const body = await req.json()
     
     // Attempt to extract geo-headers if deployed on a cloud provider like Vercel
@@ -13,13 +18,13 @@ export async function POST(req: NextRequest) {
     const city = vercelCity || body.city || null
     
     const { error } = await supabaseAdmin.from('site_analytics').insert([{
-      page: body.page,
-      referrer: body.referrer || null,
-      device: body.device,
-      browser: body.browser,
-      session_id: body.session_id,
-      country: country,
-      city: city
+      page: optStr(body.page, 200),
+      referrer: optStr(body.referrer, 500) || null,
+      device: optStr(body.device, 20),
+      browser: optStr(body.browser, 40),
+      session_id: optStr(body.session_id, 40),
+      country: country ? String(country).slice(0, 60) : null,
+      city: city ? String(city).slice(0, 60) : null
     }])
     
     if (error) {

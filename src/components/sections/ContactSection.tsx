@@ -99,10 +99,10 @@ export default function ContactSection() {
 
   const socialLinks = [
     { label: 'info@aisca.lk', href: 'mailto:info@aisca.lk', icon: Mail },
-    { label: '@aisca.lk', href: 'https://instagram.com/aisca.lk', icon: InstagramIcon },
-    { label: 'All Island Schools Commerce Association', href: 'https://facebook.com', icon: FacebookIcon },
-    { label: 'AISCA', href: 'https://linkedin.com', icon: LinkedinIcon },
-    { label: 'Join WhatsApp Channel', href: 'https://whatsapp.com/channel/0029VaF37f5F1t2e3456789', icon: MessageSquare, isAccent: true }
+    { label: '@aisca.lk', href: 'https://www.instagram.com/aisca.lk/', icon: InstagramIcon },
+    { label: 'All Island Schools Commerce Association', href: 'https://web.facebook.com/profile.php?id=61586432106049', icon: FacebookIcon },
+    { label: 'AISCA', href: 'https://www.linkedin.com/company/all-island-schools-commerce-association-aisca/', icon: LinkedinIcon },
+    { label: 'Join WhatsApp Channel', href: 'https://whatsapp.com/channel/0029Vak5dvg4IBhIrk1DsK3i', icon: MessageSquare, isAccent: true }
   ]
 
   return (

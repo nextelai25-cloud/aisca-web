@@ -2,10 +2,11 @@ import React from 'react'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import ScrollWrapper from '@/providers/ScrollWrapper'
+import { Breadcrumbs } from '@/components/ui/Breadcrumbs'
 
 export const metadata = {
   title: 'About AISCA | All Island Schools Commerce Association',
-  description: 'Learn about AISCA — founded to unite Sri Lanka\'s school commerce students across all 25 educational districts. Our mission, vision, and board of officials.',
+  description: 'Founded in 2024, AISCA is a student-led commerce network connecting 2,000+ students across 80+ schools in all 25 districts of Sri Lanka through education and leadership.',
   alternates: { canonical: 'https://aisca.lk/about' }
 }
 
@@ -15,9 +16,11 @@ export default function AboutPage() {
       <Navbar />
       <main style={{ paddingTop: '100px', minHeight: '100vh', background: '#080808' }}>
         <section style={{ maxWidth: '900px', margin: '0 auto', padding: '80px 40px' }}>
+          <Breadcrumbs items={[{ label: 'About' }]} className="mb-8" />
           <h1 style={{ fontSize: '3rem', fontWeight: '800', color: '#fff', marginBottom: '24px' }}>
             About AISCA
           </h1>
+
           <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.6)', lineHeight: '1.8', marginBottom: '32px' }}>
             The All Island Schools Commerce Association (AISCA) is Sri Lanka's largest student-led commerce network, 
             uniting over 2,000 commerce students across all 25 educational districts.

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
+import { verifyApprovedMember } from '@/lib/member'
+import { rateLimit } from '@/lib/validate'
 
 function calcHotScore(upvotes: number, downvotes: number, createdAt: string): number {
   const score = upvotes - downvotes
@@ -10,7 +12,23 @@ function calcHotScore(upvotes: number, downvotes: number, createdAt: string): nu
 }
 
 export async function POST(req: NextRequest) {
-  const { post_id, membership_number, vote_type } = await req.json()
+  if (!rateLimit(req, 'ideanet-vote', 60, 60 * 60 * 1000)) {
+    return NextResponse.json({ error: 'Too many votes. Please try again later.' }, { status: 429 })
+  }
+
+  const body = await req.json()
+  const { post_id, vote_type } = body
+
+  if (vote_type !== 'up' && vote_type !== 'down') {
+    return NextResponse.json({ error: 'Invalid vote type' }, { status: 400 })
+  }
+
+  // ── Verify membership server-side ──
+  const member = await verifyApprovedMember(body.membership_number)
+  if (!member) {
+    return NextResponse.json({ error: 'Invalid or unapproved membership number' }, { status: 403 })
+  }
+  const membership_number = member.membership_number
 
   // Check existing vote
   const { data: existing } = await supabaseAdmin

@@ -38,15 +38,7 @@ export default function Footer() {
     }
   };
 
-  const nav = (href: string) => {
-    if (href.startsWith('/')) {
-      window.location.href = href;
-    } else if (window.location.pathname === '/') {
-      document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      window.location.href = '/' + href;
-    }
-  };
+
 
   return (
     <footer id="social" className="footer-section relative bg-[#050505] pb-20 border-t border-white/[0.04] overflow-hidden" style={{ paddingTop: '120px' }}>
@@ -112,9 +104,9 @@ export default function Footer() {
             }}>Navigation</h4>
             <div className="flex flex-col">
               {NAV_LINKS.map(l => (
-                <button
+                <a
                   key={l.href}
-                  onClick={() => nav(l.href)}
+                  href={l.href}
                   style={{
                     fontSize: '14px',
                     color: 'rgba(255,255,255,0.50)',
@@ -122,13 +114,12 @@ export default function Footer() {
                     lineHeight: '2.2',
                     display: 'block',
                     textAlign: 'left',
-                    background: 'transparent',
-                    border: 'none',
+                    textDecoration: 'none',
                     cursor: 'pointer'
                   }}
                 >
                   {l.label}
-                </button>
+                </a>
               ))}
             </div>
           </div>
@@ -147,9 +138,9 @@ export default function Footer() {
               {[
                 { label: 'Associate Registry', href: '/register/associate' },
                 { label: 'School Registry', href: '/register/school' },
-                { label: 'Merchandise Dispatch', href: '/#products' },
-                { label: 'Executive Directorate', href: '/#board' },
-                { label: 'Impact Archives', href: '/#gallery' },
+                { label: 'Join Gateway', href: '/join' },
+                { label: 'Executive Directorate', href: '/officials' },
+                { label: 'Impact Archives', href: '/events' },
               ].map(t => (
                 <a
                   key={t.label}
