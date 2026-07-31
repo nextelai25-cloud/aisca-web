@@ -19,11 +19,11 @@ const DIFFICULTY_STYLE: Record<
 
 const SUBJECTS_ORDER = ['Economics', 'Business Studies', 'Accounting', 'General Knowledge'] as const;
 
-const SUBJECT_ICON: Record<string, string> = {
-  Economics: '📈',
-  'Business Studies': '💼',
-  Accounting: '📊',
-  'General Knowledge': '🧠',
+const SUBJECT_CODE: Record<string, string> = {
+  Economics: 'EC',
+  'Business Studies': 'BU',
+  Accounting: 'AC',
+  'General Knowledge': 'GK',
 };
 
 const SUBJECT_SHORT: Record<string, string> = {
@@ -162,7 +162,7 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
     <div style={{ minHeight: '100vh', position: 'relative' }}>
       <Bs360Background />
 
-      <div style={{ position: 'relative', maxWidth: 640, margin: '0 auto', padding: '24px 16px 48px' }}>
+      <div style={{ position: 'relative', maxWidth: 780, margin: '0 auto', padding: '24px 16px 48px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 22 }}>
           <Link href={`/bs360quizgrid/c/${classroom}`} className="bs360-back-link" style={{ fontSize: 13 }}>
             ← Grid list
@@ -251,10 +251,29 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
         </div>
 
         {/* subject column headers */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 10 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 12 }}>
           {SUBJECTS_ORDER.map((s) => (
             <div key={s} style={{ textAlign: 'center' }}>
-              <p style={{ fontSize: 16, lineHeight: 1, marginBottom: 5 }}>{SUBJECT_ICON[s]}</p>
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 30,
+                  height: 30,
+                  borderRadius: 9,
+                  marginBottom: 6,
+                  background: 'rgba(255,255,255,0.06)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  fontFamily: 'var(--font-display, "Space Grotesk", sans-serif)',
+                  fontWeight: 800,
+                  fontSize: 11,
+                  color: 'rgba(255,255,255,0.7)',
+                  letterSpacing: '0.02em',
+                }}
+              >
+                {SUBJECT_CODE[s]}
+              </div>
               <p
                 style={{
                   fontSize: 9.5,
@@ -271,7 +290,7 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
         </div>
 
         {/* 4x4 board */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 9 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14 }}>
           {grid.boxes.map((box, index) => {
             const style = DIFFICULTY_STYLE[box.difficulty];
             const isRevealed = Boolean(revealed[index]);
@@ -287,13 +306,13 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
                 initial={{ opacity: 0, y: 10, scale: 0.94 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 0.35, delay: index * 0.018, ease: [0.22, 1, 0.36, 1] }}
-                whileHover={!disabled ? { y: -4, scale: 1.02 } : undefined}
+                whileHover={!disabled ? { y: -5, scale: 1.03 } : undefined}
                 whileTap={!disabled ? { scale: 0.95 } : undefined}
                 className={disabled ? 'bs360-box' : 'bs360-box bs360-box-live'}
                 style={{
                   position: 'relative',
                   aspectRatio: '1',
-                  borderRadius: 14,
+                  borderRadius: 16,
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
@@ -302,19 +321,18 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
                   background:
                     isRevealed || isPending
                       ? 'rgba(255,255,255,0.025)'
-                      : 'linear-gradient(160deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015))',
-                  border: `1px solid ${isRevealed || isPending ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.08)'}`,
-                  borderLeft: `3px solid ${isRevealed || isPending ? 'rgba(255,255,255,0.08)' : style.accent}`,
+                      : `linear-gradient(155deg, ${style.accent}4D, ${style.accent}14)`,
+                  border: `1.5px solid ${isRevealed || isPending ? 'rgba(255,255,255,0.06)' : style.accent + 'aa'}`,
                   cursor: disabled ? (isPending ? 'default' : 'not-allowed') : 'pointer',
                   opacity: isPending ? 0.4 : 1,
-                  boxShadow: disabled ? 'none' : '0 10px 26px -16px rgba(0,0,0,0.7)',
+                  boxShadow: disabled ? 'none' : `0 12px 30px -14px ${style.glow}`,
                 }}
               >
                 {isLoading && (
                   <div
                     style={{
-                      width: 18,
-                      height: 18,
+                      width: 20,
+                      height: 20,
                       borderRadius: '50%',
                       border: '2px solid rgba(255,255,255,0.15)',
                       borderTopColor: 'rgba(255,255,255,0.65)',
@@ -325,11 +343,11 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
 
                 {!isLoading && isRevealed && (
                   <>
-                    <span style={{ fontSize: 17, color: 'rgba(255,255,255,0.22)' }}>✕</span>
+                    <span style={{ fontSize: 19, color: 'rgba(255,255,255,0.22)' }}>✕</span>
                     <span
                       style={{
-                        marginTop: 4,
-                        fontSize: 8.5,
+                        marginTop: 5,
+                        fontSize: 9,
                         color: 'rgba(255,255,255,0.3)',
                         letterSpacing: '0.1em',
                         fontWeight: 600,
@@ -342,19 +360,28 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
 
                 {!isLoading && !isRevealed && (
                   <>
-                    <span style={{ fontSize: 'clamp(15px, 4vw, 19px)', lineHeight: 1 }}>
-                      {isPending ? '⏳' : SUBJECT_ICON[box.subject]}
+                    <span
+                      style={{
+                        fontFamily: 'var(--font-display, "Space Grotesk", sans-serif)',
+                        fontWeight: 800,
+                        fontSize: 'clamp(15px, 3.6vw, 19px)',
+                        lineHeight: 1,
+                        color: isPending ? 'rgba(255,255,255,0.35)' : '#fff',
+                        textShadow: isPending ? 'none' : '0 2px 10px rgba(0,0,0,0.35)',
+                      }}
+                    >
+                      {isPending ? '···' : SUBJECT_CODE[box.subject]}
                     </span>
                     <span
                       style={{
-                        marginTop: 6,
-                        padding: '2px 9px',
+                        marginTop: 8,
+                        padding: '3px 11px',
                         borderRadius: 999,
-                        background: isPending ? 'rgba(255,255,255,0.05)' : style.bg,
+                        background: isPending ? 'rgba(255,255,255,0.05)' : 'rgba(5,5,10,0.45)',
                         fontFamily: 'var(--font-display, "Space Grotesk", sans-serif)',
                         fontWeight: 800,
-                        fontSize: 'clamp(11px, 3vw, 13px)',
-                        color: isPending ? 'rgba(255,255,255,0.35)' : style.accent,
+                        fontSize: 'clamp(12px, 3vw, 14px)',
+                        color: isPending ? 'rgba(255,255,255,0.35)' : '#fff',
                       }}
                     >
                       {isPending ? '—' : box.points}
@@ -463,12 +490,15 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      fontSize: 20,
+                      fontFamily: 'var(--font-display, "Space Grotesk", sans-serif)',
+                      fontWeight: 800,
+                      fontSize: 14,
+                      color: activeStyle.accent,
                       background: activeStyle.bg,
                       border: `1px solid ${activeStyle.accent}33`,
                     }}
                   >
-                    {SUBJECT_ICON[activeBox.subject]}
+                    {SUBJECT_CODE[activeBox.subject]}
                   </div>
                   <div>
                     <p style={{ color: '#fff', fontWeight: 700, fontSize: 15 }}>{activeBox.subject}</p>
