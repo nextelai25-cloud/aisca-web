@@ -64,6 +64,7 @@ interface Props {
 
 export default function QuizBoardClient({ classroom, grid }: Props) {
   const allTeams = teamsForClassroom(classroom);
+  const isDemo = grid.demo === true; // practice grid: fully local, never scored
 
   function getKey(): string {
     try {
@@ -118,10 +119,14 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
   }, [classroom, grid.id]);
 
   useEffect(() => {
+    if (isDemo) {
+      setMatchLoaded(true); // demo is local-only — no server state to load
+      return;
+    }
     fetchState();
     const interval = setInterval(fetchState, POLL_MS);
     return () => clearInterval(interval);
-  }, [fetchState]);
+  }, [fetchState, isDemo]);
 
   function toggleTeam(team: string) {
     setSelected((prev) => {
@@ -133,6 +138,10 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
 
   async function confirmTeams() {
     if (selected.length !== 2 || savingTeams) return;
+    if (isDemo) {
+      setMatch({ teamA: selected[0], teamB: selected[1], winner: null });
+      return;
+    }
     setSavingTeams(true);
     try {
       const key = getKey();
@@ -171,6 +180,11 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
 
   async function revealWithTeam(index: number, team: string) {
     setPickBox(null);
+    if (isDemo) {
+      setRevealed((prev) => ({ ...prev, [index]: { revealedAt: new Date().toISOString(), team } }));
+      setModalBox(index);
+      return;
+    }
     setLoadingBox(index);
     try {
       const key = getKey();
@@ -208,6 +222,12 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
 
   async function chooseWinner(team: string) {
     if (savingWinner) return;
+    if (isDemo) {
+      setMatch((prev) => (prev ? { ...prev, winner: team } : prev));
+      setWinnerOpen(false);
+      showToast(team === 'DRAW' ? 'Draw recorded (demo).' : `Winner recorded (demo): ${team}`);
+      return;
+    }
     setSavingWinner(true);
     try {
       const key = getKey();
@@ -239,6 +259,14 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
       `Reset Classroom ${classroom} · Grid ${String(grid.id).padStart(2, '0')}?\nThis clears all boxes, the teams and the winner. Testing only.`
     );
     if (!ok) return;
+
+    if (isDemo) {
+      setRevealed({});
+      setMatch(null);
+      setSelected([]);
+      showToast('Demo reset.');
+      return;
+    }
 
     setResetting(true);
     try {
@@ -466,6 +494,25 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
             {grid.label}
           </h1>
         </motion.div>
+
+        {isDemo && (
+          <div
+            style={{
+              textAlign: 'center',
+              margin: '0 auto 16px',
+              maxWidth: 460,
+              padding: '10px 16px',
+              borderRadius: 12,
+              background: 'linear-gradient(180deg, rgba(56,189,248,0.14), rgba(56,189,248,0.04))',
+              border: '1px solid rgba(56,189,248,0.35)',
+              color: '#7dd3fc',
+              fontSize: 12.5,
+              fontWeight: 600,
+            }}
+          >
+            Practice grid — try the flow freely. Nothing here is saved or counted on the scoreboard.
+          </div>
+        )}
 
         {/* match header — Team A vs Team B */}
         {match && (
@@ -910,7 +957,7 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
                 🏆 Result of {grid.label}
               </p>
               <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.45)', fontSize: 12.5, marginBottom: 22 }}>
-                Win = 1 point · Draw = 0.5 each. Recorded on the live scoreboard.
+                Win = 2 points · Draw = 1 each. Recorded on the live scoreboard.
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {[

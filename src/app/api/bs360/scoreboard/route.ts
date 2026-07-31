@@ -13,6 +13,7 @@ export async function GET() {
   const { data: matches, error } = await supabaseAdmin
     .from('bs360_matches')
     .select('classroom, grid, team_a, team_b, winner')
+    .gt('grid', 0) // never count the demo grid (grid 0)
     .order('classroom', { ascending: true })
     .order('grid', { ascending: true })
 
@@ -38,12 +39,12 @@ export async function GET() {
       const decided = rows.filter((m) => m.winner)
       for (const m of decided) {
         if (m.winner === 'DRAW') {
-          // Draw — half a point each.
+          // Draw — 1 point each.
           for (const t of [m.team_a, m.team_b]) {
             if (stats[t]) {
               stats[t].played += 1
               stats[t].drawn += 1
-              stats[t].points += 0.5
+              stats[t].points += 1
             }
           }
           continue
@@ -52,7 +53,7 @@ export async function GET() {
         if (stats[m.winner!]) {
           stats[m.winner!].played += 1
           stats[m.winner!].won += 1
-          stats[m.winner!].points += 1 // win = 1 point
+          stats[m.winner!].points += 2 // win = 2 points
         }
         if (stats[loser]) {
           stats[loser].played += 1

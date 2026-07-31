@@ -12,7 +12,7 @@ export default async function GridPage({
   const gridId = Number(gridParam);
 
   if (!Number.isInteger(classroom) || classroom < 1 || classroom > 8) notFound();
-  if (!Number.isInteger(gridId) || gridId < 1 || gridId > 6) notFound();
+  if (!Number.isInteger(gridId) || gridId < 0 || gridId > 6) notFound();
 
   const grid = getGrid(gridId);
   if (!grid) notFound();

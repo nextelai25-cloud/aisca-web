@@ -122,7 +122,36 @@ export default async function ClassroomPage({
           }}
         >
           {BS360_GRIDS.map((grid) => {
-            const tile = (
+            const tile = grid.demo ? (
+              <div className="bs360-tile bs360-tile-demo">
+                <p
+                  style={{
+                    marginBottom: 8,
+                    fontSize: 10.5,
+                    letterSpacing: '0.2em',
+                    color: '#7dd3fc',
+                    fontWeight: 700,
+                  }}
+                >
+                  PRACTICE
+                </p>
+                <p
+                  className="bs360-tile-number"
+                  style={{
+                    fontFamily: 'var(--font-display, "Space Grotesk", sans-serif)',
+                    fontWeight: 800,
+                    color: '#fff',
+                    fontSize: '1.35rem',
+                    lineHeight: 1.1,
+                  }}
+                >
+                  DEMO
+                </p>
+                <p style={{ marginTop: 8, fontSize: 10, letterSpacing: '0.1em', color: 'rgba(255,255,255,0.45)', fontWeight: 600 }}>
+                  NOT SCORED
+                </p>
+              </div>
+            ) : (
               <div className={grid.available ? 'bs360-tile' : 'bs360-tile bs360-tile-disabled'}>
                 <p
                   style={{
@@ -229,6 +258,13 @@ export default async function ClassroomPage({
         }
         .bs360-tile:hover .bs360-tile-number {
           color: #7dd3fc;
+        }
+        .bs360-tile-demo {
+          background: linear-gradient(180deg, rgba(56,189,248,0.12), rgba(99,102,241,0.05));
+          border-color: rgba(56,189,248,0.4);
+        }
+        .bs360-tile-demo:hover {
+          border-color: rgba(56,189,248,0.7);
         }
         .bs360-tile-disabled {
           opacity: 0.42;

@@ -25,7 +25,7 @@ export const SUBJECTS = [
 
 export const DIFFICULTIES = ['Easy', 'Medium', 'Hard', 'Super Hard'] as const;
 
-export const POINTS_BY_DIFFICULTY = [100, 200, 300, 400] as const;
+export const POINTS_BY_DIFFICULTY = [1, 3, 5, 8] as const; // Easy, Medium, Hard, Super Hard
 
 export type Subject = (typeof SUBJECTS)[number];
 export type Difficulty = (typeof DIFFICULTIES)[number];
@@ -44,6 +44,8 @@ export interface QuizGrid {
   label: string;
   /** false = this whole grid hasn't been uploaded yet */
   available: boolean;
+  /** true = practice grid: fully client-side, never stored, never scored */
+  demo?: boolean;
   boxes: QuizBox[]; // always length 16, ordered per the comment above
 }
 
@@ -200,7 +202,37 @@ const GRID_1: QuizGrid = {
   ],
 };
 
+// ────────────────────────────────────────────────────────────
+// DEMO GRID (id 0) — a practice board shown before Grid 01.
+// It runs entirely on the device (no database, no sync) so it is
+// independent everywhere and can NEVER affect the scoreboard.
+// Use it to teach students the flow: open a box, pick the answering
+// team, read the question, mark a result.
+// ────────────────────────────────────────────────────────────
+function demoBox(subject: Subject, difficulty: Difficulty): QuizBox {
+  const points = POINTS_BY_DIFFICULTY[DIFFICULTIES.indexOf(difficulty)];
+  return {
+    subject,
+    difficulty,
+    points,
+    question: {
+      en: `Practice question — ${subject} (${difficulty}).\n\nThis is the DEMO grid. Tap a box, choose which team is answering, then read the question in English, Sinhala and Tamil. Nothing here is saved or counted on the scoreboard.`,
+      si: `පුහුණු ප්‍රශ්නය — ${subject} (${difficulty}).\n\nමෙය DEMO ජාලකයයි. කොටුවක් තට්ටු කර, පිළිතුරු දෙන කණ්ඩායම තෝරා, ප්‍රශ්නය ඉංග්‍රීසි, සිංහල සහ දෙමළ භාෂාවෙන් කියවන්න. මෙහි කිසිවක් සුරැකෙන්නේ හෝ ලකුණු පුවරුවට ගණන් ගන්නේ නැත.`,
+      ta: `பயிற்சி கேள்வி — ${subject} (${difficulty}).\n\nஇது DEMO கட்டம். ஒரு பெட்டியைத் தட்டி, பதிலளிக்கும் அணியைத் தேர்ந்தெடுத்து, கேள்வியை ஆங்கிலம், சிங்களம், தமிழ் ஆகிய மொழிகளில் படியுங்கள். இங்கு எதுவும் சேமிக்கப்படாது அல்லது மதிப்பெண் பலகையில் கணக்கிடப்படாது.`,
+    },
+  };
+}
+
+const DEMO_GRID: QuizGrid = {
+  id: 0,
+  label: 'Demo Grid',
+  available: true,
+  demo: true,
+  boxes: DIFFICULTIES.flatMap((d) => SUBJECTS.map((s) => demoBox(s, d))),
+};
+
 export const BS360_GRIDS: QuizGrid[] = [
+  DEMO_GRID,
   GRID_1,
   pendingGrid(2),
   pendingGrid(3),
