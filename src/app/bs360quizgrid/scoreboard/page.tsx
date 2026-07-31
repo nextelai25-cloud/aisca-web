@@ -1,7 +1,6 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Bs360Background from '../Bs360Background';
 
@@ -92,11 +91,7 @@ export default function ScoreboardPage() {
           </div>
         </div>
 
-        <div style={{ textAlign: 'center', marginBottom: 30 }}>
-          <Link href="/bs360quizgrid" className="bs360-back-link" style={{ fontSize: 13 }}>
-            ← Back to quiz grid
-          </Link>
-        </div>
+        <div style={{ marginBottom: 30 }} />
 
         {loading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: '60px 0' }}>

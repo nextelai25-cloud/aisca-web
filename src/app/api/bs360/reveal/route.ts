@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { isValidBs360Key } from '@/lib/bs360-auth'
+import { isValidClassroomKey } from '@/lib/bs360-auth'
 
 // POST /api/bs360/reveal  { key, classroom, grid, boxIndex }
 //
@@ -14,10 +14,6 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
 
-    if (!isValidBs360Key(body.key)) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
     const classroom = Number(body.classroom)
     const grid = Number(body.grid)
     const boxIndex = Number(body.boxIndex)
@@ -25,6 +21,9 @@ export async function POST(req: NextRequest) {
 
     if (!Number.isInteger(classroom) || classroom < 1 || classroom > 8) {
       return NextResponse.json({ error: 'Invalid classroom' }, { status: 400 })
+    }
+    if (!isValidClassroomKey(classroom, body.key)) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
     if (!Number.isInteger(grid) || grid < 1 || grid > 6) {
       return NextResponse.json({ error: 'Invalid grid' }, { status: 400 })

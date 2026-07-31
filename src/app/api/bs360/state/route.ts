@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { isValidBs360Key } from '@/lib/bs360-auth'
+import { isValidClassroomKey } from '@/lib/bs360-auth'
 
 // GET /api/bs360/state?classroom=1&grid=1&key=...
 // Returns which of the 16 boxes have already been revealed for this
@@ -9,9 +9,6 @@ import { isValidBs360Key } from '@/lib/bs360-auth'
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const key = searchParams.get('key')
-  if (!isValidBs360Key(key)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
 
   const classroom = Number(searchParams.get('classroom'))
   const grid = Number(searchParams.get('grid'))
@@ -21,6 +18,9 @@ export async function GET(req: NextRequest) {
   }
   if (!Number.isInteger(grid) || grid < 1 || grid > 6) {
     return NextResponse.json({ error: 'Invalid grid' }, { status: 400 })
+  }
+  if (!isValidClassroomKey(classroom, key)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   const [{ data, error }, matchRes] = await Promise.all([

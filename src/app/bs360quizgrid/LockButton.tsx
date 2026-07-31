@@ -1,6 +1,6 @@
 'use client';
 
-import { BS360_STORAGE_KEY } from '@/lib/bs360-auth';
+import { allClassroomStorageKeys } from '@/lib/bs360-auth';
 
 export default function LockButton() {
   return (
@@ -8,9 +8,9 @@ export default function LockButton() {
       <button
         onClick={() => {
           try {
-            window.localStorage.removeItem(BS360_STORAGE_KEY);
+            for (const k of allClassroomStorageKeys()) window.localStorage.removeItem(k);
           } catch {}
-          window.location.href = '/bs360quizgrid';
+          window.location.reload();
         }}
         className="bs360-lock-btn"
         style={{
@@ -23,7 +23,7 @@ export default function LockButton() {
           cursor: 'pointer',
         }}
       >
-        Lock this device
+        Lock all classrooms on this device
       </button>
       <style jsx>{`
         .bs360-lock-btn {

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { QuizGrid } from '@/data/bs360-grids';
 import { teamsForClassroom } from '@/data/bs360-teams';
-import { BS360_STORAGE_KEY } from '@/lib/bs360-auth';
+import { classroomStorageKey } from '@/lib/bs360-auth';
 import Bs360Background from '../../../../Bs360Background';
 
 const DIFFICULTY_STYLE: Record<
@@ -62,16 +62,16 @@ interface Props {
   grid: QuizGrid;
 }
 
-function getKey(): string {
-  try {
-    return window.localStorage.getItem(BS360_STORAGE_KEY) || '';
-  } catch {
-    return '';
-  }
-}
-
 export default function QuizBoardClient({ classroom, grid }: Props) {
   const allTeams = teamsForClassroom(classroom);
+
+  function getKey(): string {
+    try {
+      return window.localStorage.getItem(classroomStorageKey(classroom)) || '';
+    } catch {
+      return '';
+    }
+  }
 
   const [match, setMatch] = useState<Match | null>(null);
   const [matchLoaded, setMatchLoaded] = useState(false);

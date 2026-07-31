@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { isValidBs360Key } from '@/lib/bs360-auth'
+import { isValidClassroomKey } from '@/lib/bs360-auth'
 import { teamsForClassroom } from '@/data/bs360-teams'
 
 // A "match" = the two teams competing on one grid inside one classroom,
@@ -16,14 +16,13 @@ function validateClassroomGrid(classroom: number, grid: number) {
 // GET /api/bs360/match?classroom=1&grid=1&key=...
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
-  if (!isValidBs360Key(searchParams.get('key'))) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
   const classroom = Number(searchParams.get('classroom'))
   const grid = Number(searchParams.get('grid'))
   const invalid = validateClassroomGrid(classroom, grid)
   if (invalid) return NextResponse.json({ error: invalid }, { status: 400 })
+  if (!isValidClassroomKey(classroom, searchParams.get('key'))) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
 
   const { data, error } = await supabaseAdmin
     .from('bs360_matches')
@@ -48,14 +47,14 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    if (!isValidBs360Key(body.key)) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
 
     const classroom = Number(body.classroom)
     const grid = Number(body.grid)
     const invalid = validateClassroomGrid(classroom, grid)
     if (invalid) return NextResponse.json({ error: invalid }, { status: 400 })
+    if (!isValidClassroomKey(classroom, body.key)) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
 
     const teams = teamsForClassroom(classroom)
 
