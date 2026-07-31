@@ -458,8 +458,8 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
               style={{
                 position: 'relative',
                 width: '100%',
-                maxWidth: 560,
-                maxHeight: '85vh',
+                maxWidth: 640,
+                maxHeight: '88vh',
                 overflowY: 'auto',
                 borderRadius: 24,
                 padding: '30px 26px',
@@ -551,7 +551,7 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
                     >
                       {LANG_LABEL[lang]}
                     </span>
-                    <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: 14.5, lineHeight: 1.75, whiteSpace: 'pre-line' }}>
+                    <p style={{ color: 'rgba(255,255,255,0.95)', fontSize: 'clamp(16px, 3.6vw, 19px)', fontWeight: 500, lineHeight: 1.65, whiteSpace: 'pre-line' }}>
                       {activeBox.question[lang]}
                     </p>
                   </div>
