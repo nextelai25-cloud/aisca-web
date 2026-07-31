@@ -5,15 +5,16 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { QuizGrid } from '@/data/bs360-grids';
 import { BS360_STORAGE_KEY } from '@/lib/bs360-auth';
+import Bs360Background from '../../../../Bs360Background';
 
 const DIFFICULTY_STYLE: Record<
   string,
   { accent: string; glow: string; bg: string; label: string }
 > = {
-  Easy: { accent: '#34d399', glow: 'rgba(52,211,153,0.45)', bg: 'rgba(52,211,153,0.08)', label: 'EASY' },
-  Medium: { accent: '#38bdf8', glow: 'rgba(56,189,248,0.45)', bg: 'rgba(56,189,248,0.08)', label: 'MEDIUM' },
-  Hard: { accent: '#f59e0b', glow: 'rgba(245,158,11,0.45)', bg: 'rgba(245,158,11,0.08)', label: 'HARD' },
-  'Super Hard': { accent: '#f43f5e', glow: 'rgba(244,63,94,0.45)', bg: 'rgba(244,63,94,0.08)', label: 'SUPER HARD' },
+  Easy: { accent: '#34d399', glow: 'rgba(52,211,153,0.5)', bg: 'rgba(52,211,153,0.1)', label: 'EASY' },
+  Medium: { accent: '#38bdf8', glow: 'rgba(56,189,248,0.5)', bg: 'rgba(56,189,248,0.1)', label: 'MEDIUM' },
+  Hard: { accent: '#f59e0b', glow: 'rgba(245,158,11,0.5)', bg: 'rgba(245,158,11,0.1)', label: 'HARD' },
+  'Super Hard': { accent: '#f43f5e', glow: 'rgba(244,63,94,0.5)', bg: 'rgba(244,63,94,0.1)', label: 'SUPER HARD' },
 };
 
 const SUBJECTS_ORDER = ['Economics', 'Business Studies', 'Accounting', 'General Knowledge'] as const;
@@ -158,23 +159,12 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
   const activeStyle = activeBox ? DIFFICULTY_STYLE[activeBox.difficulty] : null;
 
   return (
-    <div style={{ minHeight: '100vh', position: 'relative', overflow: 'hidden' }}>
-      <div
-        style={{
-          pointerEvents: 'none',
-          position: 'fixed',
-          inset: 0,
-          background: 'radial-gradient(ellipse 70% 45% at 50% 0%, rgba(56,189,248,0.09), transparent 70%)',
-        }}
-      />
+    <div style={{ minHeight: '100vh', position: 'relative' }}>
+      <Bs360Background />
 
-      <div style={{ position: 'relative', maxWidth: 620, margin: '0 auto', padding: '24px 16px 48px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-          <Link
-            href={`/bs360quizgrid/c/${classroom}`}
-            className="bs360-back-link"
-            style={{ fontSize: 13 }}
-          >
+      <div style={{ position: 'relative', maxWidth: 640, margin: '0 auto', padding: '24px 16px 48px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 22 }}>
+          <Link href={`/bs360quizgrid/c/${classroom}`} className="bs360-back-link" style={{ fontSize: 13 }}>
             ← Grid list
           </Link>
           <button
@@ -195,14 +185,19 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
           </button>
         </div>
 
-        <div style={{ textAlign: 'center', marginBottom: 18 }}>
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          style={{ textAlign: 'center', marginBottom: 20 }}
+        >
           <p
             style={{
               textTransform: 'uppercase',
               marginBottom: 4,
               fontSize: 11,
               letterSpacing: '0.3em',
-              color: 'rgba(56,189,248,0.75)',
+              color: '#7dd3fc',
               fontWeight: 600,
             }}
           >
@@ -212,13 +207,17 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
             style={{
               fontFamily: 'var(--font-display, "Space Grotesk", sans-serif)',
               fontWeight: 800,
-              color: '#fff',
-              fontSize: 'clamp(1.4rem, 4.5vw, 2rem)',
+              letterSpacing: '-0.02em',
+              fontSize: 'clamp(1.4rem, 4.5vw, 2.1rem)',
+              background: 'linear-gradient(180deg, #ffffff, rgba(255,255,255,0.6))',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
             }}
           >
             {grid.label}
           </h1>
-        </div>
+        </motion.div>
 
         {!grid.available && (
           <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.45)', fontSize: 13, marginBottom: 20 }}>
@@ -226,20 +225,25 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
           </p>
         )}
 
-        {/* difficulty legend */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 16, marginBottom: 16 }}>
+        {/* difficulty legend as pills */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 8, marginBottom: 18 }}>
           {Object.entries(DIFFICULTY_STYLE).map(([diff, style]) => (
-            <div key={diff} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <div
+              key={diff}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                padding: '5px 12px',
+                borderRadius: 999,
+                background: style.bg,
+                border: `1px solid ${style.accent}33`,
+              }}
+            >
               <span
-                style={{
-                  display: 'inline-block',
-                  width: 8,
-                  height: 8,
-                  borderRadius: '50%',
-                  background: style.accent,
-                }}
+                style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: style.accent }}
               />
-              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.05em', fontWeight: 500 }}>
+              <span style={{ fontSize: 10.5, color: style.accent, letterSpacing: '0.04em', fontWeight: 700 }}>
                 {style.label}
               </span>
             </div>
@@ -247,14 +251,14 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
         </div>
 
         {/* subject column headers */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 8 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 10 }}>
           {SUBJECTS_ORDER.map((s) => (
             <div key={s} style={{ textAlign: 'center' }}>
-              <p style={{ fontSize: 15, lineHeight: 1, marginBottom: 4 }}>{SUBJECT_ICON[s]}</p>
+              <p style={{ fontSize: 16, lineHeight: 1, marginBottom: 5 }}>{SUBJECT_ICON[s]}</p>
               <p
                 style={{
                   fontSize: 9.5,
-                  color: 'rgba(255,255,255,0.45)',
+                  color: 'rgba(255,255,255,0.48)',
                   letterSpacing: '0.02em',
                   fontWeight: 600,
                   lineHeight: 1.2,
@@ -267,7 +271,7 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
         </div>
 
         {/* 4x4 board */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 9 }}>
           {grid.boxes.map((box, index) => {
             const style = DIFFICULTY_STYLE[box.difficulty];
             const isRevealed = Boolean(revealed[index]);
@@ -280,23 +284,30 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
                 key={index}
                 onClick={() => handleBoxClick(index)}
                 disabled={disabled}
-                whileHover={!disabled ? { y: -3 } : undefined}
-                whileTap={!disabled ? { scale: 0.96 } : undefined}
-                transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-                className={disabled ? '' : 'bs360-box'}
+                initial={{ opacity: 0, y: 10, scale: 0.94 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.35, delay: index * 0.018, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={!disabled ? { y: -4, scale: 1.02 } : undefined}
+                whileTap={!disabled ? { scale: 0.95 } : undefined}
+                className={disabled ? 'bs360-box' : 'bs360-box bs360-box-live'}
                 style={{
                   position: 'relative',
                   aspectRatio: '1',
-                  borderRadius: 12,
+                  borderRadius: 14,
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
                   overflow: 'hidden',
-                  background: isRevealed || isPending ? 'rgba(255,255,255,0.025)' : style.bg,
-                  border: `1px solid ${isRevealed || isPending ? 'rgba(255,255,255,0.06)' : style.accent + '55'}`,
+                  background:
+                    isRevealed || isPending
+                      ? 'rgba(255,255,255,0.025)'
+                      : 'linear-gradient(160deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015))',
+                  border: `1px solid ${isRevealed || isPending ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.08)'}`,
+                  borderLeft: `3px solid ${isRevealed || isPending ? 'rgba(255,255,255,0.08)' : style.accent}`,
                   cursor: disabled ? (isPending ? 'default' : 'not-allowed') : 'pointer',
                   opacity: isPending ? 0.4 : 1,
+                  boxShadow: disabled ? 'none' : '0 10px 26px -16px rgba(0,0,0,0.7)',
                 }}
               >
                 {isLoading && (
@@ -314,11 +325,11 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
 
                 {!isLoading && isRevealed && (
                   <>
-                    <span style={{ fontSize: 18, color: 'rgba(255,255,255,0.22)' }}>✕</span>
+                    <span style={{ fontSize: 17, color: 'rgba(255,255,255,0.22)' }}>✕</span>
                     <span
                       style={{
                         marginTop: 4,
-                        fontSize: 9,
+                        fontSize: 8.5,
                         color: 'rgba(255,255,255,0.3)',
                         letterSpacing: '0.1em',
                         fontWeight: 600,
@@ -331,15 +342,18 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
 
                 {!isLoading && !isRevealed && (
                   <>
-                    <span style={{ fontSize: 'clamp(15px, 4.2vw, 20px)', lineHeight: 1 }}>
+                    <span style={{ fontSize: 'clamp(15px, 4vw, 19px)', lineHeight: 1 }}>
                       {isPending ? '⏳' : SUBJECT_ICON[box.subject]}
                     </span>
                     <span
                       style={{
-                        marginTop: 5,
+                        marginTop: 6,
+                        padding: '2px 9px',
+                        borderRadius: 999,
+                        background: isPending ? 'rgba(255,255,255,0.05)' : style.bg,
                         fontFamily: 'var(--font-display, "Space Grotesk", sans-serif)',
                         fontWeight: 800,
-                        fontSize: 'clamp(12px, 3.4vw, 16px)',
+                        fontSize: 'clamp(11px, 3vw, 13px)',
                         color: isPending ? 'rgba(255,255,255,0.35)' : style.accent,
                       }}
                     >
@@ -372,13 +386,14 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
             <div
               style={{
                 padding: '12px 20px',
-                borderRadius: 12,
+                borderRadius: 14,
                 color: 'rgba(255,255,255,0.85)',
-                background: 'rgba(20,20,20,0.96)',
+                background: 'rgba(16,16,22,0.96)',
                 border: '1px solid rgba(255,255,255,0.1)',
                 fontSize: 13,
-                backdropFilter: 'blur(10px)',
+                backdropFilter: 'blur(12px)',
                 textAlign: 'center',
+                boxShadow: '0 12px 34px -12px rgba(0,0,0,0.7)',
               }}
             >
               {toast}
@@ -402,16 +417,16 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
               alignItems: 'center',
               justifyContent: 'center',
               padding: '24px 16px',
-              background: 'rgba(0,0,0,0.78)',
-              backdropFilter: 'blur(6px)',
+              background: 'rgba(4,4,8,0.8)',
+              backdropFilter: 'blur(8px)',
             }}
             onClick={() => setModalBox(null)}
           >
             <motion.div
-              initial={{ opacity: 0, scale: 0.94, y: 16 }}
+              initial={{ opacity: 0, scale: 0.94, y: 18 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 8 }}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               onClick={(e) => e.stopPropagation()}
               style={{
                 position: 'relative',
@@ -419,19 +434,45 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
                 maxWidth: 560,
                 maxHeight: '85vh',
                 overflowY: 'auto',
-                borderRadius: 20,
-                padding: '28px 24px',
-                background: '#0a0a0a',
-                border: `1px solid ${activeStyle.accent}55`,
-                boxShadow: `0 0 100px -20px ${activeStyle.glow}`,
+                borderRadius: 24,
+                padding: '30px 26px',
+                background: 'linear-gradient(180deg, rgba(20,20,28,0.98), rgba(10,10,14,0.98))',
+                border: `1px solid ${activeStyle.accent}44`,
+                boxShadow: `0 30px 100px -24px rgba(0,0,0,0.75), 0 0 90px -20px ${activeStyle.glow}`,
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 22 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span style={{ fontSize: 22 }}>{SUBJECT_ICON[activeBox.subject]}</span>
+              <div
+                aria-hidden
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: '15%',
+                  right: '15%',
+                  height: 1,
+                  background: `linear-gradient(90deg, transparent, ${activeStyle.accent}55, transparent)`,
+                }}
+              />
+
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <div
+                    style={{
+                      width: 42,
+                      height: 42,
+                      borderRadius: 12,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: 20,
+                      background: activeStyle.bg,
+                      border: `1px solid ${activeStyle.accent}33`,
+                    }}
+                  >
+                    {SUBJECT_ICON[activeBox.subject]}
+                  </div>
                   <div>
                     <p style={{ color: '#fff', fontWeight: 700, fontSize: 15 }}>{activeBox.subject}</p>
-                    <p style={{ fontSize: 11, letterSpacing: '0.1em', color: activeStyle.accent, fontWeight: 600 }}>
+                    <p style={{ fontSize: 11, letterSpacing: '0.1em', color: activeStyle.accent, fontWeight: 700, marginTop: 2 }}>
                       {activeStyle.label} · {activeBox.points} PTS
                     </p>
                   </div>
@@ -459,7 +500,7 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
                   <div
                     key={lang}
                     style={{
-                      borderRadius: 14,
+                      borderRadius: 16,
                       padding: '16px 18px',
                       background: 'rgba(255,255,255,0.035)',
                       border: '1px solid rgba(255,255,255,0.07)',
@@ -468,8 +509,8 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
                     <span
                       style={{
                         display: 'inline-block',
-                        marginBottom: 8,
-                        padding: '3px 10px',
+                        marginBottom: 9,
+                        padding: '4px 11px',
                         borderRadius: 999,
                         fontSize: 10,
                         letterSpacing: '0.1em',
@@ -480,7 +521,7 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
                     >
                       {LANG_LABEL[lang]}
                     </span>
-                    <p style={{ color: 'rgba(255,255,255,0.88)', fontSize: 14.5, lineHeight: 1.7, whiteSpace: 'pre-line' }}>
+                    <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: 14.5, lineHeight: 1.75, whiteSpace: 'pre-line' }}>
                       {activeBox.question[lang]}
                     </p>
                   </div>
@@ -492,9 +533,9 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
                 className="bs360-close-full"
                 style={{
                   width: '100%',
-                  marginTop: 22,
+                  marginTop: 24,
                   padding: 14,
-                  borderRadius: 12,
+                  borderRadius: 14,
                   fontWeight: 700,
                   fontSize: 14,
                   color: '#fff',
@@ -517,29 +558,27 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
         .bs360-back-link {
           color: rgba(255,255,255,0.45);
           text-decoration: none;
-          transition: color 0.2s;
+          transition: color 0.25s;
         }
         .bs360-back-link:hover {
-          color: rgba(255,255,255,0.8);
+          color: #7dd3fc;
         }
         .bs360-reset-link {
           color: rgba(255,255,255,0.3);
-          transition: color 0.2s;
+          transition: color 0.25s;
         }
         .bs360-reset-link:hover:not(:disabled) {
-          color: rgba(255,255,255,0.6);
+          color: rgba(255,255,255,0.65);
         }
-        .bs360-box {
-          transition: box-shadow 0.25s ease;
-        }
-        .bs360-box:hover {
-          box-shadow: 0 8px 28px -10px rgba(56,189,248,0.35);
+        .bs360-box-live:hover {
+          box-shadow: 0 14px 34px -14px rgba(56,189,248,0.4) !important;
         }
         .bs360-close-btn:hover {
           color: rgba(255,255,255,0.9) !important;
         }
         .bs360-close-full:hover {
           background: rgba(255,255,255,0.11) !important;
+          border-color: rgba(255,255,255,0.2) !important;
         }
       `}</style>
     </div>

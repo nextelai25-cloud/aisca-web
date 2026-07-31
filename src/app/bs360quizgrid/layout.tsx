@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function Bs360Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ background: '#050505', minHeight: '100vh' }}>
+    <div style={{ background: '#07070d', minHeight: '100vh' }}>
       <Bs360Gate>{children}</Bs360Gate>
     </div>
   );
