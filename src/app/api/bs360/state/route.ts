@@ -23,18 +23,35 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid grid' }, { status: 400 })
   }
 
-  const { data, error } = await supabaseAdmin
-    .from('bs360_reveals')
-    .select('box_index, revealed_at')
-    .eq('classroom', classroom)
-    .eq('grid', grid)
+  const [{ data, error }, matchRes] = await Promise.all([
+    supabaseAdmin
+      .from('bs360_reveals')
+      .select('box_index, revealed_at, team')
+      .eq('classroom', classroom)
+      .eq('grid', grid),
+    supabaseAdmin
+      .from('bs360_matches')
+      .select('team_a, team_b, winner')
+      .eq('classroom', classroom)
+      .eq('grid', grid)
+      .maybeSingle(),
+  ])
 
   if (error) {
     console.error('[bs360/state] Supabase error:', error.message)
     return NextResponse.json({ error: 'Could not load grid state' }, { status: 500 })
   }
 
+  const match = matchRes.data
+    ? { teamA: matchRes.data.team_a, teamB: matchRes.data.team_b, winner: matchRes.data.winner }
+    : null
+
   return NextResponse.json({
-    reveals: (data || []).map((r) => ({ boxIndex: r.box_index, revealedAt: r.revealed_at })),
+    reveals: (data || []).map((r) => ({
+      boxIndex: r.box_index,
+      revealedAt: r.revealed_at,
+      team: r.team ?? null,
+    })),
+    match,
   })
 }

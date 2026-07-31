@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { QuizGrid } from '@/data/bs360-grids';
+import { teamsForClassroom } from '@/data/bs360-teams';
 import { BS360_STORAGE_KEY } from '@/lib/bs360-auth';
 import Bs360Background from '../../../../Bs360Background';
 
@@ -39,7 +40,22 @@ const LANG_LABEL: Record<'en' | 'si' | 'ta', string> = {
   ta: 'தமிழ்',
 };
 
+// Team A vs Team B colours — kept distinct from the difficulty palette.
+const TEAM_A_COLOR = '#38bdf8';
+const TEAM_B_COLOR = '#a78bfa';
+
 const POLL_MS = 3500;
+
+interface Match {
+  teamA: string;
+  teamB: string;
+  winner: string | null;
+}
+
+interface RevealInfo {
+  revealedAt: string;
+  team: string | null;
+}
 
 interface Props {
   classroom: number;
@@ -55,11 +71,25 @@ function getKey(): string {
 }
 
 export default function QuizBoardClient({ classroom, grid }: Props) {
-  const [revealed, setRevealed] = useState<Record<number, string>>({});
+  const allTeams = teamsForClassroom(classroom);
+
+  const [match, setMatch] = useState<Match | null>(null);
+  const [matchLoaded, setMatchLoaded] = useState(false);
+  const [revealed, setRevealed] = useState<Record<number, RevealInfo>>({});
   const [loadingBox, setLoadingBox] = useState<number | null>(null);
   const [modalBox, setModalBox] = useState<number | null>(null);
+  const [pickBox, setPickBox] = useState<number | null>(null); // box awaiting "who answered"
   const [toast, setToast] = useState<string | null>(null);
   const [resetting, setResetting] = useState(false);
+
+  // team-selection gate
+  const [selected, setSelected] = useState<string[]>([]);
+  const [savingTeams, setSavingTeams] = useState(false);
+
+  // winner
+  const [winnerOpen, setWinnerOpen] = useState(false);
+  const [savingWinner, setSavingWinner] = useState(false);
+
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const showToast = useCallback((msg: string) => {
@@ -77,9 +107,11 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
       );
       if (!res.ok) return;
       const data = await res.json();
-      const map: Record<number, string> = {};
-      for (const r of data.reveals || []) map[r.boxIndex] = r.revealedAt;
+      const map: Record<number, RevealInfo> = {};
+      for (const r of data.reveals || []) map[r.boxIndex] = { revealedAt: r.revealedAt, team: r.team ?? null };
       setRevealed(map);
+      setMatch(data.match ?? null);
+      setMatchLoaded(true);
     } catch {
       // Silent — next poll will retry.
     }
@@ -91,19 +123,61 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
     return () => clearInterval(interval);
   }, [fetchState]);
 
-  async function handleBoxClick(index: number) {
+  function toggleTeam(team: string) {
+    setSelected((prev) => {
+      if (prev.includes(team)) return prev.filter((t) => t !== team);
+      if (prev.length >= 2) return prev; // max two
+      return [...prev, team];
+    });
+  }
+
+  async function confirmTeams() {
+    if (selected.length !== 2 || savingTeams) return;
+    setSavingTeams(true);
+    try {
+      const key = getKey();
+      const res = await fetch('/api/bs360/match', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key, classroom, grid: grid.id, teamA: selected[0], teamB: selected[1] }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        showToast(data.error || 'Could not set teams.');
+        setSavingTeams(false);
+        return;
+      }
+      if (data.match) setMatch(data.match);
+      if (data.alreadySet) showToast('Teams were already set for this grid.');
+      await fetchState();
+    } catch {
+      showToast('Network error — try again.');
+    } finally {
+      setSavingTeams(false);
+    }
+  }
+
+  function handleBoxClick(index: number) {
     const box = grid.boxes[index];
     if (box.pending) return;
     if (revealed[index]) return; // already used — cannot be reopened
     if (loadingBox !== null) return;
+    if (!match) {
+      showToast('Pick the two teams first.');
+      return;
+    }
+    setPickBox(index); // ask which team is answering
+  }
 
+  async function revealWithTeam(index: number, team: string) {
+    setPickBox(null);
     setLoadingBox(index);
     try {
       const key = getKey();
       const res = await fetch('/api/bs360/reveal', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ key, classroom, grid: grid.id, boxIndex: index }),
+        body: JSON.stringify({ key, classroom, grid: grid.id, boxIndex: index, team }),
       });
       const data = await res.json();
 
@@ -113,12 +187,17 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
         return;
       }
 
-      setRevealed((prev) => ({ ...prev, [index]: data.revealedAt || new Date().toISOString() }));
+      setRevealed((prev) => ({
+        ...prev,
+        [index]: { revealedAt: data.revealedAt || new Date().toISOString(), team: data.team ?? team },
+      }));
 
       if (data.firstReveal) {
         setModalBox(index);
       } else {
-        showToast('This question was already opened.');
+        showToast(
+          data.team ? `Already opened — answered by ${data.team}.` : 'This question was already opened.'
+        );
       }
     } catch {
       showToast('Network error — try again.');
@@ -127,10 +206,37 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
     }
   }
 
+  async function chooseWinner(team: string) {
+    if (savingWinner) return;
+    setSavingWinner(true);
+    try {
+      const key = getKey();
+      const res = await fetch('/api/bs360/match', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key, classroom, grid: grid.id, winner: team }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        showToast(data.error || 'Could not set winner.');
+        setSavingWinner(false);
+        return;
+      }
+      setMatch((prev) => (prev ? { ...prev, winner: team } : prev));
+      setWinnerOpen(false);
+      showToast(`Winner recorded: ${team}`);
+      await fetchState();
+    } catch {
+      showToast('Network error — try again.');
+    } finally {
+      setSavingWinner(false);
+    }
+  }
+
   async function handleReset() {
     if (resetting) return;
     const ok = window.confirm(
-      `Reset ALL 16 boxes for Classroom ${classroom} · Grid ${String(grid.id).padStart(2, '0')}?\nThis is for testing only — it cannot be undone.`
+      `Reset Classroom ${classroom} · Grid ${String(grid.id).padStart(2, '0')}?\nThis clears all boxes, the teams and the winner. Testing only.`
     );
     if (!ok) return;
 
@@ -144,6 +250,8 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
       });
       if (res.ok) {
         setRevealed({});
+        setMatch(null);
+        setSelected([]);
         showToast('Grid reset.');
       } else {
         showToast('Could not reset grid.');
@@ -155,8 +263,148 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
     }
   }
 
+  function teamColor(team: string | null): string {
+    if (!match || !team) return 'rgba(255,255,255,0.4)';
+    return team === match.teamA ? TEAM_A_COLOR : TEAM_B_COLOR;
+  }
+  function teamLetter(team: string | null): string {
+    if (!match || !team) return '';
+    return team === match.teamA ? 'A' : 'B';
+  }
+
   const activeBox = modalBox !== null ? grid.boxes[modalBox] : null;
   const activeStyle = activeBox ? DIFFICULTY_STYLE[activeBox.difficulty] : null;
+
+  // ── Team-selection gate ─────────────────────────────────────
+  if (matchLoaded && !match) {
+    return (
+      <div style={{ minHeight: '100vh', position: 'relative' }}>
+        <Bs360Background />
+        <div style={{ position: 'relative', maxWidth: 520, margin: '0 auto', padding: '32px 18px 60px' }}>
+          <Link href={`/bs360quizgrid/c/${classroom}`} className="bs360-back-link" style={{ fontSize: 13 }}>
+            ← Grid list
+          </Link>
+
+          <div style={{ textAlign: 'center', margin: '30px 0 26px' }}>
+            <p style={{ textTransform: 'uppercase', fontSize: 11, letterSpacing: '0.3em', color: '#7dd3fc', fontWeight: 600, marginBottom: 8 }}>
+              Classroom {String(classroom).padStart(2, '0')} · {grid.label}
+            </p>
+            <h1
+              style={{
+                fontFamily: 'var(--font-display, "Space Grotesk", sans-serif)',
+                fontWeight: 800,
+                fontSize: 'clamp(1.4rem, 4.5vw, 2rem)',
+                background: 'linear-gradient(180deg, #ffffff, rgba(255,255,255,0.6))',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}
+            >
+              Select the two teams
+            </h1>
+            <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 13.5, marginTop: 8, fontWeight: 300 }}>
+              Choose exactly two teams competing in this grid.
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {allTeams.map((t) => {
+              const on = selected.includes(t);
+              const idx = selected.indexOf(t);
+              const color = idx === 0 ? TEAM_A_COLOR : idx === 1 ? TEAM_B_COLOR : '#38bdf8';
+              return (
+                <button
+                  key={t}
+                  onClick={() => toggleTeam(t)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 14,
+                    width: '100%',
+                    textAlign: 'left',
+                    padding: '15px 18px',
+                    borderRadius: 16,
+                    cursor: 'pointer',
+                    background: on
+                      ? `linear-gradient(180deg, ${color}26, ${color}0d)`
+                      : 'rgba(255,255,255,0.035)',
+                    border: `1.5px solid ${on ? color + 'cc' : 'rgba(255,255,255,0.1)'}`,
+                    transition: 'all 0.2s',
+                  }}
+                >
+                  <span
+                    style={{
+                      flexShrink: 0,
+                      width: 26,
+                      height: 26,
+                      borderRadius: 8,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      background: on ? color : 'rgba(255,255,255,0.08)',
+                      color: on ? '#04121a' : 'rgba(255,255,255,0.5)',
+                      fontWeight: 800,
+                      fontSize: 13,
+                    }}
+                  >
+                    {on ? (idx === 0 ? 'A' : 'B') : '+'}
+                  </span>
+                  <span style={{ color: '#fff', fontSize: 14.5, fontWeight: 500 }}>{t}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          <button
+            onClick={confirmTeams}
+            disabled={selected.length !== 2 || savingTeams}
+            style={{
+              width: '100%',
+              marginTop: 24,
+              padding: 15,
+              borderRadius: 14,
+              fontWeight: 700,
+              fontSize: 14,
+              color: '#04121a',
+              background: 'linear-gradient(135deg, #38bdf8, #6366f1)',
+              border: 'none',
+              cursor: selected.length === 2 && !savingTeams ? 'pointer' : 'default',
+              opacity: selected.length === 2 && !savingTeams ? 1 : 0.4,
+              boxShadow: '0 10px 28px -10px rgba(56,189,248,0.6)',
+            }}
+          >
+            {savingTeams ? 'Setting up…' : selected.length === 2 ? 'Start match' : `Select ${2 - selected.length} more`}
+          </button>
+        </div>
+        <style>{`
+          .bs360-back-link { color: rgba(255,255,255,0.45); text-decoration: none; transition: color 0.25s; }
+          .bs360-back-link:hover { color: #7dd3fc; }
+        `}</style>
+      </div>
+    );
+  }
+
+  // still loading match state — brief spinner
+  if (!matchLoaded) {
+    return (
+      <div style={{ minHeight: '100vh', position: 'relative' }}>
+        <Bs360Background />
+        <div style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div
+            style={{
+              width: 26,
+              height: 26,
+              borderRadius: '50%',
+              border: '2px solid rgba(255,255,255,0.12)',
+              borderTopColor: '#38bdf8',
+              animation: 'bs360-spin 0.7s linear infinite',
+            }}
+          />
+        </div>
+        <style>{`@keyframes bs360-spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
 
   return (
     <div style={{ minHeight: '100vh', position: 'relative' }}>
@@ -189,7 +437,7 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          style={{ textAlign: 'center', marginBottom: 20 }}
+          style={{ textAlign: 'center', marginBottom: 18 }}
         >
           <p
             style={{
@@ -219,6 +467,65 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
           </h1>
         </motion.div>
 
+        {/* match header — Team A vs Team B */}
+        {match && (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 12,
+              flexWrap: 'wrap',
+              marginBottom: 16,
+            }}
+          >
+            <TeamChip letter="A" name={match.teamA} color={TEAM_A_COLOR} won={match.winner === match.teamA} />
+            <span style={{ color: 'rgba(255,255,255,0.4)', fontWeight: 800, fontSize: 13, letterSpacing: '0.1em' }}>VS</span>
+            <TeamChip letter="B" name={match.teamB} color={TEAM_B_COLOR} won={match.winner === match.teamB} />
+          </div>
+        )}
+
+        {/* winner banner or button */}
+        {match && match.winner ? (
+          <div
+            style={{
+              textAlign: 'center',
+              margin: '0 auto 20px',
+              maxWidth: 440,
+              padding: '12px 18px',
+              borderRadius: 14,
+              background: 'linear-gradient(180deg, rgba(250,204,21,0.16), rgba(250,204,21,0.05))',
+              border: '1px solid rgba(250,204,21,0.4)',
+              color: '#fde68a',
+              fontWeight: 700,
+              fontSize: 14,
+            }}
+          >
+            🏆 {grid.label} won by {match.winner}
+          </div>
+        ) : (
+          match && (
+            <div style={{ textAlign: 'center', marginBottom: 20 }}>
+              <button
+                onClick={() => setWinnerOpen(true)}
+                className="bs360-winner-btn"
+                style={{
+                  padding: '10px 22px',
+                  borderRadius: 999,
+                  fontWeight: 700,
+                  fontSize: 13,
+                  color: '#fde68a',
+                  background: 'rgba(250,204,21,0.1)',
+                  border: '1px solid rgba(250,204,21,0.35)',
+                  cursor: 'pointer',
+                }}
+              >
+                ★ Select winning team
+              </button>
+            </div>
+          )
+        )}
+
         {!grid.available && (
           <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.45)', fontSize: 13, marginBottom: 20 }}>
             This grid&apos;s questions haven&apos;t been uploaded yet.
@@ -240,9 +547,7 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
                 border: `1px solid ${style.accent}33`,
               }}
             >
-              <span
-                style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: style.accent }}
-              />
+              <span style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: style.accent }} />
               <span style={{ fontSize: 10.5, color: style.accent, letterSpacing: '0.04em', fontWeight: 700 }}>
                 {style.label}
               </span>
@@ -293,10 +598,13 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14 }}>
           {grid.boxes.map((box, index) => {
             const style = DIFFICULTY_STYLE[box.difficulty];
-            const isRevealed = Boolean(revealed[index]);
+            const info = revealed[index];
+            const isRevealed = Boolean(info);
             const isPending = Boolean(box.pending);
             const isLoading = loadingBox === index;
             const disabled = isRevealed || isPending || isLoading;
+            const ansColor = teamColor(info?.team ?? null);
+            const ansLetter = teamLetter(info?.team ?? null);
 
             return (
               <motion.button
@@ -309,6 +617,7 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
                 whileHover={!disabled ? { y: -5, scale: 1.03 } : undefined}
                 whileTap={!disabled ? { scale: 0.95 } : undefined}
                 className={disabled ? 'bs360-box' : 'bs360-box bs360-box-live'}
+                title={isRevealed && info?.team ? `Answered by ${info.team}` : undefined}
                 style={{
                   position: 'relative',
                   aspectRatio: '1',
@@ -319,10 +628,14 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
                   justifyContent: 'center',
                   overflow: 'hidden',
                   background:
-                    isRevealed || isPending
+                    isRevealed
+                      ? `linear-gradient(160deg, ${ansColor}26, ${ansColor}08)`
+                      : isPending
                       ? 'rgba(255,255,255,0.025)'
                       : `linear-gradient(155deg, ${style.accent}4D, ${style.accent}14)`,
-                  border: `1.5px solid ${isRevealed || isPending ? 'rgba(255,255,255,0.06)' : style.accent + 'aa'}`,
+                  border: `1.5px solid ${
+                    isRevealed ? ansColor + '66' : isPending ? 'rgba(255,255,255,0.06)' : style.accent + 'aa'
+                  }`,
                   cursor: disabled ? (isPending ? 'default' : 'not-allowed') : 'pointer',
                   opacity: isPending ? 0.4 : 1,
                   boxShadow: disabled ? 'none' : `0 12px 30px -14px ${style.glow}`,
@@ -343,17 +656,37 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
 
                 {!isLoading && isRevealed && (
                   <>
-                    <span style={{ fontSize: 19, color: 'rgba(255,255,255,0.22)' }}>✕</span>
+                    {info?.team ? (
+                      <span
+                        style={{
+                          width: 28,
+                          height: 28,
+                          borderRadius: 9,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          background: ansColor,
+                          color: '#04121a',
+                          fontWeight: 800,
+                          fontSize: 14,
+                          fontFamily: 'var(--font-display, "Space Grotesk", sans-serif)',
+                        }}
+                      >
+                        {ansLetter}
+                      </span>
+                    ) : (
+                      <span style={{ fontSize: 19, color: 'rgba(255,255,255,0.22)' }}>✕</span>
+                    )}
                     <span
                       style={{
                         marginTop: 5,
                         fontSize: 9,
-                        color: 'rgba(255,255,255,0.3)',
+                        color: info?.team ? ansColor : 'rgba(255,255,255,0.3)',
                         letterSpacing: '0.1em',
-                        fontWeight: 600,
+                        fontWeight: 700,
                       }}
                     >
-                      USED
+                      {info?.team ? 'ANSWERED' : 'USED'}
                     </span>
                   </>
                 )}
@@ -392,6 +725,12 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
             );
           })}
         </div>
+
+        <div style={{ textAlign: 'center', marginTop: 30 }}>
+          <Link href="/bs360quizgrid/scoreboard" className="bs360-back-link" style={{ fontSize: 13 }}>
+            View live scoreboard →
+          </Link>
+        </div>
       </div>
 
       {/* toast */}
@@ -401,14 +740,7 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            style={{
-              position: 'fixed',
-              bottom: 24,
-              left: '50%',
-              transform: 'translateX(-50%)',
-              zIndex: 50,
-              maxWidth: '90vw',
-            }}
+            style={{ position: 'fixed', bottom: 24, left: '50%', transform: 'translateX(-50%)', zIndex: 60, maxWidth: '90vw' }}
           >
             <div
               style={{
@@ -425,6 +757,216 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
             >
               {toast}
             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* who-answered prompt */}
+      <AnimatePresence>
+        {pickBox !== null && match && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 55,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '24px 16px',
+              background: 'rgba(4,4,8,0.8)',
+              backdropFilter: 'blur(8px)',
+            }}
+            onClick={() => setPickBox(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.94, y: 18 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 8 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                width: '100%',
+                maxWidth: 420,
+                borderRadius: 22,
+                padding: '28px 24px',
+                background: 'linear-gradient(180deg, rgba(20,20,28,0.98), rgba(10,10,14,0.98))',
+                border: '1px solid rgba(255,255,255,0.1)',
+                boxShadow: '0 30px 100px -24px rgba(0,0,0,0.75)',
+              }}
+            >
+              <p style={{ textAlign: 'center', color: '#fff', fontWeight: 700, fontSize: 16, marginBottom: 6 }}>
+                Which team is answering?
+              </p>
+              <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.45)', fontSize: 12.5, marginBottom: 22 }}>
+                Once revealed, this box is used up permanently.
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {[
+                  { team: match.teamA, letter: 'A', color: TEAM_A_COLOR },
+                  { team: match.teamB, letter: 'B', color: TEAM_B_COLOR },
+                ].map(({ team, letter, color }) => (
+                  <button
+                    key={letter}
+                    onClick={() => revealWithTeam(pickBox, team)}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 14,
+                      width: '100%',
+                      textAlign: 'left',
+                      padding: '15px 18px',
+                      borderRadius: 15,
+                      cursor: 'pointer',
+                      background: `linear-gradient(180deg, ${color}22, ${color}0a)`,
+                      border: `1.5px solid ${color}99`,
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: 30,
+                        height: 30,
+                        borderRadius: 9,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        background: color,
+                        color: '#04121a',
+                        fontWeight: 800,
+                        fontSize: 15,
+                      }}
+                    >
+                      {letter}
+                    </span>
+                    <span style={{ color: '#fff', fontSize: 14.5, fontWeight: 500 }}>{team}</span>
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={() => setPickBox(null)}
+                style={{
+                  width: '100%',
+                  marginTop: 16,
+                  padding: 12,
+                  borderRadius: 12,
+                  fontSize: 13,
+                  color: 'rgba(255,255,255,0.55)',
+                  background: 'none',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  cursor: 'pointer',
+                }}
+              >
+                Cancel
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* winner prompt */}
+      <AnimatePresence>
+        {winnerOpen && match && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 55,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '24px 16px',
+              background: 'rgba(4,4,8,0.8)',
+              backdropFilter: 'blur(8px)',
+            }}
+            onClick={() => setWinnerOpen(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.94, y: 18 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 8 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                width: '100%',
+                maxWidth: 420,
+                borderRadius: 22,
+                padding: '28px 24px',
+                background: 'linear-gradient(180deg, rgba(20,20,28,0.98), rgba(10,10,14,0.98))',
+                border: '1px solid rgba(250,204,21,0.35)',
+                boxShadow: '0 30px 100px -24px rgba(0,0,0,0.75), 0 0 80px -30px rgba(250,204,21,0.4)',
+              }}
+            >
+              <p style={{ textAlign: 'center', color: '#fde68a', fontWeight: 700, fontSize: 16, marginBottom: 6 }}>
+                🏆 Who won {grid.label}?
+              </p>
+              <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.45)', fontSize: 12.5, marginBottom: 22 }}>
+                This is recorded on the live scoreboard.
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {[
+                  { team: match.teamA, letter: 'A', color: TEAM_A_COLOR },
+                  { team: match.teamB, letter: 'B', color: TEAM_B_COLOR },
+                ].map(({ team, letter, color }) => (
+                  <button
+                    key={letter}
+                    onClick={() => chooseWinner(team)}
+                    disabled={savingWinner}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 14,
+                      width: '100%',
+                      textAlign: 'left',
+                      padding: '15px 18px',
+                      borderRadius: 15,
+                      cursor: savingWinner ? 'default' : 'pointer',
+                      opacity: savingWinner ? 0.6 : 1,
+                      background: `linear-gradient(180deg, ${color}22, ${color}0a)`,
+                      border: `1.5px solid ${color}99`,
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: 30,
+                        height: 30,
+                        borderRadius: 9,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        background: color,
+                        color: '#04121a',
+                        fontWeight: 800,
+                        fontSize: 15,
+                      }}
+                    >
+                      {letter}
+                    </span>
+                    <span style={{ color: '#fff', fontSize: 14.5, fontWeight: 500 }}>{team}</span>
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={() => setWinnerOpen(false)}
+                style={{
+                  width: '100%',
+                  marginTop: 16,
+                  padding: 12,
+                  borderRadius: 12,
+                  fontSize: 13,
+                  color: 'rgba(255,255,255,0.55)',
+                  background: 'none',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  cursor: 'pointer',
+                }}
+              >
+                Cancel
+              </button>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -480,7 +1022,7 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
                 }}
               />
 
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24 }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 18 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   <div
                     style={{
@@ -524,6 +1066,42 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
                   ×
                 </button>
               </div>
+
+              {/* who is answering */}
+              {modalBox !== null && revealed[modalBox]?.team && (
+                <div
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 9,
+                    marginBottom: 20,
+                    padding: '7px 14px',
+                    borderRadius: 999,
+                    background: `${teamColor(revealed[modalBox]!.team)}1f`,
+                    border: `1px solid ${teamColor(revealed[modalBox]!.team)}66`,
+                  }}
+                >
+                  <span
+                    style={{
+                      width: 22,
+                      height: 22,
+                      borderRadius: 7,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      background: teamColor(revealed[modalBox]!.team),
+                      color: '#04121a',
+                      fontWeight: 800,
+                      fontSize: 12,
+                    }}
+                  >
+                    {teamLetter(revealed[modalBox]!.team)}
+                  </span>
+                  <span style={{ color: '#fff', fontSize: 13, fontWeight: 600 }}>
+                    Answering: {revealed[modalBox]!.team}
+                  </span>
+                </div>
+              )}
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                 {(['en', 'si', 'ta'] as const).map((lang) => (
@@ -603,6 +1181,9 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
         .bs360-box-live:hover {
           box-shadow: 0 14px 34px -14px rgba(56,189,248,0.4) !important;
         }
+        .bs360-winner-btn:hover {
+          background: rgba(250,204,21,0.18) !important;
+        }
         .bs360-close-btn:hover {
           color: rgba(255,255,255,0.9) !important;
         }
@@ -611,6 +1192,52 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
           border-color: rgba(255,255,255,0.2) !important;
         }
       `}</style>
+    </div>
+  );
+}
+
+function TeamChip({
+  letter,
+  name,
+  color,
+  won,
+}: {
+  letter: string;
+  name: string;
+  color: string;
+  won: boolean;
+}) {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 9,
+        padding: '8px 14px',
+        borderRadius: 999,
+        background: `linear-gradient(180deg, ${color}22, ${color}0a)`,
+        border: `1.5px solid ${won ? '#facc15' : color + '88'}`,
+        boxShadow: won ? '0 0 20px -6px rgba(250,204,21,0.6)' : 'none',
+      }}
+    >
+      <span
+        style={{
+          width: 24,
+          height: 24,
+          borderRadius: 7,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: color,
+          color: '#04121a',
+          fontWeight: 800,
+          fontSize: 13,
+        }}
+      >
+        {letter}
+      </span>
+      <span style={{ color: '#fff', fontSize: 13.5, fontWeight: 600 }}>{name}</span>
+      {won && <span style={{ fontSize: 13 }}>🏆</span>}
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { BS360_GRIDS } from '@/data/bs360-grids';
+import { teamsForClassroom, requiredMatchups } from '@/data/bs360-teams';
 import Bs360Background from '../../Bs360Background';
 
 export default async function ClassroomPage({
@@ -14,6 +15,9 @@ export default async function ClassroomPage({
   if (!Number.isInteger(classroom) || classroom < 1 || classroom > 8) {
     notFound();
   }
+
+  const teams = teamsForClassroom(classroom);
+  const games = requiredMatchups(classroom);
 
   return (
     <div style={{ minHeight: '100vh', position: 'relative' }}>
@@ -57,7 +61,56 @@ export default async function ClassroomPage({
             Select a Grid
           </h1>
           <p style={{ color: 'rgba(255,255,255,0.42)', fontSize: 13.5, fontWeight: 300 }}>
-            6 grids · 16 questions each · Easy → Super Hard
+            {teams.length} teams · {games} matches to play · one grid per match
+          </p>
+        </div>
+
+        {/* competing school teams in this classroom */}
+        <div style={{ marginBottom: 34 }} className="bs360-fade-up">
+          <p
+            style={{
+              textAlign: 'center',
+              textTransform: 'uppercase',
+              fontSize: 10.5,
+              letterSpacing: '0.24em',
+              color: 'rgba(255,255,255,0.4)',
+              fontWeight: 700,
+              marginBottom: 14,
+            }}
+          >
+            Competing Teams
+          </p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 10 }}>
+            {teams.map((t) => (
+              <div
+                key={t}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 9,
+                  padding: '9px 15px',
+                  borderRadius: 999,
+                  background: 'linear-gradient(180deg, rgba(56,189,248,0.12), rgba(99,102,241,0.06))',
+                  border: '1px solid rgba(56,189,248,0.28)',
+                }}
+              >
+                <span
+                  style={{ display: 'inline-block', width: 7, height: 7, borderRadius: '50%', background: '#38bdf8' }}
+                />
+                <span style={{ color: 'rgba(255,255,255,0.92)', fontSize: 13, fontWeight: 500 }}>{t}</span>
+              </div>
+            ))}
+          </div>
+          <p
+            style={{
+              textAlign: 'center',
+              marginTop: 16,
+              fontSize: 12,
+              color: 'rgba(255,255,255,0.4)',
+              fontWeight: 300,
+            }}
+          >
+            Open a grid to pick the two teams for that match.
           </p>
         </div>
 
@@ -127,6 +180,12 @@ export default async function ClassroomPage({
               </Link>
             );
           })}
+        </div>
+
+        <div style={{ textAlign: 'center', marginTop: 44 }}>
+          <Link href="/bs360quizgrid/scoreboard" className="bs360-back-link" style={{ fontSize: 13 }}>
+            View live scoreboard →
+          </Link>
         </div>
       </div>
 

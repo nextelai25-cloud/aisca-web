@@ -38,6 +38,19 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Could not reset grid' }, { status: 500 })
     }
 
+    // Also clear the match (teams + winner) for this grid so it can be
+    // re-played from scratch during testing.
+    const { error: matchErr } = await supabaseAdmin
+      .from('bs360_matches')
+      .delete()
+      .eq('classroom', classroom)
+      .eq('grid', grid)
+
+    if (matchErr) {
+      console.error('[bs360/reset match] Supabase error:', matchErr.message)
+      return NextResponse.json({ error: 'Could not reset match' }, { status: 500 })
+    }
+
     return NextResponse.json({ success: true })
   } catch (err) {
     console.error('[bs360/reset] Internal error:', err)

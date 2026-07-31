@@ -1,11 +1,17 @@
 'use client';
 
 import { useEffect, useState, FormEvent } from 'react';
+import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { BS360_PASSWORD, BS360_STORAGE_KEY } from '@/lib/bs360-auth';
 import Bs360Background from './Bs360Background';
 
+// Paths under /bs360quizgrid that are public (no password gate).
+const PUBLIC_PATHS = ['/bs360quizgrid/scoreboard'];
+
 export default function Bs360Gate({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const isPublic = PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(p + '/'));
   const [checking, setChecking] = useState(true);
   const [unlocked, setUnlocked] = useState(false);
   const [input, setInput] = useState('');
@@ -35,6 +41,10 @@ export default function Bs360Gate({ children }: { children: React.ReactNode }) {
       setShake(true);
       setTimeout(() => setShake(false), 500);
     }
+  }
+
+  if (isPublic) {
+    return <>{children}</>;
   }
 
   if (checking) {

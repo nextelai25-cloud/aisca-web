@@ -21,6 +21,7 @@ export async function POST(req: NextRequest) {
     const classroom = Number(body.classroom)
     const grid = Number(body.grid)
     const boxIndex = Number(body.boxIndex)
+    const team = typeof body.team === 'string' && body.team ? String(body.team) : null
 
     if (!Number.isInteger(classroom) || classroom < 1 || classroom > 8) {
       return NextResponse.json({ error: 'Invalid classroom' }, { status: 400 })
@@ -34,13 +35,13 @@ export async function POST(req: NextRequest) {
 
     const { data, error } = await supabaseAdmin
       .from('bs360_reveals')
-      .insert([{ classroom, grid, box_index: boxIndex }])
-      .select('revealed_at')
+      .insert([{ classroom, grid, box_index: boxIndex, team }])
+      .select('revealed_at, team')
       .single()
 
     if (!error) {
       // We were first — this device gets to show the question.
-      return NextResponse.json({ firstReveal: true, revealedAt: data.revealed_at })
+      return NextResponse.json({ firstReveal: true, revealedAt: data.revealed_at, team: data.team })
     }
 
     // Unique-constraint violation = someone else already revealed this
@@ -49,7 +50,7 @@ export async function POST(req: NextRequest) {
     if (error.code === '23505') {
       const { data: existing } = await supabaseAdmin
         .from('bs360_reveals')
-        .select('revealed_at')
+        .select('revealed_at, team')
         .eq('classroom', classroom)
         .eq('grid', grid)
         .eq('box_index', boxIndex)
@@ -58,6 +59,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({
         firstReveal: false,
         revealedAt: existing?.revealed_at || null,
+        team: existing?.team || null,
       })
     }
 
