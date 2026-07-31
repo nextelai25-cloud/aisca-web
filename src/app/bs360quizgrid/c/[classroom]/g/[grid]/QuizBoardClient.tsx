@@ -1178,6 +1178,25 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
                 </div>
               )}
 
+              {activeBox.image && (
+                <div
+                  style={{
+                    marginBottom: 16,
+                    borderRadius: 14,
+                    overflow: 'hidden',
+                    border: '1px solid rgba(255,255,255,0.12)',
+                    background: '#fff',
+                  }}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={activeBox.image}
+                    alt="Question figure"
+                    style={{ display: 'block', width: '100%', height: 'auto' }}
+                  />
+                </div>
+              )}
+
               <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                 {(['en', 'si', 'ta'] as const).map((lang) => (
                   <div
