@@ -30,17 +30,29 @@ export async function GET() {
 
       const stats: Record<
         string,
-        { team: string; played: number; won: number; lost: number; points: number }
+        { team: string; played: number; won: number; drawn: number; lost: number; points: number }
       > = {}
-      for (const t of teams) stats[t] = { team: t, played: 0, won: 0, lost: 0, points: 0 }
+      for (const t of teams) stats[t] = { team: t, played: 0, won: 0, drawn: 0, lost: 0, points: 0 }
 
+      // A match is "decided" once it has a result: a winner OR a draw.
       const decided = rows.filter((m) => m.winner)
       for (const m of decided) {
+        if (m.winner === 'DRAW') {
+          // Draw — half a point each.
+          for (const t of [m.team_a, m.team_b]) {
+            if (stats[t]) {
+              stats[t].played += 1
+              stats[t].drawn += 1
+              stats[t].points += 0.5
+            }
+          }
+          continue
+        }
         const loser = m.winner === m.team_a ? m.team_b : m.team_a
         if (stats[m.winner!]) {
           stats[m.winner!].played += 1
           stats[m.winner!].won += 1
-          stats[m.winner!].points += 3
+          stats[m.winner!].points += 1 // win = 1 point
         }
         if (stats[loser]) {
           stats[loser].played += 1
@@ -49,13 +61,13 @@ export async function GET() {
       }
 
       const standings = Object.values(stats).sort(
-        (a, b) => b.won - a.won || b.played - a.played || a.team.localeCompare(b.team)
+        (a, b) => b.points - a.points || b.won - a.won || a.team.localeCompare(b.team)
       )
 
       const requiredGames = requiredMatchups(classroom)
       const decidedCount = decided.length
-      const topWins = standings.length ? standings[0].won : 0
-      const leaders = standings.filter((s) => s.won === topWins && topWins > 0)
+      const topPoints = standings.length ? standings[0].points : 0
+      const leaders = standings.filter((s) => s.points === topPoints && topPoints > 0)
       const complete = decidedCount >= requiredGames
       const champion = complete && leaders.length === 1 ? leaders[0].team : null
 

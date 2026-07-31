@@ -224,7 +224,7 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
       }
       setMatch((prev) => (prev ? { ...prev, winner: team } : prev));
       setWinnerOpen(false);
-      showToast(`Winner recorded: ${team}`);
+      showToast(team === 'DRAW' ? 'Draw recorded.' : `Winner recorded: ${team}`);
       await fetchState();
     } catch {
       showToast('Network error — try again.');
@@ -485,7 +485,7 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
           </div>
         )}
 
-        {/* winner banner or button */}
+        {/* result banner or button */}
         {match && match.winner ? (
           <div
             style={{
@@ -494,14 +494,19 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
               maxWidth: 440,
               padding: '12px 18px',
               borderRadius: 14,
-              background: 'linear-gradient(180deg, rgba(250,204,21,0.16), rgba(250,204,21,0.05))',
-              border: '1px solid rgba(250,204,21,0.4)',
-              color: '#fde68a',
+              background:
+                match.winner === 'DRAW'
+                  ? 'linear-gradient(180deg, rgba(148,163,184,0.16), rgba(148,163,184,0.05))'
+                  : 'linear-gradient(180deg, rgba(250,204,21,0.16), rgba(250,204,21,0.05))',
+              border: `1px solid ${match.winner === 'DRAW' ? 'rgba(148,163,184,0.45)' : 'rgba(250,204,21,0.4)'}`,
+              color: match.winner === 'DRAW' ? '#cbd5e1' : '#fde68a',
               fontWeight: 700,
               fontSize: 14,
             }}
           >
-            🏆 {grid.label} won by {match.winner}
+            {match.winner === 'DRAW'
+              ? `🤝 ${grid.label} ended in a draw`
+              : `🏆 ${grid.label} won by ${match.winner}`}
           </div>
         ) : (
           match && (
@@ -520,7 +525,7 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
                   cursor: 'pointer',
                 }}
               >
-                ★ Select winning team
+                ★ Record result
               </button>
             </div>
           )
@@ -902,10 +907,10 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
               }}
             >
               <p style={{ textAlign: 'center', color: '#fde68a', fontWeight: 700, fontSize: 16, marginBottom: 6 }}>
-                🏆 Who won {grid.label}?
+                🏆 Result of {grid.label}
               </p>
               <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.45)', fontSize: 12.5, marginBottom: 22 }}>
-                This is recorded on the live scoreboard.
+                Win = 1 point · Draw = 0.5 each. Recorded on the live scoreboard.
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {[
@@ -947,8 +952,31 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
                       {letter}
                     </span>
                     <span style={{ color: '#fff', fontSize: 14.5, fontWeight: 500 }}>{team}</span>
+                    <span style={{ marginLeft: 'auto', color: 'rgba(255,255,255,0.4)', fontSize: 12 }}>wins</span>
                   </button>
                 ))}
+                <button
+                  onClick={() => chooseWinner('DRAW')}
+                  disabled={savingWinner}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 10,
+                    width: '100%',
+                    padding: '14px 18px',
+                    borderRadius: 15,
+                    cursor: savingWinner ? 'default' : 'pointer',
+                    opacity: savingWinner ? 0.6 : 1,
+                    background: 'rgba(148,163,184,0.12)',
+                    border: '1.5px solid rgba(148,163,184,0.4)',
+                    color: '#cbd5e1',
+                    fontSize: 14,
+                    fontWeight: 600,
+                  }}
+                >
+                  🤝 Draw — half a point each
+                </button>
               </div>
               <button
                 onClick={() => setWinnerOpen(false)}

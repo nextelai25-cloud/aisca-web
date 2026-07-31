@@ -8,8 +8,13 @@ interface Standing {
   team: string;
   played: number;
   won: number;
+  drawn: number;
   lost: number;
   points: number;
+}
+
+function fmtPts(n: number): string {
+  return Number.isInteger(n) ? String(n) : n.toFixed(1);
 }
 interface MatchRow {
   grid: number;
@@ -189,23 +194,24 @@ function ClassroomCard({ board, delay }: { board: ClassroomBoard; delay: number 
 
       {/* standings table */}
       <div style={{ marginBottom: 16 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '22px 1fr 26px 26px 26px 32px', gap: 4, padding: '0 4px 8px', fontSize: 10, color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.04em' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '20px 1fr 22px 22px 22px 22px 34px', gap: 3, padding: '0 4px 8px', fontSize: 10, color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.04em' }}>
           <span>#</span>
           <span>TEAM</span>
           <span style={{ textAlign: 'center' }}>P</span>
           <span style={{ textAlign: 'center' }}>W</span>
+          <span style={{ textAlign: 'center' }}>D</span>
           <span style={{ textAlign: 'center' }}>L</span>
           <span style={{ textAlign: 'center' }}>PTS</span>
         </div>
         {board.standings.map((s, idx) => {
-          const isLeader = idx === 0 && s.won > 0;
+          const isLeader = idx === 0 && s.points > 0;
           return (
             <div
               key={s.team}
               style={{
                 display: 'grid',
-                gridTemplateColumns: '22px 1fr 26px 26px 26px 32px',
-                gap: 4,
+                gridTemplateColumns: '20px 1fr 22px 22px 22px 22px 34px',
+                gap: 3,
                 alignItems: 'center',
                 padding: '9px 4px',
                 borderRadius: 9,
@@ -216,13 +222,14 @@ function ClassroomCard({ board, delay }: { board: ClassroomBoard; delay: number 
               <span style={{ fontSize: 12, fontWeight: 700, color: isLeader ? '#facc15' : 'rgba(255,255,255,0.5)' }}>
                 {idx + 1}
               </span>
-              <span style={{ fontSize: 12.5, color: '#fff', fontWeight: isLeader ? 700 : 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              <span style={{ fontSize: 12, color: '#fff', fontWeight: isLeader ? 700 : 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {s.team}
               </span>
               <span style={{ textAlign: 'center', fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>{s.played}</span>
               <span style={{ textAlign: 'center', fontSize: 12, color: '#34d399', fontWeight: 700 }}>{s.won}</span>
+              <span style={{ textAlign: 'center', fontSize: 12, color: '#cbd5e1' }}>{s.drawn}</span>
               <span style={{ textAlign: 'center', fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>{s.lost}</span>
-              <span style={{ textAlign: 'center', fontSize: 12.5, color: '#fff', fontWeight: 800 }}>{s.points}</span>
+              <span style={{ textAlign: 'center', fontSize: 12.5, color: '#fff', fontWeight: 800 }}>{fmtPts(s.points)}</span>
             </div>
           );
         })}
@@ -256,7 +263,9 @@ function ClassroomCard({ board, delay }: { board: ClassroomBoard; delay: number 
               <span style={{ flex: 1, textAlign: 'right', color: m.winner === m.teamA ? '#34d399' : 'rgba(255,255,255,0.75)', fontWeight: m.winner === m.teamA ? 700 : 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {m.winner === m.teamA && '✓ '}{m.teamA}
               </span>
-              <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 10, fontWeight: 700 }}>vs</span>
+              <span style={{ color: m.winner === 'DRAW' ? '#cbd5e1' : 'rgba(255,255,255,0.3)', fontSize: 10, fontWeight: 700 }}>
+                {m.winner === 'DRAW' ? 'DRAW' : 'vs'}
+              </span>
               <span style={{ flex: 1, color: m.winner === m.teamB ? '#34d399' : 'rgba(255,255,255,0.75)', fontWeight: m.winner === m.teamB ? 700 : 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {m.teamB}{m.winner === m.teamB && ' ✓'}
               </span>

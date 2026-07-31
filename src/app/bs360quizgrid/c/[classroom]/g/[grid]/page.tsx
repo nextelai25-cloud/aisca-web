@@ -17,5 +17,5 @@ export default async function GridPage({
   const grid = getGrid(gridId);
   if (!grid) notFound();
 
-  return <QuizBoardClient classroom={classroom} grid={grid} />;
+  return <QuizBoardClient key={`c${classroom}-g${gridId}`} classroom={classroom} grid={grid} />;
 }

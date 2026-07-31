@@ -58,13 +58,15 @@ export async function POST(req: NextRequest) {
 
     const teams = teamsForClassroom(classroom)
 
-    // ── Set winner ──────────────────────────────────────────────
+    // ── Set result (winner or draw) ─────────────────────────────
     if (typeof body.winner === 'string') {
       const winner = body.winner as string
-      if (!teams.includes(winner)) {
+      const isDraw = winner === 'DRAW'
+
+      if (!isDraw && !teams.includes(winner)) {
         return NextResponse.json({ error: 'Winner is not a team in this classroom' }, { status: 400 })
       }
-      // Winner must be one of the two teams actually assigned to this grid.
+      // Result can only be set once teams are locked in for this grid.
       const { data: existing } = await supabaseAdmin
         .from('bs360_matches')
         .select('team_a, team_b')
@@ -75,7 +77,7 @@ export async function POST(req: NextRequest) {
       if (!existing) {
         return NextResponse.json({ error: 'Teams not selected for this grid yet' }, { status: 400 })
       }
-      if (winner !== existing.team_a && winner !== existing.team_b) {
+      if (!isDraw && winner !== existing.team_a && winner !== existing.team_b) {
         return NextResponse.json({ error: 'Winner must be one of the two competing teams' }, { status: 400 })
       }
 
@@ -87,7 +89,7 @@ export async function POST(req: NextRequest) {
 
       if (updErr) {
         console.error('[bs360/match winner] Supabase error:', updErr.message)
-        return NextResponse.json({ error: 'Could not set winner' }, { status: 500 })
+        return NextResponse.json({ error: 'Could not set result' }, { status: 500 })
       }
       return NextResponse.json({ ok: true, winner })
     }
