@@ -13,34 +13,30 @@
 
 export const CLASSROOM_TEAMS: Record<number, string[]> = {
   1: [
-    'Rathnavali Balika Vidyalaya B',
     'Bishops College A',
-    'Visakha Vidyalaya B',
     'Vidura College B',
+    'Ananda College B',
+    'Gampaha Bandaranayake B',
   ],
   2: [
     'Musaeus College A',
     'Defence Services College A',
-    'Ananda College B',
     'Bishops College B',
   ],
   3: [
-    'D.S.Senanayake College B',
-    'St. Josephs College Maradana A',
+    'D.S. Senanayake College B',
+    'St. Joseph’s College Maradana A',
     'Bandaranayake Central Veyangoda A',
-    'Gampaha Bandaranayake B',
   ],
   4: [
     'St. John’s College Jaffna A',
     'Muslim Ladies College A',
-    'Sripalee College A',
     'Anula Vidyalaya A',
   ],
   5: [
     'Vidura College A',
     'Panadura Balika Vidyalaya A',
     'Ananda College A',
-    'Royal Institute Havelock A',
   ],
   6: [
     'Gampaha Bandaranayake A',
@@ -55,7 +51,7 @@ export const CLASSROOM_TEAMS: Record<number, string[]> = {
   ],
   8: [
     'Muslim Ladies College B',
-    'D.S.Senanayake A',
+    'D.S. Senanayake College A',
     'Ferguson High School A',
   ],
 };
