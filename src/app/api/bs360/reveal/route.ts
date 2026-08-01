@@ -32,6 +32,23 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid box' }, { status: 400 })
     }
 
+    // A box can only be opened once the two teams for this grid are set,
+    // and the answering team must be one of those two. This blocks
+    // direct-API attempts to reveal questions early or store bogus teams.
+    const { data: matchRow } = await supabaseAdmin
+      .from('bs360_matches')
+      .select('team_a, team_b')
+      .eq('classroom', classroom)
+      .eq('grid', grid)
+      .maybeSingle()
+
+    if (!matchRow) {
+      return NextResponse.json({ error: 'Teams not selected for this grid yet' }, { status: 400 })
+    }
+    if (team && team !== matchRow.team_a && team !== matchRow.team_b) {
+      return NextResponse.json({ error: 'Answering team is not part of this match' }, { status: 400 })
+    }
+
     const { data, error } = await supabaseAdmin
       .from('bs360_reveals')
       .insert([{ classroom, grid, box_index: boxIndex, team }])

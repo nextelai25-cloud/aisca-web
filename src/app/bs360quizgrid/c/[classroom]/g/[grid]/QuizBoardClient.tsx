@@ -82,6 +82,9 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
   const [pickBox, setPickBox] = useState<number | null>(null); // box awaiting "who answered"
   const [toast, setToast] = useState<string | null>(null);
   const [resetting, setResetting] = useState(false);
+  // The reset button wipes a grid, so it stays hidden during live play.
+  // It only appears for the demo grid, or on ?tools=1 (organiser use).
+  const [showTools, setShowTools] = useState(false);
 
   // team-selection gate
   const [selected, setSelected] = useState<string[]>([]);
@@ -97,6 +100,13 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
     setToast(msg);
     if (toastTimer.current) clearTimeout(toastTimer.current);
     toastTimer.current = setTimeout(() => setToast(null), 3000);
+  }, []);
+
+  useEffect(() => {
+    try {
+      const tools = new URLSearchParams(window.location.search).get('tools');
+      if (tools === '1') setShowTools(true);
+    } catch {}
   }, []);
 
   const fetchState = useCallback(async () => {
@@ -443,22 +453,24 @@ export default function QuizBoardClient({ classroom, grid }: Props) {
           <Link href={`/bs360quizgrid/c/${classroom}`} className="bs360-back-link" style={{ fontSize: 13 }}>
             ← Grid list
           </Link>
-          <button
-            onClick={handleReset}
-            disabled={resetting}
-            className="bs360-reset-link"
-            style={{
-              fontSize: 11,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              background: 'none',
-              border: 'none',
-              cursor: resetting ? 'default' : 'pointer',
-              opacity: resetting ? 0.5 : 1,
-            }}
-          >
-            {resetting ? 'Resetting…' : 'Reset (testing)'}
-          </button>
+          {(isDemo || showTools) && (
+            <button
+              onClick={handleReset}
+              disabled={resetting}
+              className="bs360-reset-link"
+              style={{
+                fontSize: 11,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                background: 'none',
+                border: 'none',
+                cursor: resetting ? 'default' : 'pointer',
+                opacity: resetting ? 0.5 : 1,
+              }}
+            >
+              {resetting ? 'Resetting…' : isDemo ? 'Reset demo' : 'Reset (organiser)'}
+            </button>
+          )}
         </div>
 
         <motion.div
