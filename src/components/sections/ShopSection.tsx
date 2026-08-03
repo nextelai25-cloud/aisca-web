@@ -13,7 +13,8 @@ const PRODUCTS = [
 
 const SIZES = ['2XS', 'XS', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL']
 const DELIVERY_FEE = 250
-const GOLD = '#d4af37'
+const GOLD = '#ffffff' // monochrome accent (site has no colour accent)
+const MUTED = 'rgba(255,255,255,0.45)'
 
 const BANK = {
   account: '1069 6100 6902',
@@ -143,7 +144,7 @@ export default function ShopSection() {
       <section style={{ background: '#050505', padding: '40px 0 110px' }}>
         <div style={{ maxWidth: 620, margin: '0 auto', padding: '0 24px', textAlign: 'center' }}>
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-            style={{ borderRadius: 24, padding: 'clamp(28px,5vw,48px)', background: 'rgba(255,255,255,0.03)', border: `1px solid rgba(212,175,55,0.3)`, backdropFilter: 'blur(20px)' }}>
+            style={{ borderRadius: 24, padding: 'clamp(28px,5vw,48px)', background: 'rgba(255,255,255,0.03)', border: `1px solid rgba(255,255,255,0.3)`, backdropFilter: 'blur(20px)' }}>
             <div style={{ width: 60, height: 60, borderRadius: '50%', margin: '0 auto 20px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(34,197,94,0.12)', border: '1px solid rgba(34,197,94,0.3)', color: '#22c55e' }}>
               <CheckCircle2 size={30} />
             </div>
@@ -151,8 +152,8 @@ export default function ShopSection() {
             <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14, lineHeight: 1.7, marginBottom: 20 }}>
               Thank you! Your order has been submitted with your payment receipt. It will be confirmed after our team verifies the payment. You&apos;ll be contacted on WhatsApp.
             </p>
-            <div style={{ display: 'inline-flex', flexDirection: 'column', gap: 6, padding: '14px 22px', borderRadius: 14, background: 'rgba(212,175,55,0.08)', border: `1px solid rgba(212,175,55,0.3)`, marginBottom: 22 }}>
-              <span style={{ fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: GOLD, fontWeight: 700 }}>Order Number</span>
+            <div style={{ display: 'inline-flex', flexDirection: 'column', gap: 6, padding: '14px 22px', borderRadius: 14, background: 'rgba(255,255,255,0.08)', border: `1px solid rgba(255,255,255,0.3)`, marginBottom: 22 }}>
+              <span style={{ fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: MUTED, fontWeight: 700 }}>Order Number</span>
               <span style={{ fontFamily: 'monospace', fontSize: 18, color: '#fff', fontWeight: 700 }}>{done.orderNumber}</span>
               <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>Total Paid: {money(done.total)}</span>
             </div>
@@ -166,18 +167,18 @@ export default function ShopSection() {
   }
 
   return (
-    <section style={{ background: '#050505', padding: '32px 0 110px', position: 'relative', overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', top: 200, right: '18%', width: 500, height: 500, background: 'rgba(212,175,55,0.02)', borderRadius: '50%', filter: 'blur(110px)', pointerEvents: 'none' }} />
+    <section style={{ background: '#050505', padding: '64px 0 110px', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', top: 200, right: '18%', width: 500, height: 500, background: 'rgba(255,255,255,0.02)', borderRadius: '50%', filter: 'blur(110px)', pointerEvents: 'none' }} />
 
       <div style={{ maxWidth: 1120, margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 10 }}>
         {/* header */}
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
-          <span style={{ display: 'block', fontSize: 11, fontWeight: 700, letterSpacing: '0.25em', textTransform: 'uppercase', color: GOLD, marginBottom: 14 }}>Official Merchandise</span>
+          <span style={{ display: 'block', fontSize: 11, fontWeight: 700, letterSpacing: '0.25em', textTransform: 'uppercase', color: MUTED, marginBottom: 14 }}>Official Merchandise</span>
           <h1 style={{ fontFamily: 'var(--font-display, "Space Grotesk", sans-serif)', fontSize: 'clamp(2rem, 5vw, 3.4rem)', fontWeight: 800, textTransform: 'uppercase', color: '#fff', letterSpacing: '-0.02em', lineHeight: 1.05, marginBottom: 14 }}>
             AISCA Merchandise Collection
           </h1>
           <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', maxWidth: 620, margin: '0 auto', lineHeight: 1.7 }}>
-            The official merchandise order form of the All Island Schools Commerce Association. Choose your items, pay by bank transfer, and upload your receipt — all in one place.
+            The official merchandise order form of the All Island Schools Commerce Association. Choose your items, pay by bank transfer, and upload your receipt, all in one place.
           </p>
         </div>
 
@@ -189,7 +190,7 @@ export default function ShopSection() {
             { label: 'Need Help?', value: CONTACTS.map(c => `${c.name} ${c.phone}`).join('  ·  ') },
           ].map((c) => (
             <div key={c.label} style={{ padding: '16px 18px', borderRadius: 16, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
-              <div style={{ fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: GOLD, fontWeight: 700, marginBottom: 8 }}>{c.label}</div>
+              <div style={{ fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: MUTED, fontWeight: 700, marginBottom: 8 }}>{c.label}</div>
               <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)', lineHeight: 1.55 }}>{c.value}</div>
             </div>
           ))}
@@ -221,7 +222,7 @@ export default function ShopSection() {
 
                   {p.sized ? (
                     <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: 10 }}>
-                      <button onClick={() => setSizeChartOpen(true)} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, alignSelf: 'flex-start', fontSize: 11, color: GOLD, background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600 }}>
+                      <button onClick={() => setSizeChartOpen(true)} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, alignSelf: 'flex-start', fontSize: 11, color: '#fff', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.2)', padding: '7px 13px', borderRadius: 999, cursor: 'pointer', fontWeight: 700 }}>
                         <Ruler size={13} /> View size chart
                       </button>
                       <div style={{ display: 'flex', gap: 8 }}>
@@ -255,8 +256,8 @@ export default function ShopSection() {
         </div>
 
         {/* group order note */}
-        <div style={{ marginBottom: 44, padding: '14px 18px', borderRadius: 14, background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.25)', fontSize: 12.5, color: 'rgba(255,255,255,0.7)', lineHeight: 1.6 }}>
-          💡 Tip: You can place a <strong style={{ color: GOLD }}>group order</strong> — order for several people together, get it delivered to one location, and share among yourselves. Just add all the items and sizes below.
+        <div style={{ marginBottom: 44, padding: '14px 18px', borderRadius: 14, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.25)', fontSize: 12.5, color: 'rgba(255,255,255,0.7)', lineHeight: 1.6 }}>
+          💡 Tip: You can place a <strong style={{ color: GOLD }}>group order</strong>: order for several people together, get it delivered to one location, and share among yourselves. Just add all the items and sizes below.
         </div>
 
         {/* two-column: summary + details */}
@@ -314,10 +315,10 @@ export default function ShopSection() {
               <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, marginBottom: 14 }}>
                 Deposit or transfer the <strong style={{ color: '#fff' }}>total payable amount</strong> to the account below, then upload your receipt in the next step.
               </p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: 16, borderRadius: 14, background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.25)' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: 16, borderRadius: 14, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.25)' }}>
                 {[['Account No', BANK.account], ['Account Name', BANK.name], ['Bank', BANK.bank], ['Branch', BANK.branch]].map(([k, v]) => (
                   <div key={k} style={{ display: 'flex', flexDirection: 'column' }}>
-                    <span style={{ fontSize: 9.5, letterSpacing: '0.16em', textTransform: 'uppercase', color: GOLD, fontWeight: 700 }}>{k}</span>
+                    <span style={{ fontSize: 9.5, letterSpacing: '0.16em', textTransform: 'uppercase', color: MUTED, fontWeight: 700 }}>{k}</span>
                     <span style={{ fontSize: k === 'Account No' ? 17 : 13, color: '#fff', fontWeight: k === 'Account No' ? 800 : 500, fontFamily: k === 'Account No' ? 'monospace' : 'inherit' }}>{v}</span>
                   </div>
                 ))}
@@ -348,7 +349,7 @@ export default function ShopSection() {
               <input ref={fileRef} type="file" accept="image/*,application/pdf" onChange={handleReceipt} style={{ display: 'none' }} />
               {!receiptUrl ? (
                 <button onClick={() => fileRef.current?.click()} disabled={uploading}
-                  style={{ width: '100%', padding: '22px', borderRadius: 14, border: '1.5px dashed rgba(212,175,55,0.4)', background: 'rgba(212,175,55,0.04)', color: GOLD, cursor: uploading ? 'default' : 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+                  style={{ width: '100%', padding: '22px', borderRadius: 14, border: '1.5px dashed rgba(255,255,255,0.4)', background: 'rgba(255,255,255,0.04)', color: GOLD, cursor: uploading ? 'default' : 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
                   <Upload size={22} />
                   <span style={{ fontSize: 13, fontWeight: 700 }}>{uploading ? 'Uploading…' : 'Upload bank slip / screenshot'}</span>
                   <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>Image or PDF, up to 10 MB</span>
@@ -409,14 +410,14 @@ export default function ShopSection() {
           font-family: inherit;
         }
         .shop-input::placeholder { color: rgba(255,255,255,0.3); }
-        .shop-input:focus { border-color: rgba(212,175,55,0.5); background: rgba(255,255,255,0.06); }
+        .shop-input:focus { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.06); }
         .shop-add-btn {
           width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px;
-          padding: 11px; border-radius: 11px; border: 1px solid rgba(212,175,55,0.35);
-          background: rgba(212,175,55,0.1); color: ${GOLD}; font-size: 12.5px; font-weight: 700;
+          padding: 11px; border-radius: 11px; border: 1px solid rgba(255,255,255,0.35);
+          background: rgba(255,255,255,0.1); color: ${GOLD}; font-size: 12.5px; font-weight: 700;
           text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; transition: background 0.2s;
         }
-        .shop-add-btn:hover { background: rgba(212,175,55,0.18); }
+        .shop-add-btn:hover { background: rgba(255,255,255,0.18); }
         .shop-submit {
           width: 100%; margin-top: 20px; min-height: 54px; border: none; border-radius: 14px;
           background: #ffffff; color: #000; font-weight: 800; font-size: 14px; letter-spacing: 0.04em;

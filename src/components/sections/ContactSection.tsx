@@ -85,12 +85,12 @@ export default function ContactSection() {
       style={{ position: 'relative', padding: '80px 0 96px', background: '#050505', overflow: 'hidden' }}
     >
       {/* soft gold flare */}
-      <div style={{ position: 'absolute', top: '50%', right: '22%', transform: 'translateY(-50%)', width: 500, height: 500, background: 'rgba(212,175,55,0.02)', borderRadius: '50%', filter: 'blur(100px)', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', top: '50%', right: '22%', transform: 'translateY(-50%)', width: 500, height: 500, background: 'rgba(255,255,255,0.02)', borderRadius: '50%', filter: 'blur(100px)', pointerEvents: 'none' }} />
 
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 10 }}>
         {/* header */}
         <div style={{ textAlign: 'center', marginBottom: 56 }}>
-          <span style={{ display: 'block', fontSize: 11, fontWeight: 700, letterSpacing: '0.25em', textTransform: 'uppercase', color: '#d4af37', marginBottom: 14 }}>
+          <span style={{ display: 'block', fontSize: 11, fontWeight: 700, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', marginBottom: 14 }}>
             Get in touch
           </span>
           <h2 style={{ fontFamily: 'var(--font-display, "Space Grotesk", sans-serif)', fontSize: 'clamp(2rem, 5vw, 3.25rem)', fontWeight: 800, textTransform: 'uppercase', color: '#fff', letterSpacing: '-0.02em', lineHeight: 1.05, marginBottom: 16 }}>
@@ -129,13 +129,13 @@ export default function ContactSection() {
                       padding: '14px 16px',
                       borderRadius: 16,
                       textDecoration: 'none',
-                      border: `1px solid ${link.isAccent ? 'rgba(212,175,55,0.3)' : 'rgba(255,255,255,0.06)'}`,
-                      background: link.isAccent ? 'rgba(212,175,55,0.06)' : 'rgba(255,255,255,0.02)',
-                      color: link.isAccent ? '#d4af37' : 'rgba(255,255,255,0.72)',
+                      border: `1px solid ${link.isAccent ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.06)'}`,
+                      background: link.isAccent ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.02)',
+                      color: link.isAccent ? '#ffffff' : 'rgba(255,255,255,0.72)',
                       transition: 'all 0.25s',
                     }}
                   >
-                    <span style={{ flexShrink: 0, width: 40, height: 40, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', background: link.isAccent ? 'rgba(212,175,55,0.1)' : 'rgba(255,255,255,0.05)' }}>
+                    <span style={{ flexShrink: 0, width: 40, height: 40, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', background: link.isAccent ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.05)' }}>
                       <Icon size={18} />
                     </span>
                     <span style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -149,7 +149,7 @@ export default function ContactSection() {
 
           {/* right: form */}
           <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 24, padding: 'clamp(22px, 4vw, 40px)', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', boxShadow: '0 0 60px -20px rgba(255,255,255,0.04)' }}>
-            <div aria-hidden style={{ position: 'absolute', top: 0, left: '15%', right: '15%', height: 1, background: 'linear-gradient(90deg, transparent, rgba(212,175,55,0.25), transparent)', pointerEvents: 'none' }} />
+            <div aria-hidden style={{ position: 'absolute', top: 0, left: '15%', right: '15%', height: 1, background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent)', pointerEvents: 'none' }} />
 
             <div style={{ marginBottom: 26 }}>
               <h3 style={{ fontFamily: 'var(--font-display, "Space Grotesk", sans-serif)', fontSize: 18, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.02em', color: '#fff', marginBottom: 6 }}>
@@ -251,7 +251,7 @@ export default function ContactSection() {
         }
         .aisca-cf-input::placeholder { color: rgba(255,255,255,0.3); }
         .aisca-cf-input:focus {
-          border-color: rgba(212,175,55,0.5);
+          border-color: rgba(255,255,255,0.5);
           background: rgba(255,255,255,0.06);
         }
         .aisca-cf-btn {

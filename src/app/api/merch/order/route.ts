@@ -5,7 +5,7 @@ import { cleanStr, optStr, isPhone, isEmail, rateLimit } from '@/lib/validate'
 
 // ── Server-authoritative catalog: the client can NEVER set prices ──
 const CATALOG: Record<string, { name: string; price: number; sized?: boolean }> = {
-  'aisca-tshirt-black': { name: 'AISCA T-Shirt — Black Edition', price: 2500, sized: true },
+  'aisca-tshirt-black': { name: 'AISCA T-Shirt (Black Edition)', price: 2500, sized: true },
   'aisca-wristband': { name: 'AISCA Wrist Band', price: 300 },
   'aisca-blazerpin': { name: 'AISCA Blazer Pin', price: 1600 },
 }
