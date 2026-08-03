@@ -3,7 +3,7 @@ export const NAV_LINKS = [
   { label: 'About', href: '/about' },
   { label: 'Officials', href: '/officials' },
   { label: 'Events', href: '/events' },
-  { label: 'Products', href: '/#products' },
+  { label: 'Shop', href: '/shop' },
   { label: 'IdeaNet', href: '/ideanet' },
   { label: 'Contact', href: '/contact' },
 ] as const;
