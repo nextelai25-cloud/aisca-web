@@ -20,13 +20,13 @@ export const events: Event[] = [
   {
     id: '12',
     slug: 'bs360-finals-2026',
-    name: 'BS360 Quiz Competition — Grand Finals',
+    name: 'BS360 Quiz Competition - Grand Finals',
     tag: 'Competition',
     year: '2026',
     date: 'August 01, 2026',
     coverPhoto: '',
     photos: [],
-    description: `The island's brightest commerce minds, one final stage.. On August 01, 2026, BS360 reached its grand finale at Mahanama College, Colombo — a high-energy, on-ground showdown that brought together the top school teams who had battled their way through the qualifying round. After weeks of anticipation, the finals delivered a spectacle of knowledge, speed, and school spirit.\n\nThe competition unfolded across multiple classrooms running simultaneously, with teams facing a live, interactive quiz grid spanning Economics, Business Studies, Accounting, and General Knowledge. Every question was presented in English, Sinhala, and Tamil — keeping the finals as inclusive as they were challenging — while the difficulty climbed from Easy all the way to Super Hard.\n\nAs the points mounted and the matches intensified, one team rose above the rest to be crowned BS360 champions. The finals capped off a landmark competition for AISCA — a proud celebration of academic excellence, healthy rivalry, and the islandwide commerce community coming together.`
+    description: `The island's brightest commerce minds, one final stage.. On August 01, 2026, BS360 reached its grand finale at Mahanama College, Colombo, a high-energy, on-ground showdown that brought together the top school teams who had battled their way through the qualifying round. After weeks of anticipation, the finals delivered a spectacle of knowledge, speed, and school spirit.\n\nThe competition unfolded across multiple classrooms running simultaneously, with teams facing a live, interactive quiz grid spanning Economics, Business Studies, Accounting, and General Knowledge. Every question was presented in English, Sinhala, and Tamil, keeping the finals as inclusive as they were challenging, while the difficulty climbed from Easy all the way to Super Hard.\n\nAs the points mounted and the matches intensified, one team rose above the rest to be crowned BS360 champions. The finals capped off a landmark competition for AISCA, a proud celebration of academic excellence, healthy rivalry, and the islandwide commerce community coming together.`
   },
   {
     id: '11',
@@ -37,18 +37,18 @@ export const events: Event[] = [
     date: 'July 13, 2026',
     coverPhoto: '',
     photos: [],
-    description: `Levelling up the conversation on growth and leadership.. Building on the success of our inaugural edition, AISCA Forum 2.0 returned on July 13, 2026, with a bigger vision and a sharper focus on preparing our members for the world beyond the classroom. The second edition was hosted in partnership with APIIT (Asia Pacific Institute of Information Technology), one of Sri Lanka's leading private higher-education institutions.\n\nHeld in connection with the Stanford SHINE initiative, Forum 2.0 opened our members up to global perspectives on innovation, personal branding, and professional readiness. The sessions were designed to push participants out of their comfort zones — sharpening communication, building confidence, and deepening their understanding of the modern corporate landscape.\n\nForum 2.0 reflected exactly what AISCA sets out to do: connect ambitious commerce students with world-class institutions and ideas, and equip them with the mindset to lead. Our members walked away inspired, better networked, and ready for the opportunities ahead.`
+    description: `Levelling up the conversation on growth and leadership.. Building on the success of our inaugural edition, AISCA Forum 2.0 returned on July 13, 2026, with a bigger vision and a sharper focus on preparing our members for the world beyond the classroom. The second edition was hosted in partnership with APIIT (Asia Pacific Institute of Information Technology), one of Sri Lanka's leading private higher-education institutions.\n\nHeld in connection with the Stanford SHINE initiative, Forum 2.0 opened our members up to global perspectives on innovation, personal branding, and professional readiness. The sessions were designed to push participants out of their comfort zones, sharpening communication, building confidence, and deepening their understanding of the modern corporate landscape.\n\nForum 2.0 reflected exactly what AISCA sets out to do: connect ambitious commerce students with world-class institutions and ideas, and equip them with the mindset to lead. Our members walked away inspired, better networked, and ready for the opportunities ahead.`
   },
   {
     id: '10',
     slug: 'bs360-round-1-2026',
-    name: 'BS360 Quiz Competition — Round 1',
+    name: 'BS360 Quiz Competition - Round 1',
     tag: 'Competition',
     year: '2026',
     date: 'June 27, 2026',
     coverPhoto: '',
     photos: [],
-    description: `Where the island's sharpest commerce minds began the race.. BS360 opened its very first round on June 27, 2026, in a fully virtual format that brought school teams from across the island onto a single competitive stage. Designed as the qualifying round of AISCA's flagship inter-school commerce quiz, it tested students on Economics, Business Studies, Accounting, and General Knowledge across four rising levels of difficulty.\n\nWhat set BS360 apart was its genuinely inclusive format — every question appeared in English, Sinhala, and Tamil, ensuring that knowledge, not language, decided the outcome. Teams worked their way through a fast-paced quiz grid, thinking on their feet as the stakes climbed with every level.\n\nRound 1 set the tone for everything BS360 stands for: a national platform where commerce students test their knowledge, represent their schools with pride, and earn their place in the finals. The energy from this opening round carried straight into the next stage of the competition.`
+    description: `Where the island's sharpest commerce minds began the race.. BS360 opened its very first round on June 27, 2026, in a fully virtual format that brought school teams from across the island onto a single competitive stage. Designed as the qualifying round of AISCA's flagship inter-school commerce quiz, it tested students on Economics, Business Studies, Accounting, and General Knowledge across four rising levels of difficulty.\n\nWhat set BS360 apart was its genuinely inclusive format, where every question appeared in English, Sinhala, and Tamil, ensuring that knowledge, not language, decided the outcome. Teams worked their way through a fast-paced quiz grid, thinking on their feet as the stakes climbed with every level.\n\nRound 1 set the tone for everything BS360 stands for: a national platform where commerce students test their knowledge, represent their schools with pride, and earn their place in the finals. The energy from this opening round carried straight into the next stage of the competition.`
   },
   {
     id: '9',
