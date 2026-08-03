@@ -166,7 +166,9 @@ export default function ContactSection() {
           </div>
 
           {/* Right Side: Message form */}
-          <div className="lg:col-span-7 bg-[#0b0b0b] border border-white/5 rounded-3xl p-6 md:p-10 space-y-6">
+          <div className="lg:col-span-7 relative overflow-hidden glass-card-glow rounded-3xl p-6 md:p-10 space-y-6">
+            {/* gold top highlight */}
+            <div className="absolute top-0 left-[15%] right-[15%] h-[1px] bg-gradient-to-r from-transparent via-[#d4af37]/25 to-transparent pointer-events-none" />
             <div>
               <h3 className="text-lg font-bold tracking-wide uppercase text-white mb-1">
                 Dispatch message
@@ -195,7 +197,7 @@ export default function ContactSection() {
                         onChange={e => setName(e.target.value)}
                         placeholder="Dilshan Silva"
                         required
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 outline-none focus:border-white/20 transition-all"
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 outline-none focus:border-[#d4af37]/50 focus:bg-white/[0.07] transition-all"
                       />
                     </div>
 
@@ -209,7 +211,7 @@ export default function ContactSection() {
                         onChange={e => setEmail(e.target.value)}
                         placeholder="dilshan@gmail.com"
                         required
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 outline-none focus:border-white/20 transition-all"
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 outline-none focus:border-[#d4af37]/50 focus:bg-white/[0.07] transition-all"
                       />
                     </div>
                   </div>
@@ -224,7 +226,7 @@ export default function ContactSection() {
                       onChange={e => setSubject(e.target.value)}
                       placeholder="Corporate Sponsorship Inquiries"
                       required
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 outline-none focus:border-white/20 transition-all"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 outline-none focus:border-[#d4af37]/50 focus:bg-white/[0.07] transition-all"
                     />
                   </div>
 
@@ -238,7 +240,7 @@ export default function ContactSection() {
                       placeholder="Write your message details..."
                       required
                       rows={5}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-sm text-white placeholder-gray-600 outline-none focus:border-white/20 transition-all resize-none"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-sm text-white placeholder-gray-600 outline-none focus:border-[#d4af37]/50 focus:bg-white/[0.07] transition-all resize-none"
                     />
                   </div>
 
@@ -251,7 +253,7 @@ export default function ContactSection() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full min-h-[48px] bg-white text-black font-semibold text-xs tracking-widest uppercase rounded-xl hover:bg-gray-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="w-full min-h-[48px] bg-gradient-to-r from-[#d4af37] to-[#c19a2e] text-black font-bold text-xs tracking-widest uppercase rounded-xl hover:brightness-110 shadow-[0_12px_34px_-12px_rgba(212,175,55,0.55)] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     <Send size={14} />
                     <span>{loading ? 'Sending Message...' : 'Send Message'}</span>
