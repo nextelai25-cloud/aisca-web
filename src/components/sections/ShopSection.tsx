@@ -27,16 +27,17 @@ const CONTACTS = [
   { name: 'Ranuth', phone: '+94 71 887 4008' },
 ]
 
-interface TeeLine { key: string; size: string; quantity: number }
-
 const money = (n: number) => `Rs. ${n.toLocaleString()}`
 
+// Tell Lenis smooth-scroll to recompute after the page height changes,
+// otherwise (on mobile) the scroll limit goes stale and you get stuck.
+function nudgeScroll() {
+  setTimeout(() => { try { window.dispatchEvent(new Event('resize')) } catch {} }, 120)
+}
+
 export default function ShopSection() {
-  // T-shirt lines (per-item size), plus simple quantities for the rest
-  const [teeLines, setTeeLines] = useState<TeeLine[]>([])
   const [teeSize, setTeeSize] = useState('M')
-  const [teeQty, setTeeQty] = useState(1)
-  const [qty, setQty] = useState<Record<string, number>>({ 'aisca-blazerpin': 0, 'aisca-wristband': 0 })
+  const [qty, setQty] = useState<Record<string, number>>({ 'aisca-tshirt-black': 0, 'aisca-blazerpin': 0, 'aisca-wristband': 0 })
 
   // customer
   const [form, setForm] = useState({
@@ -59,24 +60,25 @@ export default function ShopSection() {
 
   const setField = (k: keyof typeof form, v: string) => setForm(f => ({ ...f, [k]: v }))
 
-  const addTee = () => {
-    if (teeQty < 1) return
-    setTeeLines(l => [...l, { key: `${Date.now()}-${Math.random().toString(36).slice(2)}`, size: teeSize, quantity: teeQty }])
-    setTeeQty(1)
-  }
   const bump = (id: string, d: number) => setQty(q => ({ ...q, [id]: Math.max(0, Math.min(50, (q[id] || 0) + d)) }))
 
   // Build order lines
   const lines = useMemo(() => {
     const out: { product_id: string; name: string; size: string | null; quantity: number; unit_price: number; line_total: number }[] = []
-    for (const t of teeLines) out.push({ product_id: 'aisca-tshirt-black', name: 'AISCA T-Shirt (Black Edition)', size: t.size, quantity: t.quantity, unit_price: 2500, line_total: 2500 * t.quantity })
     for (const p of PRODUCTS) {
-      if (p.sized) continue
       const n = qty[p.id] || 0
-      if (n > 0) out.push({ product_id: p.id, name: p.name, size: null, quantity: n, unit_price: p.price, line_total: p.price * n })
+      if (n <= 0) continue
+      out.push({
+        product_id: p.id,
+        name: p.sized ? 'AISCA T-Shirt (Black Edition)' : p.name,
+        size: p.sized ? teeSize : null,
+        quantity: n,
+        unit_price: p.price,
+        line_total: p.price * n,
+      })
     }
     return out
-  }, [teeLines, qty])
+  }, [qty, teeSize])
 
   const itemsTotal = lines.reduce((s, l) => s + l.line_total, 0)
   const hasItems = lines.length > 0
@@ -95,6 +97,7 @@ export default function ShopSection() {
       if (res.ok && data.url) {
         setReceiptUrl(data.url)
         setReceiptName(data.filename || file.name)
+        nudgeScroll()
       } else {
         setError(data.error || 'Receipt upload failed.')
       }
@@ -220,45 +223,34 @@ export default function ShopSection() {
                   </div>
                   <div style={{ fontSize: 18, fontWeight: 800, color: GOLD }}>{money(p.price)}</div>
 
-                  {p.sized ? (
+                  {p.sized && (
                     <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: 10 }}>
                       <button onClick={() => setSizeChartOpen(true)} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, alignSelf: 'flex-start', fontSize: 11, color: '#fff', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.2)', padding: '7px 13px', borderRadius: 999, cursor: 'pointer', fontWeight: 700 }}>
                         <Ruler size={13} /> View size chart
                       </button>
-                      <div style={{ display: 'flex', gap: 8 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.06em', flexShrink: 0 }}>Size</span>
                         <select value={teeSize} onChange={e => setTeeSize(e.target.value)} className="shop-input" style={{ flex: 1 }}>
                           {SIZES.map(s => <option key={s} value={s} style={{ background: '#111' }}>{s}</option>)}
                         </select>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 4, border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10, padding: '0 4px' }}>
-                          <button onClick={() => setTeeQty(q => Math.max(1, q - 1))} style={stepBtn}><Minus size={13} /></button>
-                          <span style={{ minWidth: 18, textAlign: 'center', color: '#fff', fontSize: 13 }}>{teeQty}</span>
-                          <button onClick={() => setTeeQty(q => Math.min(50, q + 1))} style={stepBtn}><Plus size={13} /></button>
-                        </div>
-                      </div>
-                      <button onClick={addTee} className="shop-add-btn">
-                        <Plus size={14} /> Add to order
-                      </button>
-                    </div>
-                  ) : (
-                    <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 12, padding: '8px 10px' }}>
-                      <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Quantity</span>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <button onClick={() => bump(p.id, -1)} style={stepBtn}><Minus size={14} /></button>
-                        <span style={{ minWidth: 22, textAlign: 'center', color: '#fff', fontSize: 15, fontWeight: 700 }}>{qty[p.id] || 0}</span>
-                        <button onClick={() => bump(p.id, 1)} style={stepBtn}><Plus size={14} /></button>
                       </div>
                     </div>
                   )}
+                  <div style={{ marginTop: p.sized ? 0 : 'auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 12, padding: '8px 10px' }}>
+                    <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Quantity</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <button onClick={() => bump(p.id, -1)} style={stepBtn}><Minus size={14} /></button>
+                      <span style={{ minWidth: 22, textAlign: 'center', color: '#fff', fontSize: 15, fontWeight: 700 }}>{qty[p.id] || 0}</span>
+                      <button onClick={() => bump(p.id, 1)} style={stepBtn}><Plus size={14} /></button>
+                    </div>
+                  </div>
                 </div>
               </div>
             )
           })}
         </div>
 
-        {/* group order note */}
-        <div style={{ marginBottom: 44, padding: '14px 18px', borderRadius: 14, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.25)', fontSize: 12.5, color: 'rgba(255,255,255,0.7)', lineHeight: 1.6 }}>
-          💡 Tip: You can place a <strong style={{ color: GOLD }}>group order</strong>: order for several people together, get it delivered to one location, and share among yourselves. Just add all the items and sizes below.
-        </div>
+        <div style={{ marginBottom: 44 }} />
 
         {/* two-column: summary + details */}
         <div className="shop-grid" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 28, alignItems: 'start' }}>
@@ -267,30 +259,18 @@ export default function ShopSection() {
             <h2 style={sectionTitle}>2 · Your order</h2>
             <div style={{ borderRadius: 20, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', padding: 20 }}>
               {!hasItems ? (
-                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textAlign: 'center', padding: '18px 0' }}>No items yet. Add products above.</p>
+                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', textAlign: 'center', padding: '18px 0' }}>No items yet. Set a quantity above to begin.</p>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                  {teeLines.map((t) => (
-                    <div key={t.key} style={rowStyle}>
+                  {lines.map((l) => (
+                    <div key={l.product_id} style={rowStyle}>
                       <div>
-                        <div style={{ color: '#fff', fontSize: 13.5, fontWeight: 600 }}>AISCA T-Shirt</div>
-                        <div style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.45)' }}>Size {t.size} · Qty {t.quantity}</div>
+                        <div style={{ color: '#fff', fontSize: 13.5, fontWeight: 600 }}>{l.name}</div>
+                        <div style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.45)' }}>{l.size ? `Size ${l.size} · ` : ''}Qty {l.quantity}</div>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                        <span style={{ color: '#fff', fontSize: 13 }}>{money(2500 * t.quantity)}</span>
-                        <button onClick={() => setTeeLines(l => l.filter(x => x.key !== t.key))} style={delBtn}><Trash2 size={14} /></button>
-                      </div>
-                    </div>
-                  ))}
-                  {PRODUCTS.filter(p => !p.sized && (qty[p.id] || 0) > 0).map((p) => (
-                    <div key={p.id} style={rowStyle}>
-                      <div>
-                        <div style={{ color: '#fff', fontSize: 13.5, fontWeight: 600 }}>{p.name}</div>
-                        <div style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.45)' }}>Qty {qty[p.id]}</div>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                        <span style={{ color: '#fff', fontSize: 13 }}>{money(p.price * (qty[p.id] || 0))}</span>
-                        <button onClick={() => setQty(q => ({ ...q, [p.id]: 0 }))} style={delBtn}><Trash2 size={14} /></button>
+                        <span style={{ color: '#fff', fontSize: 13 }}>{money(l.line_total)}</span>
+                        <button onClick={() => setQty(q => ({ ...q, [l.product_id]: 0 }))} style={delBtn}><Trash2 size={14} /></button>
                       </div>
                     </div>
                   ))}
@@ -299,8 +279,10 @@ export default function ShopSection() {
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>
                     <span>Items subtotal</span><span>{money(itemsTotal)}</span>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>
-                    <span>Delivery (within September)</span><span>{money(DELIVERY_FEE)}</span>
+                  {/* highlighted delivery row */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 13, color: '#fff', fontWeight: 600, padding: '10px 12px', borderRadius: 10, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.14)' }}>
+                    <span>Delivery charge <span style={{ color: 'rgba(255,255,255,0.5)', fontWeight: 400, fontSize: 11.5 }}>(within September)</span></span>
+                    <span>{money(DELIVERY_FEE)}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 16, fontWeight: 800, color: GOLD, marginTop: 4 }}>
                     <span>Total Payable</span><span>{money(total)}</span>
@@ -360,12 +342,26 @@ export default function ShopSection() {
                     <CheckCircle2 size={18} style={{ color: '#22c55e', flexShrink: 0 }} />
                     <span style={{ fontSize: 13, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{receiptName || 'Receipt uploaded'}</span>
                   </div>
-                  <button onClick={() => { setReceiptUrl(''); setReceiptName('') }} style={delBtn}><X size={15} /></button>
+                  <button onClick={() => { setReceiptUrl(''); setReceiptName(''); nudgeScroll() }} style={delBtn}><X size={15} /></button>
                 </div>
               )}
               <p style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.4)', marginTop: 12, lineHeight: 1.6 }}>
-                Orders are confirmed only after successful payment verification. If you face any problem, contact {CONTACTS.map((c, i) => <span key={c.name}>{c.name} {c.phone}{i < CONTACTS.length - 1 ? ' or ' : ''}</span>)}.
+                Orders are confirmed only after successful payment verification.
               </p>
+              <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+                <div style={{ fontSize: 10.5, letterSpacing: '0.14em', textTransform: 'uppercase', color: MUTED, fontWeight: 700, marginBottom: 8 }}>
+                  Need help? Contact
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {CONTACTS.map((c) => (
+                    <a key={c.name} href={`tel:${c.phone.replace(/\s/g, '')}`}
+                      style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '10px 14px', borderRadius: 10, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', textDecoration: 'none' }}>
+                      <span style={{ fontSize: 13, color: '#fff', fontWeight: 600 }}>{c.name}</span>
+                      <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', fontFamily: 'monospace', whiteSpace: 'nowrap' }}>{c.phone}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
             </div>
 
             {error && <p style={{ color: '#f87171', fontSize: 13, textAlign: 'center', marginTop: 16 }}>⚠️ {error}</p>}
@@ -411,13 +407,6 @@ export default function ShopSection() {
         }
         .shop-input::placeholder { color: rgba(255,255,255,0.3); }
         .shop-input:focus { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.06); }
-        .shop-add-btn {
-          width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px;
-          padding: 11px; border-radius: 11px; border: 1px solid rgba(255,255,255,0.35);
-          background: rgba(255,255,255,0.1); color: ${GOLD}; font-size: 12.5px; font-weight: 700;
-          text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; transition: background 0.2s;
-        }
-        .shop-add-btn:hover { background: rgba(255,255,255,0.18); }
         .shop-submit {
           width: 100%; margin-top: 20px; min-height: 54px; border: none; border-radius: 14px;
           background: #ffffff; color: #000; font-weight: 800; font-size: 14px; letter-spacing: 0.04em;
