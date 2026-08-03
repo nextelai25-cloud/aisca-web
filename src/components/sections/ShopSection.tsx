@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Plus, Minus, Trash2, Upload, CheckCircle2, X, Ruler } from 'lucide-react'
 
@@ -30,9 +30,20 @@ const CONTACTS = [
 const money = (n: number) => `Rs. ${n.toLocaleString()}`
 
 // Tell Lenis smooth-scroll to recompute after the page height changes,
-// otherwise (on mobile) the scroll limit goes stale and you get stuck.
+// otherwise (on mobile) the scroll limit goes stale and the page looks
+// cut off / unscrollable. We call Lenis.resize() directly (a plain resize
+// event is not always enough) a few times across paints to be safe.
 function nudgeScroll() {
-  setTimeout(() => { try { window.dispatchEvent(new Event('resize')) } catch {} }, 120)
+  const run = () => {
+    try {
+      const lenis = (window as unknown as { __lenis?: { resize: () => void } }).__lenis
+      lenis?.resize()
+      window.dispatchEvent(new Event('resize'))
+    } catch {}
+  }
+  requestAnimationFrame(run)
+  setTimeout(run, 150)
+  setTimeout(run, 450)
 }
 
 export default function ShopSection() {
@@ -83,6 +94,10 @@ export default function ShopSection() {
   const itemsTotal = lines.reduce((s, l) => s + l.line_total, 0)
   const hasItems = lines.length > 0
   const total = itemsTotal + (hasItems ? DELIVERY_FEE : 0)
+
+  // Recompute the smooth-scroll height whenever the page grows or shrinks
+  // (items added/removed, receipt uploaded, error shown).
+  useEffect(() => { nudgeScroll() }, [lines.length, receiptUrl, error, done])
 
   async function handleReceipt(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
