@@ -29,6 +29,18 @@ const CONTACTS = [
 
 const money = (n: number) => `Rs. ${n.toLocaleString()}`
 
+// Shorten long receipt filenames (they overflow the row on mobile otherwise),
+// keeping the extension visible.
+function shortName(name: string, max = 26): string {
+  if (!name) return 'Receipt uploaded'
+  if (name.length <= max) return name
+  const dot = name.lastIndexOf('.')
+  const ext = dot > 0 ? name.slice(dot) : ''
+  const base = dot > 0 ? name.slice(0, dot) : name
+  const keep = Math.max(6, max - ext.length - 1)
+  return base.slice(0, keep) + '…' + ext
+}
+
 // Tell Lenis smooth-scroll to recompute after the page height changes,
 // otherwise (on mobile) the scroll limit goes stale and the page looks
 // cut off / unscrollable. We call Lenis.resize() directly (a plain resize
@@ -352,12 +364,12 @@ export default function ShopSection() {
                   <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>Image or PDF, up to 10 MB</span>
                 </button>
               ) : (
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '14px 16px', borderRadius: 12, background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.3)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '14px 16px', borderRadius: 12, background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.3)', minWidth: 0, maxWidth: '100%' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, flex: 1 }}>
                     <CheckCircle2 size={18} style={{ color: '#22c55e', flexShrink: 0 }} />
-                    <span style={{ fontSize: 13, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{receiptName || 'Receipt uploaded'}</span>
+                    <span style={{ fontSize: 13, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>{shortName(receiptName)}</span>
                   </div>
-                  <button onClick={() => { setReceiptUrl(''); setReceiptName(''); nudgeScroll() }} style={delBtn}><X size={15} /></button>
+                  <button onClick={() => { setReceiptUrl(''); setReceiptName(''); nudgeScroll() }} style={{ ...delBtn }}><X size={15} /></button>
                 </div>
               )}
               <p style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.4)', marginTop: 12, lineHeight: 1.6 }}>
@@ -407,6 +419,7 @@ export default function ShopSection() {
       </AnimatePresence>
 
       <style>{`
+        .shop-grid > div { min-width: 0; }
         @media (min-width: 980px) { .shop-grid { grid-template-columns: 5fr 6fr; gap: 40px; } }
         .shop-input {
           width: 100%;
