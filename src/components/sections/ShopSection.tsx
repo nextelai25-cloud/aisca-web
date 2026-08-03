@@ -216,7 +216,7 @@ export default function ShopSection() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14, marginBottom: 44 }}>
           {[
             { label: 'Order Closing Date', value: 'Orders close after 25th August' },
-            { label: 'Estimated Delivery', value: 'Delivered within September' },
+            { label: 'Estimated Delivery', value: 'Island-wide · delivered within September' },
             { label: 'Need Help?', value: CONTACTS.map(c => `${c.name} ${c.phone}`).join('  ·  ') },
           ].map((c) => (
             <div key={c.label} style={{ padding: '16px 18px', borderRadius: 16, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
@@ -307,9 +307,14 @@ export default function ShopSection() {
                     <span>Items subtotal</span><span>{money(itemsTotal)}</span>
                   </div>
                   {/* highlighted delivery row */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 13, color: '#fff', fontWeight: 600, padding: '10px 12px', borderRadius: 10, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.14)' }}>
-                    <span>Delivery charge <span style={{ color: 'rgba(255,255,255,0.5)', fontWeight: 400, fontSize: 11.5 }}>(within September)</span></span>
-                    <span>{money(DELIVERY_FEE)}</span>
+                  <div style={{ padding: '10px 12px', borderRadius: 10, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.14)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 13, color: '#fff', fontWeight: 600 }}>
+                      <span>Delivery charge</span>
+                      <span>{money(DELIVERY_FEE)}</span>
+                    </div>
+                    <div style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.55)', marginTop: 4 }}>
+                      🇱🇰 Island-wide delivery available · delivered within September
+                    </div>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 16, fontWeight: 800, color: GOLD, marginTop: 4 }}>
                     <span>Total Payable</span><span>{money(total)}</span>
