@@ -12,7 +12,7 @@ const ease = [0.22, 1, 0.36, 1] as const;
 function ProductCard({ p, i }: { p: typeof PRODUCTS[number]; i: number }) {
   const [isBtnHovered, setIsBtnHovered] = useState(false);
 
-  const productUrl = p.id === 'tshirt' ? '/products/tshirt' : p.id === 'pin' ? '/products/blazer-pin' : '/products/wristband';
+  const productUrl = '/shop';
 
   return (
     <motion.div
@@ -55,8 +55,8 @@ function ProductCard({ p, i }: { p: typeof PRODUCTS[number]; i: number }) {
             ITEM
           </span>
         )}
-        <span className="absolute top-3 left-3 z-10 px-3 py-1 rounded-full text-[10px] tracking-[0.2em] uppercase text-white/60 font-normal" style={{ background: 'rgba(255,255,255,0.10)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.10)' }}>
-          {p.status || 'In Stock'}
+        <span className="absolute top-3 left-3 z-10 px-3 py-1 rounded-full text-[10px] tracking-[0.2em] uppercase text-white/70 font-normal" style={{ background: 'rgba(255,255,255,0.10)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.10)' }}>
+          Pre-orders close · Aug 25
         </span>
       </div>
 
@@ -99,7 +99,7 @@ function ProductCard({ p, i }: { p: typeof PRODUCTS[number]; i: number }) {
             textDecoration: 'none'
           }}
         >
-          View Details & Pre-order
+          Order Now
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </Link>
       </div>
