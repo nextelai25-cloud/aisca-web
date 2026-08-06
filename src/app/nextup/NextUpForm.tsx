@@ -114,8 +114,8 @@ export default function NextUpForm() {
       <div style={{ position: 'relative', zIndex: 2, maxWidth: 760, margin: '0 auto', padding: '28px 22px 100px' }}>
         {/* Logos row */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: 40 }}>
-          <img src="/nextup/aisca.webp" alt="AISCA" style={{ height: 34, width: 'auto', objectFit: 'contain' }} />
-          <img src="/nextup/ba-junior.webp" alt="Business Advisor Junior" style={{ height: 48, width: 'auto', objectFit: 'contain' }} />
+          <img src="/nextup/aisca.webp" alt="AISCA" className="nx-aisca" />
+          <img src="/nextup/ba-junior.webp" alt="Business Advisor Junior" className="nx-ba" />
         </div>
 
         {done ? (
@@ -128,7 +128,7 @@ export default function NextUpForm() {
               <p style={{ fontFamily: DISPLAY, fontSize: 'clamp(1.4rem, 4.5vw, 2.1rem)', color: RED, letterSpacing: '0.01em', margin: '0 0 12px' }}>
                 EMPOWERING SRI LANKA&apos;S YOUNGEST MINDS
               </p>
-              <p style={{ fontSize: 15, lineHeight: 1.75, color: 'rgba(255,255,255,0.7)', maxWidth: 620, margin: '0 auto' }}>
+              <p className="nx-intro" style={{ fontSize: 15, lineHeight: 1.75, color: 'rgba(255,255,255,0.7)', maxWidth: 620, margin: '0 auto' }}>
                 NextUp is a national initiative by AISCA, in partnership with Business Advisor Junior, spotlighting the country&apos;s boldest young entrepreneurs, changemakers, and innovators. If you are nineteen or under and already building something real, this is your moment to be seen. Up to twenty young founders will be featured in a professionally produced AISCA e-magazine and a podcast-style video series with Business Advisor Junior.
               </p>
               <div style={{ display: 'inline-block', marginTop: 18, padding: '9px 18px', borderRadius: 999, background: 'rgba(225,29,42,0.12)', border: `1px solid ${RED}66`, color: '#fff', fontSize: 12.5, fontWeight: 700, letterSpacing: '0.06em' }}>
@@ -307,6 +307,13 @@ export default function NextUpForm() {
       </div>
 
       <style>{`
+        .nx-aisca { height: 30px !important; width: auto !important; object-fit: contain; }
+        .nx-ba { height: 62px !important; width: auto !important; object-fit: contain; }
+        @media (max-width: 767px) {
+          .nx-aisca { height: 22px !important; }
+          .nx-ba { height: 46px !important; }
+          .nx-intro { font-size: 12.5px !important; line-height: 1.6 !important; }
+        }
         .nx-input {
           width: 100%;
           background: rgba(255,255,255,0.04);
