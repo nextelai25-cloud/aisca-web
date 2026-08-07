@@ -266,7 +266,7 @@ export default function NextUpForm() {
                         style={{ width: '100%', padding: '22px', borderRadius: 14, border: `1.5px dashed ${RED}66`, background: 'rgba(225,29,42,0.05)', color: '#fff', cursor: uploading ? 'default' : 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
                         <Upload size={22} color={RED} />
                         <span style={{ fontSize: 13.5, fontWeight: 700 }}>{uploading ? 'Uploading…' : 'Upload photos & documents'}</span>
-                        <span style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.45)' }}>{uploads.length}/8 files · images or PDF, up to 10 MB each</span>
+                        <span style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.45)' }}>{uploads.length}/8 files · images or PDF, up to 25 MB each</span>
                       </button>
                     )}
                     {uploads.length > 0 && (

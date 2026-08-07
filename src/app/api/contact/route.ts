@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { sendTelegram } from '@/lib/telegram'
-import { isEmail, cleanStr, rateLimit } from '@/lib/validate'
+import { isEmail, rateLimit } from '@/lib/validate'
 
 export async function POST(req: NextRequest) {
   try {
@@ -11,9 +11,11 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json()
 
-    const name = cleanStr(body.name, 120)
-    const subject = cleanStr(body.subject, 200)
-    const message = cleanStr(body.message, 5000)
+    // Truncate long input instead of rejecting it, so a long message never
+    // gets falsely flagged as "all fields are required".
+    const name = String(body.name ?? '').trim().slice(0, 200)
+    const subject = String(body.subject ?? '').trim().slice(0, 300)
+    const message = String(body.message ?? '').trim().slice(0, 20000)
 
     if (!name || !subject || !message) {
       return NextResponse.json({ error: 'All fields are required' }, { status: 400 })

@@ -8,12 +8,14 @@ import { rateLimit } from '@/lib/validate'
 // order submission then attaches to the order.
 const ALLOWED: Record<string, string> = {
   'image/jpeg': 'jpg',
+  'image/jpg': 'jpg',
   'image/png': 'png',
   'image/webp': 'webp',
   'image/heic': 'heic',
+  'image/heif': 'heif',
   'application/pdf': 'pdf',
 }
-const MAX_SIZE = 10 * 1024 * 1024 // 10 MB
+const MAX_SIZE = 15 * 1024 * 1024
 
 export async function POST(req: NextRequest) {
   if (!rateLimit(req, 'merch-upload', 600, 60 * 60 * 1000)) {
@@ -29,7 +31,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Only JPG, PNG, WEBP, HEIC images or PDF files are allowed.' }, { status: 400 })
   }
   if (file.size > MAX_SIZE) {
-    return NextResponse.json({ error: 'File must be smaller than 10 MB.' }, { status: 400 })
+    return NextResponse.json({ error: 'File must be smaller than 15 MB.' }, { status: 400 })
   }
 
   const fileName = `merch-receipts/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`

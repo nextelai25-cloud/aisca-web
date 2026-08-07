@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     const district = cleanStr(body.district, 60)
     const province = cleanStr(body.province, 60)
     const who_are_you = cleanStr(body.who_are_you, 120)
-    const date_of_birth = cleanStr(body.date_of_birth, 10)
+    const date_of_birth = cleanStr(body.date_of_birth, 40)
 
     if (!full_name || !school || !district || !province || !who_are_you || !date_of_birth) {
       return NextResponse.json({ error: 'Please fill in all required fields.' }, { status: 400 })

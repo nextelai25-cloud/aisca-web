@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { sendTelegram } from '@/lib/telegram'
 import { verifyApprovedMember } from '@/lib/member'
-import { cleanStr, rateLimit } from '@/lib/validate'
+import { rateLimit } from '@/lib/validate'
 
 function calcHotScore(upvotes: number, downvotes: number, createdAt: string): number {
   const score = upvotes - downvotes
@@ -38,8 +38,10 @@ export async function POST(req: NextRequest) {
 
   const body = await req.json()
 
-  const title = cleanStr(body.title, 200)
-  const description = cleanStr(body.description, 5000)
+  // Truncate long input instead of rejecting, so a long idea never gets
+  // falsely flagged as a missing field.
+  const title = String(body.title ?? '').trim().slice(0, 300)
+  const description = String(body.description ?? '').trim().slice(0, 20000)
   if (!title || !description) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
   }

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { verifyApprovedMember } from '@/lib/member'
-import { cleanStr, rateLimit } from '@/lib/validate'
+import { rateLimit } from '@/lib/validate'
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
   const body = await req.json()
   const { post_id, parent_id } = body
 
-  const content = cleanStr(body.content, 2000)
+  const content = String(body.content ?? '').trim().slice(0, 6000)
   if (!post_id || !content) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
   }

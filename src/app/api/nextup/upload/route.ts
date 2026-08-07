@@ -7,12 +7,14 @@ import { rateLimit } from '@/lib/validate'
 // the returned URLs. Images or PDFs, up to 10 MB, stored under nextup/.
 const ALLOWED: Record<string, string> = {
   'image/jpeg': 'jpg',
+  'image/jpg': 'jpg',
   'image/png': 'png',
   'image/webp': 'webp',
   'image/heic': 'heic',
+  'image/heif': 'heif',
   'application/pdf': 'pdf',
 }
-const MAX_SIZE = 10 * 1024 * 1024
+const MAX_SIZE = 25 * 1024 * 1024 // phone photos can be large
 
 export async function POST(req: NextRequest) {
   // Each applicant uploads up to 8 files and many share one school/mobile IP,
@@ -30,7 +32,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Only JPG, PNG, WEBP, HEIC images or PDF files are allowed.' }, { status: 400 })
   }
   if (file.size > MAX_SIZE) {
-    return NextResponse.json({ error: 'Each file must be smaller than 10 MB.' }, { status: 400 })
+    return NextResponse.json({ error: 'Each file must be smaller than 25 MB.' }, { status: 400 })
   }
 
   const fileName = `nextup/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`

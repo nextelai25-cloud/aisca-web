@@ -366,7 +366,7 @@ export default function ShopSection() {
                   style={{ width: '100%', padding: '22px', borderRadius: 14, border: '1.5px dashed rgba(255,255,255,0.4)', background: 'rgba(255,255,255,0.04)', color: GOLD, cursor: uploading ? 'default' : 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
                   <Upload size={22} />
                   <span style={{ fontSize: 13, fontWeight: 700 }}>{uploading ? 'Uploading…' : 'Upload bank slip / screenshot'}</span>
-                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>Image or PDF, up to 10 MB</span>
+                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>Image or PDF, up to 15 MB</span>
                 </button>
               ) : (
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '14px 16px', borderRadius: 12, background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.3)', minWidth: 0, maxWidth: '100%' }}>

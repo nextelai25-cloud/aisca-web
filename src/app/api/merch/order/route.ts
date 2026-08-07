@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { sendTelegram } from '@/lib/telegram'
-import { cleanStr, optStr, isPhone, isEmail, rateLimit } from '@/lib/validate'
+import { optStr, isPhone, isEmail, rateLimit } from '@/lib/validate'
 
 // ── Server-authoritative catalog: the client can NEVER set prices ──
 const CATALOG: Record<string, { name: string; price: number; sized?: boolean }> = {
@@ -61,14 +61,14 @@ export async function POST(req: NextRequest) {
       items.push({ product_id: raw.product_id, name: product.name, size, quantity, unit_price: product.price, line_total })
     }
 
-    // ── Customer ──
-    const customer_name = cleanStr(body.customer_name, 120)
+    // ── Customer (truncate long input instead of rejecting) ──
+    const customer_name = String(body.customer_name ?? '').trim().slice(0, 200)
     if (!customer_name) return NextResponse.json({ error: 'Please provide your name.' }, { status: 400 })
 
     if (!isPhone(body.customer_phone)) {
       return NextResponse.json({ error: 'Please provide a valid WhatsApp number.' }, { status: 400 })
     }
-    const customer_address = cleanStr(body.customer_address, 500)
+    const customer_address = String(body.customer_address ?? '').trim().slice(0, 1500)
     if (!customer_address) return NextResponse.json({ error: 'Please provide a delivery address.' }, { status: 400 })
 
     const customer_email = optStr(body.customer_email, 254)
