@@ -332,11 +332,11 @@ export default function NextUpForm() {
       </div>
 
       <style>{`
-        .nx-aisca { height: 30px !important; width: auto !important; object-fit: contain; }
+        .nx-aisca { height: 44px !important; width: auto !important; object-fit: contain; }
         .nx-ba { height: 74px !important; width: auto !important; object-fit: contain; }
         @media (max-width: 767px) {
-          .nx-aisca { height: 22px !important; }
-          .nx-ba { height: 56px !important; }
+          .nx-aisca { height: 28px !important; }
+          .nx-ba { height: 52px !important; }
           .nx-intro { font-size: 12.5px !important; line-height: 1.6 !important; }
         }
         .nx-input {
