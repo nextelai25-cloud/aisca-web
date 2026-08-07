@@ -15,8 +15,10 @@ const ALLOWED: Record<string, string> = {
 const MAX_SIZE = 10 * 1024 * 1024
 
 export async function POST(req: NextRequest) {
-  if (!rateLimit(req, 'nextup-upload', 60, 60 * 60 * 1000)) {
-    return NextResponse.json({ error: 'Too many uploads. Please try again later.' }, { status: 429 })
+  // Each applicant uploads up to 8 files and many share one school/mobile IP,
+  // so keep this high to avoid blocking legitimate applicants.
+  if (!rateLimit(req, 'nextup-upload', 4000, 60 * 60 * 1000)) {
+    return NextResponse.json({ error: 'Too many uploads from this connection. Please wait a little and try again.' }, { status: 429 })
   }
 
   const formData = await req.formData()

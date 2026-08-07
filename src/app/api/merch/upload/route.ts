@@ -16,8 +16,8 @@ const ALLOWED: Record<string, string> = {
 const MAX_SIZE = 10 * 1024 * 1024 // 10 MB
 
 export async function POST(req: NextRequest) {
-  if (!rateLimit(req, 'merch-upload', 30, 60 * 60 * 1000)) {
-    return NextResponse.json({ error: 'Too many uploads. Please try again later.' }, { status: 429 })
+  if (!rateLimit(req, 'merch-upload', 600, 60 * 60 * 1000)) {
+    return NextResponse.json({ error: 'Too many uploads from this connection. Please wait a little and try again.' }, { status: 429 })
   }
 
   const formData = await req.formData()

@@ -11,6 +11,30 @@ const BODY = "'Inter', system-ui, -apple-system, sans-serif"
 type Mode = '' | 'self' | 'referral'
 interface Uploaded { url: string; filename: string }
 
+const SUPPORT = [
+  { name: 'Sachindra', phone: '074 254 2662' },
+  { name: 'Kovida', phone: '077 158 5048' },
+]
+
+function Support() {
+  return (
+    <div style={{ marginTop: 22, textAlign: 'center' }}>
+      <p style={{ fontSize: 10.5, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', fontWeight: 700, marginBottom: 10 }}>
+        Need help? Contact
+      </p>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center' }}>
+        {SUPPORT.map((c) => (
+          <a key={c.name} href={`tel:${c.phone.replace(/\s/g, '')}`}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 9, padding: '9px 15px', borderRadius: 999, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.14)', textDecoration: 'none' }}>
+            <span style={{ color: '#fff', fontSize: 13, fontWeight: 600 }}>{c.name}</span>
+            <span style={{ color: 'rgba(255,255,255,0.65)', fontSize: 13, fontFamily: 'monospace' }}>{c.phone}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 const emptyForm = {
   // referral
   referrer_name: '', referrer_phone: '', referrer_relationship: '',
@@ -134,6 +158,7 @@ export default function NextUpForm() {
               <div style={{ display: 'inline-block', marginTop: 18, padding: '9px 18px', borderRadius: 999, background: 'rgba(225,29,42,0.12)', border: `1px solid ${RED}66`, color: '#fff', fontSize: 12.5, fontWeight: 700, letterSpacing: '0.06em' }}>
                 Applications close on 16th August 2026
               </div>
+              <Support />
             </div>
 
             {/* Who this is for */}
@@ -308,10 +333,10 @@ export default function NextUpForm() {
 
       <style>{`
         .nx-aisca { height: 30px !important; width: auto !important; object-fit: contain; }
-        .nx-ba { height: 62px !important; width: auto !important; object-fit: contain; }
+        .nx-ba { height: 74px !important; width: auto !important; object-fit: contain; }
         @media (max-width: 767px) {
           .nx-aisca { height: 22px !important; }
-          .nx-ba { height: 46px !important; }
+          .nx-ba { height: 56px !important; }
           .nx-intro { font-size: 12.5px !important; line-height: 1.6 !important; }
         }
         .nx-input {
@@ -394,6 +419,7 @@ function SuccessCard() {
       <p style={{ fontSize: 15, lineHeight: 1.75, color: 'rgba(255,255,255,0.72)', maxWidth: 480, margin: '0 auto' }}>
         Thank you. We read every single application, and our team will be in touch with the founders selected for NextUp. Keep building.
       </p>
+      <Support />
     </motion.div>
   )
 }

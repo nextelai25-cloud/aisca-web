@@ -8,8 +8,10 @@ interface Upload { url?: string; filename?: string }
 
 export async function POST(req: NextRequest) {
   try {
-    if (!rateLimit(req, 'nextup-apply', 15, 60 * 60 * 1000)) {
-      return NextResponse.json({ error: 'Too many submissions. Please try again later.' }, { status: 429 })
+    // Generous limit: many students share one school/mobile IP (NAT), so this
+    // must not block a whole classroom submitting from the same connection.
+    if (!rateLimit(req, 'nextup-apply', 400, 60 * 60 * 1000)) {
+      return NextResponse.json({ error: 'Too many submissions from this connection. Please wait a little and try again.' }, { status: 429 })
     }
 
     const b = await req.json()

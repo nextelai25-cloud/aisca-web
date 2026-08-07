@@ -18,8 +18,9 @@ interface LineIn { product_id?: string; size?: string; quantity?: unknown }
 
 export async function POST(req: NextRequest) {
   try {
-    if (!rateLimit(req, 'merch-order', 12, 60 * 60 * 1000)) {
-      return NextResponse.json({ error: 'Too many orders from this connection. Please try again later.' }, { status: 429 })
+    // Many buyers share one school/mobile IP (NAT), so keep this generous.
+    if (!rateLimit(req, 'merch-order', 300, 60 * 60 * 1000)) {
+      return NextResponse.json({ error: 'Too many orders from this connection. Please wait a little and try again.' }, { status: 429 })
     }
 
     const body = await req.json()
