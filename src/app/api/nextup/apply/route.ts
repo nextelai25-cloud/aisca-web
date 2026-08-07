@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { sendTelegram } from '@/lib/telegram'
 import { sendNextUpReceivedEmail } from '@/lib/nextup-email'
-import { cleanStr, optStr, isPhone, isEmail, rateLimit } from '@/lib/validate'
+import { optStr, isPhone, isEmail, rateLimit } from '@/lib/validate'
 
 interface Upload { url?: string; filename?: string }
 
@@ -20,10 +20,10 @@ export async function POST(req: NextRequest) {
 
     // ─────────────────────────── Referral path ───────────────────────────
     if (type === 'referral') {
-      const referrer_name = cleanStr(b.referrer_name, 120)
+      const referrer_name = String(b.referrer_name ?? '').trim().slice(0, 200)
       if (!referrer_name) return NextResponse.json({ error: 'Please tell us your name.' }, { status: 400 })
       if (!isPhone(b.referrer_phone)) return NextResponse.json({ error: 'Please provide your contact number.' }, { status: 400 })
-      const referred_founder_name = cleanStr(b.referred_founder_name, 120)
+      const referred_founder_name = String(b.referred_founder_name ?? '').trim().slice(0, 200)
       if (!referred_founder_name) return NextResponse.json({ error: "Please provide the founder's name." }, { status: 400 })
       if (!isPhone(b.referred_founder_phone)) return NextResponse.json({ error: "Please provide the founder's contact number." }, { status: 400 })
 
@@ -57,22 +57,24 @@ export async function POST(req: NextRequest) {
     }
 
     // ──────────────────────────── Self path ──────────────────────────────
-    const full_name = cleanStr(b.full_name, 120)
+    const full_name = String(b.full_name ?? '').trim().slice(0, 200)
     if (!full_name) return NextResponse.json({ error: 'Please provide your full name.' }, { status: 400 })
-    const age = cleanStr(b.age, 40)
+    const age = String(b.age ?? '').trim().slice(0, 200)
     if (!age) return NextResponse.json({ error: 'Please tell us your age.' }, { status: 400 })
-    const school = cleanStr(b.school, 160)
+    const school = String(b.school ?? '').trim().slice(0, 300)
     if (!school) return NextResponse.json({ error: 'Please tell us which school you attend.' }, { status: 400 })
-    const district = cleanStr(b.district, 80)
+    const district = String(b.district ?? '').trim().slice(0, 200)
     if (!district) return NextResponse.json({ error: 'Please tell us your district.' }, { status: 400 })
     if (!isPhone(b.whatsapp)) return NextResponse.json({ error: 'Please provide a valid WhatsApp number.' }, { status: 400 })
     const email = optStr(b.email, 254)
     if (!email || !isEmail(email)) return NextResponse.json({ error: 'Please provide a valid email address.' }, { status: 400 })
-    const venture_name = cleanStr(b.venture_name, 160)
+    const venture_name = String(b.venture_name ?? '').trim().slice(0, 300)
     if (!venture_name) return NextResponse.json({ error: 'Please name your business, project, or venture.' }, { status: 400 })
-    const venture_description = cleanStr(b.venture_description, 600)
+    // Long free-text: TRUNCATE generously instead of rejecting, so a long
+    // answer never gets falsely flagged as empty.
+    const venture_description = String(b.venture_description ?? '').trim().slice(0, 3000)
     if (!venture_description) return NextResponse.json({ error: 'Please tell us what it does.' }, { status: 400 })
-    const story = cleanStr(b.story, 3000)
+    const story = String(b.story ?? '').trim().slice(0, 20000)
     if (!story) return NextResponse.json({ error: 'Please share your story — this is the part we care about most.' }, { status: 400 })
     if (b.consent !== true) return NextResponse.json({ error: 'Please confirm the information is true and give permission to feature your story.' }, { status: 400 })
 
