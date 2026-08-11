@@ -101,7 +101,7 @@ export default function NextUpForm() {
       }
     } else {
       if (!f.full_name.trim()) { setError('Please enter your full name.'); return }
-      if (!f.age.trim()) { setError('Please tell us your age.'); return }
+      if (!f.age.trim()) { setError('Please tell us what best describes you.'); return }
       if (!f.school.trim()) { setError('Please tell us your school.'); return }
       if (!f.district.trim()) { setError('Please tell us your district.'); return }
       if (f.whatsapp.replace(/\D/g, '').length < 9) { setError('Please enter a valid WhatsApp number.'); return }
@@ -153,10 +153,10 @@ export default function NextUpForm() {
                 EMPOWERING SRI LANKA&apos;S YOUNGEST MINDS
               </p>
               <p className="nx-intro" style={{ fontSize: 15, lineHeight: 1.75, color: 'rgba(255,255,255,0.7)', maxWidth: 620, margin: '0 auto' }}>
-                NextUp is a national initiative by AISCA, in partnership with Business Advisor Junior, spotlighting the country&apos;s boldest young entrepreneurs, changemakers, and innovators. If you are nineteen or under and already building something real, this is your moment to be seen. Up to twenty young founders will be featured in a professionally produced AISCA e-magazine and a podcast-style video series with Business Advisor Junior.
+                NextUp is a national initiative by AISCA, in partnership with Business Advisor Junior, spotlighting the country&apos;s boldest young entrepreneurs, changemakers, and innovators. If you are young and already building something real, this is your moment to be seen. Up to twenty young founders will be featured in a professionally produced AISCA e-magazine and a podcast-style video series with Business Advisor Junior.
               </p>
               <div style={{ display: 'inline-block', marginTop: 18, padding: '9px 18px', borderRadius: 999, background: 'rgba(225,29,42,0.12)', border: `1px solid ${RED}66`, color: '#fff', fontSize: 12.5, fontWeight: 700, letterSpacing: '0.06em' }}>
-                Applications close on 16th August 2026
+                Applications close on 31st August 2026
               </div>
               <Support />
             </div>
@@ -166,7 +166,7 @@ export default function NextUpForm() {
               <SectionLabel>Who this is for</SectionLabel>
               <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {[
-                  'You are a Sri Lankan student aged nineteen or under.',
+                  'You are a young Sri Lankan: a school student, a university student, or simply someone young who is building something of their own.',
                   'You are already running or building a business, project, or venture, not just an idea on paper.',
                   'You are ready to share your story publicly.',
                   'You can apply for yourself, or refer someone you believe deserves the spotlight.',
@@ -228,7 +228,7 @@ export default function NextUpForm() {
                     <SectionLabel>About you</SectionLabel>
                     <Field label="What is your full name?" required><input className="nx-input" value={f.full_name} onChange={e => set('full_name', e.target.value)} /></Field>
                     <Grid>
-                      <Field label="How old are you right now?" required hint="Confirm you are 19 or under as of August 2026."><input className="nx-input" value={f.age} onChange={e => set('age', e.target.value)} /></Field>
+                      <Field label="What best describes you?" required hint="e.g. school student, university student, young founder, or someone building something different."><input className="nx-input" value={f.age} onChange={e => set('age', e.target.value)} placeholder="School / university student, young founder…" /></Field>
                       <Field label="Which district are you based in?" required><input className="nx-input" value={f.district} onChange={e => set('district', e.target.value)} /></Field>
                     </Grid>
                     <Field label="Which school do you attend?" required><input className="nx-input" value={f.school} onChange={e => set('school', e.target.value)} /></Field>

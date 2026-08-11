@@ -59,8 +59,9 @@ export async function POST(req: NextRequest) {
     // ──────────────────────────── Self path ──────────────────────────────
     const full_name = String(b.full_name ?? '').trim().slice(0, 200)
     if (!full_name) return NextResponse.json({ error: 'Please provide your full name.' }, { status: 400 })
-    const age = String(b.age ?? '').trim().slice(0, 200)
-    if (!age) return NextResponse.json({ error: 'Please tell us your age.' }, { status: 400 })
+    // `age` column now stores the broader "what best describes you" category.
+    const age = String(b.age ?? '').trim().slice(0, 300)
+    if (!age) return NextResponse.json({ error: 'Please tell us what best describes you.' }, { status: 400 })
     const school = String(b.school ?? '').trim().slice(0, 300)
     if (!school) return NextResponse.json({ error: 'Please tell us which school you attend.' }, { status: 400 })
     const district = String(b.district ?? '').trim().slice(0, 200)
@@ -121,7 +122,8 @@ export async function POST(req: NextRequest) {
     try {
       await sendTelegram(
         `⭐ *NEXTUP APPLICATION*\n\n` +
-        `👤 *Name*: ${full_name} (age ${age})\n` +
+        `👤 *Name*: ${full_name}\n` +
+        `🎓 *Category*: ${age}\n` +
         `🏫 *School*: ${school} · ${district}\n` +
         `📱 *WhatsApp*: ${payload.whatsapp}\n` +
         `📧 *Email*: ${email}\n` +
