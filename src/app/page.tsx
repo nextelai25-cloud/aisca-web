@@ -15,6 +15,7 @@ import BoardSection from '@/components/sections/BoardSection';
 import GallerySection from '@/components/sections/GallerySection';
 import ProductsSection from '@/components/sections/ProductsSection';
 import RegisterSection from '@/components/sections/RegisterSection';
+import SpotlightSection from '@/components/sections/SpotlightSection';
 
 const SmoothScrollProvider = dynamic(() => import('@/providers/SmoothScrollProvider'), { ssr: false });
 
@@ -32,6 +33,8 @@ export default function HomePage() {
         <Navbar />
         <main className={`transition-opacity duration-500 ${loading ? 'opacity-0' : 'opacity-100'}`}>
           <HeroSection />
+          <div className="sep" />
+          <SpotlightSection />
           <div className="sep" />
           <MissionVisionSection />
           <div className="sep" />
