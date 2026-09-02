@@ -18,6 +18,7 @@ export interface QuizView {
   explanation: string | null
   results: { choiceIndex: number; count: number }[] | null
   correctCount: number | null
+  fastest: { nickname: string; avatarIndex: number; responseMs: number } | null
   leaderboard: { participantId: number; nickname: string; avatarIndex: number; score: number; rank: number }[] | null
   participants: { participantId: number; nickname: string; avatarIndex: number }[] | null
   you: {

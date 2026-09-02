@@ -128,12 +128,12 @@ export function TimerBar({ view }: { view: QuizView }) {
   const pct = Math.max(0, Math.min(1, rem / total))
   const urgent = secs <= 5 && secs > 0
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 14, width: '100%', maxWidth: 900, margin: '0 auto' }}>
-      <motion.div animate={urgent ? { scale: [1, 1.15, 1] } : { scale: 1 }} transition={{ duration: 0.25, repeat: urgent ? Infinity : 0 }}
-        style={{ fontFamily: DISPLAY, fontSize: 34, fontWeight: 800, color: urgent ? '#f43f5e' : '#fff', minWidth: 54, textAlign: 'center' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 20, width: '100%', maxWidth: 1100, margin: '0 auto' }}>
+      <motion.div animate={urgent ? { scale: [1, 1.18, 1] } : { scale: 1 }} transition={{ duration: 0.25, repeat: urgent ? Infinity : 0 }}
+        style={{ fontFamily: DISPLAY, fontSize: 56, fontWeight: 800, color: urgent ? '#f43f5e' : '#fff', minWidth: 90, textAlign: 'center', textShadow: urgent ? '0 0 30px rgba(244,63,94,0.6)' : 'none' }}>
         {secs}
       </motion.div>
-      <div style={{ flex: 1, height: 14, borderRadius: 999, background: 'rgba(255,255,255,0.1)', overflow: 'hidden' }}>
+      <div style={{ flex: 1, height: 22, borderRadius: 999, background: 'rgba(255,255,255,0.1)', overflow: 'hidden' }}>
         <div style={{ height: '100%', width: `${pct * 100}%`, borderRadius: 999, background: urgent ? '#f43f5e' : 'linear-gradient(90deg,#8b5cf6,#3b82f6)', transition: 'width 0.15s linear' }} />
       </div>
     </div>
@@ -146,23 +146,24 @@ export function ResultBars({ view }: { view: QuizView }) {
   if (!q || !results) return null
   const totalAns = results.reduce((s, r) => s + r.count, 0) || 1
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: '100%', maxWidth: 900, margin: '0 auto' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16, width: '100%', maxWidth: 1100, margin: '0 auto' }}>
       {q.options.map((opt, i) => {
         const count = results.find((r) => r.choiceIndex === i)?.count ?? 0
         const pct = Math.round((count / totalAns) * 100)
         const correct = i === view.correctIndex
         return (
-          <div key={i} style={{ position: 'relative', borderRadius: 14, overflow: 'hidden', background: 'rgba(255,255,255,0.06)', border: `1.5px solid ${correct ? '#22c55e' : 'rgba(255,255,255,0.08)'}` }}>
-            <motion.div initial={{ width: '0%' }} animate={{ width: `${pct}%` }} transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-              style={{ position: 'absolute', inset: 0, background: correct ? 'rgba(34,197,94,0.32)' : `${OPTION_COLORS[i % OPTION_COLORS.length]}44` }} />
-            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 18px' }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#fff', fontSize: 16, fontWeight: 600 }}>
-                <span style={{ color: OPTION_COLORS[i % OPTION_COLORS.length], fontSize: 18 }}>{OPTION_SHAPES[i % OPTION_SHAPES.length]}</span>
-                {opt} {correct && <span style={{ color: '#4ade80' }}>✓</span>}
+          <motion.div key={i} initial={{ opacity: 0, x: -20 }} animate={{ opacity: correct ? 1 : 0.75, x: 0 }} transition={{ delay: i * 0.06 }}
+            style={{ position: 'relative', borderRadius: 18, overflow: 'hidden', background: 'rgba(255,255,255,0.06)', border: `2px solid ${correct ? '#22c55e' : 'rgba(255,255,255,0.08)'}`, boxShadow: correct ? '0 0 40px -8px rgba(34,197,94,0.55)' : 'none' }}>
+            <motion.div initial={{ width: '0%' }} animate={{ width: `${pct}%` }} transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+              style={{ position: 'absolute', inset: 0, background: correct ? 'rgba(34,197,94,0.34)' : `${OPTION_COLORS[i % OPTION_COLORS.length]}44` }} />
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 28px' }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 14, color: '#fff', fontSize: 24, fontWeight: 600 }}>
+                <span style={{ color: OPTION_COLORS[i % OPTION_COLORS.length], fontSize: 26 }}>{OPTION_SHAPES[i % OPTION_SHAPES.length]}</span>
+                {opt} {correct && <span style={{ color: '#4ade80', fontSize: 28 }}>✓</span>}
               </span>
-              <span style={{ color: '#fff', fontWeight: 800, fontSize: 18 }}>{pct}%</span>
+              <span style={{ color: '#fff', fontWeight: 800, fontSize: 30 }}>{pct}%</span>
             </div>
-          </div>
+          </motion.div>
         )
       })}
     </div>
@@ -172,17 +173,18 @@ export function ResultBars({ view }: { view: QuizView }) {
 // ── Leaderboard (FLIP reorder) ───────────────────────────
 export function Leaderboard({ rows, highlightId, max = 5 }: { rows: { participantId: number; nickname: string; avatarIndex: number; score: number; rank: number }[]; highlightId?: number; max?: number }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%', maxWidth: 640, margin: '0 auto' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: '100%', maxWidth: 780, margin: '0 auto' }}>
       {rows.slice(0, max).map((r) => {
         const me = r.participantId === highlightId
+        const top = r.rank <= 3
         return (
           <motion.div key={r.participantId} layout transition={{ type: 'spring', stiffness: 500, damping: 40 }}
             initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}
-            style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 18px', borderRadius: 16, background: me ? 'rgba(139,92,246,0.22)' : 'rgba(255,255,255,0.05)', border: `1.5px solid ${me ? '#8b5cf6' : 'rgba(255,255,255,0.08)'}` }}>
-            <span style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: 20, color: r.rank === 1 ? '#facc15' : '#fff', minWidth: 30 }}>{r.rank}</span>
-            <Avatar index={r.avatarIndex} size={40} />
-            <span style={{ flex: 1, color: '#fff', fontSize: 16, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.nickname}</span>
-            <span style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: 18, color: '#fff' }}>{Math.round(r.score).toLocaleString()}</span>
+            style={{ display: 'flex', alignItems: 'center', gap: 18, padding: '18px 26px', borderRadius: 18, background: me ? 'rgba(139,92,246,0.22)' : top ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.05)', border: `2px solid ${me ? '#8b5cf6' : r.rank === 1 ? 'rgba(250,204,21,0.5)' : 'rgba(255,255,255,0.08)'}` }}>
+            <span style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: 30, color: r.rank === 1 ? '#facc15' : r.rank === 2 ? '#cbd5e1' : r.rank === 3 ? '#d97706' : '#fff', minWidth: 44 }}>{r.rank}</span>
+            <Avatar index={r.avatarIndex} size={52} />
+            <span style={{ flex: 1, color: '#fff', fontSize: 24, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.nickname}</span>
+            <span style={{ fontFamily: DISPLAY, fontWeight: 800, fontSize: 28, color: '#fff' }}>{Math.round(r.score).toLocaleString()}</span>
           </motion.div>
         )
       })}
@@ -195,23 +197,24 @@ export function Podium({ rows }: { rows: { participantId: number; nickname: stri
   const top = rows.slice(0, 3)
   const first = top[0]; const second = top[1]; const third = top[2]
   const Block = ({ r, place, h, delay }: { r?: typeof first; place: number; h: number; delay: number }) => {
-    if (!r) return <div style={{ width: 150 }} />
+    if (!r) return <div style={{ width: 200 }} />
     const color = place === 1 ? '#facc15' : place === 2 ? '#cbd5e1' : '#d97706'
     return (
-      <motion.div initial={{ y: 120, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 150 }}>
-        <Avatar index={r.avatarIndex} size={place === 1 ? 76 : 60} />
-        <div style={{ color: '#fff', fontWeight: 700, marginTop: 8, textAlign: 'center', fontSize: 15, maxWidth: 150, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.nickname}</div>
-        <div style={{ color, fontWeight: 800, fontFamily: DISPLAY, fontSize: 18 }}>{Math.round(r.score).toLocaleString()}</div>
-        <div style={{ marginTop: 12, width: '100%', height: h, borderRadius: '12px 12px 0 0', background: `linear-gradient(180deg, ${color}, ${color}55)`, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', paddingTop: 12, fontFamily: DISPLAY, fontWeight: 800, fontSize: 40, color: '#0a0620' }}>{place}</div>
+      <motion.div initial={{ y: 160, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 200 }}>
+        {place === 1 && <div style={{ fontSize: 40, marginBottom: 2 }}>👑</div>}
+        <Avatar index={r.avatarIndex} size={place === 1 ? 104 : 80} />
+        <div style={{ color: '#fff', fontWeight: 700, marginTop: 10, textAlign: 'center', fontSize: 20, maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.nickname}</div>
+        <div style={{ color, fontWeight: 800, fontFamily: DISPLAY, fontSize: 24 }}>{Math.round(r.score).toLocaleString()}</div>
+        <div style={{ marginTop: 14, width: '100%', height: h, borderRadius: '16px 16px 0 0', background: `linear-gradient(180deg, ${color}, ${color}55)`, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', paddingTop: 18, fontFamily: DISPLAY, fontWeight: 800, fontSize: 56, color: '#0a0620' }}>{place}</div>
       </motion.div>
     )
   }
   return (
-    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: 14 }}>
-      <Block r={second} place={2} h={150} delay={0.3} />
-      <Block r={first} place={1} h={210} delay={0.9} />
-      <Block r={third} place={3} h={110} delay={0.1} />
+    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: 18 }}>
+      <Block r={second} place={2} h={200} delay={0.3} />
+      <Block r={first} place={1} h={290} delay={0.9} />
+      <Block r={third} place={3} h={150} delay={0.1} />
     </div>
   )
 }

@@ -95,6 +95,21 @@ export async function computeView(session: SessionRow, role: 'host' | 'player', 
     }
   }
 
+  // Fastest correct answer (host, at reveal) — a "who nailed it first" moment.
+  let fastest: { nickname: string; avatarIndex: number; responseMs: number } | null = null
+  if (role === 'host' && revealed && question) {
+    const { data: fRow } = await supabaseAdmin
+      .from('quiz_answers')
+      .select('participant_id, response_ms')
+      .eq('session_id', session.id).eq('question_index', idx).eq('is_correct', true)
+      .order('response_ms', { ascending: true }).limit(1).maybeSingle()
+    if (fRow) {
+      const f = fRow as { participant_id: number; response_ms: number }
+      const fp = parts.find((p) => p.id === f.participant_id)
+      if (fp) fastest = { nickname: fp.nickname, avatarIndex: fp.avatar_index, responseMs: f.response_ms }
+    }
+  }
+
   // Player "you" block
   let you: Record<string, unknown> | null = null
   if (role === 'player' && token) {
@@ -157,6 +172,7 @@ export async function computeView(session: SessionRow, role: 'host' | 'player', 
     explanation: revealed ? question?.explanation ?? null : null,
     results,
     correctCount,
+    fastest,
     leaderboard: SHOW_LB.has(session.state)
       ? ranked.slice(0, 10).map((p) => ({
           participantId: p.id, nickname: p.nickname, avatarIndex: p.avatar_index,
