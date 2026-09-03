@@ -2,9 +2,9 @@
 
 import React, { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
-import { AVATARS, OPTION_COLORS, OPTION_SHAPES, QUIZGAME_TOKEN_STORAGE } from '@/lib/quizgame/config'
+import { AVATARS, OPTION_COLORS, QUIZGAME_TOKEN_STORAGE } from '@/lib/quizgame/config'
 import { useSession, remainingMs } from './useSession'
-import { Avatar, CountdownOverlay, AnimatedNumber, makeSounds, BG, DISPLAY, EASE, SPRING_SNAPPY, type Sounds } from './game-ui'
+import { Avatar, CountdownOverlay, AnimatedNumber, LetterChip, GridBG, makeSounds, BG, DISPLAY, EASE, ACCENT_2, ACCENT_GRAD, PANEL, BORDER, clip, SPRING_SNAPPY, type Sounds } from './game-ui'
 
 const CODE_KEY = 'quizgame_code'
 
@@ -21,7 +21,6 @@ export default function QuizPlayer() {
   const [muted, setMuted] = useState(false)
   const soundsRef = useRef<Sounds | null>(null)
 
-  // Restore session / read ?code
   useEffect(() => {
     if (typeof window === 'undefined') return
     const urlCode = new URLSearchParams(window.location.search).get('code') || ''
@@ -69,15 +68,16 @@ export default function QuizPlayer() {
 
   const MuteBtn = () => (
     <button onClick={() => setMuted((m) => !m)} aria-label="mute"
-      style={{ position: 'fixed', top: 'calc(env(safe-area-inset-top, 0px) + 14px)', right: 14, zIndex: 40, width: 40, height: 40, borderRadius: 12, background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', cursor: 'pointer', fontSize: 16 }}>
+      style={{ position: 'fixed', top: 'calc(env(safe-area-inset-top, 0px) + 14px)', right: 14, zIndex: 40, width: 40, height: 40, clipPath: clip(8), background: 'rgba(255,255,255,0.1)', border: 'none', color: '#fff', cursor: 'pointer', fontSize: 16 }}>
       {muted ? '🔇' : '🔊'}
     </button>
   )
 
   const shell = (children: React.ReactNode) => (
     <main style={{ minHeight: '100vh', background: BG, color: '#fff', fontFamily: "'Inter', system-ui, sans-serif", display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 'calc(env(safe-area-inset-top,0px) + 20px) 18px calc(env(safe-area-inset-bottom,0px) + 20px)', position: 'relative' }}>
+      <GridBG />
       <MuteBtn />
-      {children}
+      <div style={{ position: 'relative', zIndex: 1, width: '100%', display: 'flex', justifyContent: 'center' }}>{children}</div>
       <style>{`input::placeholder{color:rgba(255,255,255,0.4)}`}</style>
     </main>
   )
@@ -85,10 +85,10 @@ export default function QuizPlayer() {
   if (phase === 'enter') {
     return shell(
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: EASE.entrance }} style={{ width: '100%', maxWidth: 380, textAlign: 'center' }}>
-        <h1 style={{ fontFamily: DISPLAY, fontSize: 40, fontWeight: 800, marginBottom: 8 }}>AISCA Quiz</h1>
+        <h1 style={{ fontFamily: DISPLAY, fontSize: 40, fontWeight: 800, marginBottom: 8 }}>AISCA <span style={{ color: ACCENT_2 }}>Quiz</span></h1>
         <p style={{ color: 'rgba(255,255,255,0.6)', marginBottom: 28, fontSize: 14 }}>Enter the code shown on the screen</p>
         <input value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))} inputMode="numeric" placeholder="000000" autoFocus
-          style={{ width: '100%', textAlign: 'center', letterSpacing: '0.4em', fontSize: 30, fontWeight: 700, padding: '16px', borderRadius: 16, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', outline: 'none', fontFamily: DISPLAY, fontVariantNumeric: 'tabular-nums', boxSizing: 'border-box' }} />
+          style={{ width: '100%', textAlign: 'center', letterSpacing: '0.4em', fontSize: 30, fontWeight: 700, padding: '16px', clipPath: clip(12), background: PANEL, border: 'none', outline: `1px solid ${BORDER}`, color: '#fff', fontFamily: DISPLAY, fontVariantNumeric: 'tabular-nums', boxSizing: 'border-box' }} />
         {error && <p style={{ color: '#fca5a5', fontSize: 13, marginTop: 12 }}>{error}</p>}
         <motion.button whileTap={{ scale: 0.96 }} onClick={proceedFromCode} style={btnPrimary}>Enter</motion.button>
       </motion.div>
@@ -98,24 +98,23 @@ export default function QuizPlayer() {
   if (phase === 'setup') {
     return shell(
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: EASE.entrance }} style={{ width: '100%', maxWidth: 380, textAlign: 'center' }}>
-        <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 13, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 18 }}>Joining {code.slice(0, 3)} {code.slice(3)}</p>
+        <p style={{ color: ACCENT_2, fontSize: 13, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 18, fontWeight: 700 }}>Joining {code.slice(0, 3)} {code.slice(3)}</p>
         <AnimatePresence mode="wait">
           <motion.div key={avatarIndex} initial={{ scale: 0.7, rotate: -8, opacity: 0 }} animate={{ scale: 1, rotate: 0, opacity: 1 }} exit={{ scale: 0.7, opacity: 0 }} transition={SPRING_SNAPPY} style={{ display: 'inline-block', marginBottom: 12 }}>
             <Avatar index={avatarIndex} size={110} />
           </motion.div>
         </AnimatePresence>
         <div>
-          <motion.button whileTap={{ scale: 0.95 }} onClick={() => setAvatarIndex((i) => (i + 1) % AVATARS.length)} style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', borderRadius: 999, padding: '7px 16px', fontSize: 13, cursor: 'pointer', marginBottom: 22 }}>🔀 Shuffle avatar</motion.button>
+          <motion.button whileTap={{ scale: 0.95 }} onClick={() => setAvatarIndex((i) => (i + 1) % AVATARS.length)} style={{ background: PANEL, border: 'none', outline: `1px solid ${BORDER}`, color: '#fff', clipPath: clip(8), padding: '7px 16px', fontSize: 13, cursor: 'pointer', marginBottom: 22 }}>🔀 Shuffle avatar</motion.button>
         </div>
         <input value={nickname} onChange={(e) => setNickname(e.target.value.slice(0, 24))} placeholder="Your nickname" autoFocus
-          style={{ width: '100%', textAlign: 'center', fontSize: 20, fontWeight: 600, padding: '15px', borderRadius: 16, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', outline: 'none', boxSizing: 'border-box' }} />
+          style={{ width: '100%', textAlign: 'center', fontSize: 20, fontWeight: 600, padding: '15px', clipPath: clip(12), background: PANEL, border: 'none', outline: `1px solid ${BORDER}`, color: '#fff', boxSizing: 'border-box' }} />
         {error && <p style={{ color: '#fca5a5', fontSize: 13, marginTop: 12 }}>{error}</p>}
         <motion.button whileTap={{ scale: 0.96 }} onClick={join} disabled={busy} style={{ ...btnPrimary, opacity: busy ? 0.6 : 1 }}>{busy ? 'Joining…' : "Let's go"}</motion.button>
       </motion.div>
     )
   }
 
-  // phase === 'play'
   return shell(<PlayView view={view} code={code} token={token} sounds={soundsRef} />)
 }
 
@@ -123,10 +122,8 @@ function PlayView({ view, token, sounds }: { view: ReturnType<typeof useSession>
   const reduce = useReducedMotion()
   const [selected, setSelected] = useState<number | null>(null)
   const [submitting, setSubmitting] = useState(false)
-  const lastState = useRef<string>('')
   const lastRevealIdx = useRef<number>(-1)
 
-  // Sync local selection with server (reconnection / current question)
   useEffect(() => {
     if (!view) return
     if (view.state === 'question_open') {
@@ -136,7 +133,6 @@ function PlayView({ view, token, sounds }: { view: ReturnType<typeof useSession>
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [view?.index, view?.state])
 
-  // Feedback sounds on reveal
   useEffect(() => {
     if (!view) return
     if (view.state === 'reveal' && lastRevealIdx.current !== view.index) {
@@ -144,7 +140,6 @@ function PlayView({ view, token, sounds }: { view: ReturnType<typeof useSession>
       if (view.you?.lastCorrect) sounds.current?.correct()
       else sounds.current?.wrong()
     }
-    lastState.current = view.state
   }, [view?.state, view?.index, view, sounds])
 
   if (!view) return <div style={{ textAlign: 'center', color: 'rgba(255,255,255,0.7)' }}>Connecting…<Dots /></div>
@@ -159,7 +154,7 @@ function PlayView({ view, token, sounds }: { view: ReturnType<typeof useSession>
 
   async function submit(i: number) {
     if (locked || submitting) return
-    setSelected(i); setSubmitting(true) // instant local feedback; server confirms after
+    setSelected(i); setSubmitting(true)
     try {
       await fetch('/api/quizgame/answer', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -168,7 +163,6 @@ function PlayView({ view, token, sounds }: { view: ReturnType<typeof useSession>
     } catch {} finally { setSubmitting(false) }
   }
 
-  // group open/closed so the question screen doesn't remount when it locks
   const group =
     view.state === 'question_open' || view.state === 'question_closed' ? 'question'
     : view.state === 'podium' || view.state === 'finished' ? 'podium'
@@ -178,6 +172,7 @@ function PlayView({ view, token, sounds }: { view: ReturnType<typeof useSession>
     ? { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } }
     : { initial: { opacity: 0, y: 18, scale: 0.98 }, animate: { opacity: 1, y: 0, scale: 1 }, exit: { opacity: 0, y: -12, scale: 0.98 } }
 
+  const cp = clip(12)
   let body: React.ReactNode = null
 
   if (view.state === 'lobby') {
@@ -185,7 +180,7 @@ function PlayView({ view, token, sounds }: { view: ReturnType<typeof useSession>
       <div style={{ textAlign: 'center' }}>
         <Avatar index={view.you?.avatarIndex ?? 0} size={96} idle />
         <h2 style={{ fontFamily: DISPLAY, fontSize: 30, fontWeight: 800, margin: '16px 0 6px' }}>You&apos;re in!</h2>
-        <p style={{ color: 'rgba(255,255,255,0.65)' }}>{view.you?.nickname}</p>
+        <p style={{ color: ACCENT_2, fontWeight: 600 }}>{view.you?.nickname}</p>
         <p style={{ color: 'rgba(255,255,255,0.45)', marginTop: 18, fontSize: 14 }}>Waiting for the host to start…</p>
         <Dots />
       </div>
@@ -202,27 +197,25 @@ function PlayView({ view, token, sounds }: { view: ReturnType<typeof useSession>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {q.options.map((opt, i) => {
             const chosen = selected === i
+            const c = OPTION_COLORS[i % OPTION_COLORS.length]
             return (
-              <motion.button key={i} onClick={() => submit(i)} disabled={locked}
-                whileTap={locked ? undefined : { scale: 0.97 }}
-                animate={{ scale: chosen ? 1 : 1 }}
-                style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '18px 18px', minHeight: 62, borderRadius: 16, cursor: locked ? 'default' : 'pointer', textAlign: 'left',
-                  background: chosen ? OPTION_COLORS[i % OPTION_COLORS.length] : `${OPTION_COLORS[i % OPTION_COLORS.length]}26`,
-                  border: `2px solid ${chosen ? '#fff' : OPTION_COLORS[i % OPTION_COLORS.length] + '88'}`,
-                  color: '#fff', fontSize: 16, fontWeight: 600, transition: 'background 0.22s ease, border-color 0.22s ease', opacity: locked && !chosen ? 0.55 : 1, boxSizing: 'border-box' }}>
-                <span style={{ fontSize: 20, flexShrink: 0 }}>{OPTION_SHAPES[i % OPTION_SHAPES.length]}</span>
-                <span style={{ flex: 1 }}>{opt}</span>
-                {/* reserved slot → no layout shift when the check appears */}
-                <span style={{ width: 24, flexShrink: 0, display: 'inline-flex', justifyContent: 'center' }}>
-                  <AnimatePresence>
-                    {chosen && <motion.span initial={{ scale: 0, opacity: 0 }} animate={{ scale: [0, 1.15, 1], opacity: 1 }} exit={{ scale: 0, opacity: 0 }} transition={{ duration: 0.28, ease: EASE.entrance }} style={{ fontSize: 18 }}>✓</motion.span>}
-                  </AnimatePresence>
-                </span>
+              <motion.button key={i} onClick={() => submit(i)} disabled={locked} whileTap={locked ? undefined : { scale: 0.97 }}
+                style={{ width: '100%', clipPath: cp, padding: 2, border: 'none', cursor: locked ? 'default' : 'pointer',
+                  background: chosen ? '#fff' : `linear-gradient(135deg, ${c}aa, ${BORDER})`, opacity: locked && !chosen ? 0.5 : 1, transition: 'opacity 0.2s ease' }}>
+                <div style={{ clipPath: cp, display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px 12px 12px', minHeight: 60, textAlign: 'left', boxSizing: 'border-box',
+                  background: chosen ? `linear-gradient(135deg, ${c}, ${c}cc)` : PANEL, transition: 'background 0.22s ease' }}>
+                  <LetterChip i={i} size={40} />
+                  <span style={{ flex: 1, color: '#fff', fontSize: 16, fontWeight: 600 }}>{opt}</span>
+                  <span style={{ width: 24, flexShrink: 0, display: 'inline-flex', justifyContent: 'center' }}>
+                    <AnimatePresence>
+                      {chosen && <motion.span initial={{ scale: 0, opacity: 0 }} animate={{ scale: [0, 1.15, 1], opacity: 1 }} exit={{ scale: 0, opacity: 0 }} transition={{ duration: 0.28, ease: EASE.entrance }} style={{ fontSize: 18, color: '#fff' }}>✓</motion.span>}
+                    </AnimatePresence>
+                  </span>
+                </div>
               </motion.button>
             )
           })}
         </div>
-        {/* reserved status area (fixed height) → no jump */}
         <div style={{ minHeight: 22, textAlign: 'center' }}>
           <AnimatePresence mode="wait">
             {selected != null && (
@@ -240,8 +233,7 @@ function PlayView({ view, token, sounds }: { view: ReturnType<typeof useSession>
     const answered = view.you?.answeredChoice != null
     body = (
       <div style={{ textAlign: 'center', width: '100%', maxWidth: 420 }}>
-        <motion.div initial={{ scale: 0.4, opacity: 0 }} animate={{ scale: reduce ? 1 : [0.4, 1.12, 1], opacity: 1 }} transition={{ duration: 0.45, ease: EASE.entrance }}
-          style={{ fontSize: 74 }}>{correct ? '✅' : answered ? '❌' : '⌛'}</motion.div>
+        <motion.div initial={{ scale: 0.4, opacity: 0 }} animate={{ scale: reduce ? 1 : [0.4, 1.12, 1], opacity: 1 }} transition={{ duration: 0.45, ease: EASE.entrance }} style={{ fontSize: 74 }}>{correct ? '✅' : answered ? '❌' : '⌛'}</motion.div>
         <motion.h2 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} style={{ fontFamily: DISPLAY, fontSize: 30, fontWeight: 800, margin: '8px 0' }}>
           {correct ? 'Correct!' : answered ? 'Not quite!' : 'No answer'}
         </motion.h2>
@@ -263,9 +255,9 @@ function PlayView({ view, token, sounds }: { view: ReturnType<typeof useSession>
   } else if (view.state === 'leaderboard') {
     body = (
       <div style={{ textAlign: 'center' }}>
-        <p style={{ color: 'rgba(255,255,255,0.55)', letterSpacing: '0.15em', textTransform: 'uppercase', fontSize: 12 }}>Leaderboard</p>
+        <p style={{ color: ACCENT_2, letterSpacing: '0.15em', textTransform: 'uppercase', fontSize: 12, fontWeight: 700 }}>Leaderboard</p>
         <Avatar index={view.you?.avatarIndex ?? 0} size={80} />
-        <div style={{ fontFamily: DISPLAY, fontSize: 54, fontWeight: 800, marginTop: 8, fontVariantNumeric: 'tabular-nums' }}>#{view.you?.rank ?? '-'}</div>
+        <div style={{ fontFamily: DISPLAY, fontSize: 54, fontWeight: 800, marginTop: 8, fontVariantNumeric: 'tabular-nums', background: ACCENT_GRAD, WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>#{view.you?.rank ?? '-'}</div>
         <div style={{ color: 'rgba(255,255,255,0.7)' }}><AnimatedNumber value={Math.round(view.you?.score ?? 0)} /> points</div>
         <p style={{ color: 'rgba(255,255,255,0.4)', marginTop: 18, fontSize: 13 }}>Look up at the main screen 👀</p>
       </div>
@@ -274,7 +266,7 @@ function PlayView({ view, token, sounds }: { view: ReturnType<typeof useSession>
     const rank = view.you?.rank
     body = (
       <div style={{ textAlign: 'center', width: '100%', maxWidth: 420 }}>
-        <p style={{ color: 'rgba(255,255,255,0.55)', letterSpacing: '0.15em', textTransform: 'uppercase', fontSize: 12, marginBottom: 8 }}>Quiz complete</p>
+        <p style={{ color: ACCENT_2, letterSpacing: '0.15em', textTransform: 'uppercase', fontSize: 12, marginBottom: 8, fontWeight: 700 }}>Quiz complete</p>
         <Avatar index={view.you?.avatarIndex ?? 0} size={96} />
         <div style={{ fontFamily: DISPLAY, fontSize: 22, fontWeight: 700, marginTop: 10 }}>{view.you?.nickname}</div>
         {rank === 1 && <motion.div initial={{ scale: 0, rotate: -20 }} animate={{ scale: 1, rotate: 0 }} transition={SPRING_SNAPPY} style={{ fontSize: 40, marginTop: 4 }}>🏆</motion.div>}
@@ -287,7 +279,6 @@ function PlayView({ view, token, sounds }: { view: ReturnType<typeof useSession>
     body = <Dots />
   }
 
-  // countdown is a full-screen overlay; render it without the shell transition
   if (view.state === 'countdown') return <>{body}</>
 
   return (
@@ -299,19 +290,18 @@ function PlayView({ view, token, sounds }: { view: ReturnType<typeof useSession>
   )
 }
 
-// ── small helpers ──
 function Dots() {
   return (
     <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 16 }}>
       {[0, 1, 2].map((i) => (
         <motion.span key={i} animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
-          style={{ width: 8, height: 8, borderRadius: '50%', background: '#fff' }} />
+          style={{ width: 8, height: 8, borderRadius: '50%', background: ACCENT_2 }} />
       ))}
     </div>
   )
 }
 
 const btnPrimary: React.CSSProperties = {
-  width: '100%', marginTop: 22, padding: 16, borderRadius: 16, border: 'none', cursor: 'pointer',
-  background: '#fff', color: '#140a2e', fontWeight: 800, fontSize: 16, fontFamily: "'Space Grotesk', sans-serif",
+  width: '100%', marginTop: 22, padding: 16, clipPath: 'polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px)', border: 'none', cursor: 'pointer',
+  background: 'linear-gradient(135deg, #3b82f6 0%, #22d3ee 100%)', color: '#fff', fontWeight: 800, fontSize: 16, fontFamily: "'Space Grotesk', sans-serif",
 }

@@ -37,8 +37,11 @@ export function randomAvatarIndex(): number {
 }
 
 // Answer-card colours on the participant / presenter screens (by option index).
-export const OPTION_COLORS = ['#EF4444', '#3B82F6', '#F59E0B', '#22C55E', '#8B5CF6', '#EC4899']
+// Electric "tech" palette to match the game-show theme (blue-led, still distinct).
+export const OPTION_COLORS = ['#3B82F6', '#06B6D4', '#8B5CF6', '#10B981', '#F59E0B', '#EC4899']
 export const OPTION_SHAPES = ['▲', '◆', '●', '■', '★', '⬢']
+// Answer options are identified by letter chips (A/B/C/D…) in the new theme.
+export const OPTION_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F']
 
 // ── Server-authoritative speed scoring ──
 // Correct answers earn between maxPoints/2 and maxPoints based on speed.
