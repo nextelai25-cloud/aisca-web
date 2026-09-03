@@ -352,31 +352,34 @@ export function Leaderboard({ rows, highlightId, max = 5 }: { rows: { participan
 }
 
 /* ── Podium (top 3, sequenced rise, angular blocks) ── */
-export function Podium({ rows }: { rows: { participantId: number; nickname: string; avatarIndex: number; score: number; rank: number }[] }) {
+type PodiumRow = { participantId: number; nickname: string; avatarIndex: number; score: number; rank: number }
+
+// Top-level (stable identity) so host polling doesn't remount → animation plays once.
+function PodiumBlock({ r, place, h, delay }: { r?: PodiumRow; place: number; h: number; delay: number }) {
+  if (!r) return <div style={{ width: 200 }} />
+  const color = place === 1 ? '#facc15' : place === 2 ? '#cbd5e1' : '#d97706'
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 200 }}>
+      <motion.div initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: delay + 0.15, duration: 0.5, ease: EASE.entrance }}
+        style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        {place === 1 && <motion.div initial={{ scale: 0, rotate: -20 }} animate={{ scale: 1, rotate: 0 }} transition={{ delay: delay + 0.45, ...SPRING_SNAPPY }} style={{ fontSize: 40, marginBottom: 2 }}>👑</motion.div>}
+        <Avatar index={r.avatarIndex} size={place === 1 ? 104 : 80} />
+        <div style={{ color: '#fff', fontWeight: 700, marginTop: 10, textAlign: 'center', fontSize: 20, maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.nickname}</div>
+        <AnimatedNumber value={Math.round(r.score)} style={{ color, fontWeight: 800, fontFamily: DISPLAY, fontSize: 24 }} />
+      </motion.div>
+      <motion.div initial={{ height: 0 }} animate={{ height: h }} transition={{ delay, duration: 0.7, ease: EASE.entrance }}
+        style={{ marginTop: 14, width: '100%', clipPath: 'polygon(14px 0, calc(100% - 14px) 0, 100% 100%, 0 100%)', background: `linear-gradient(180deg, ${color}, ${color}55)`, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', paddingTop: 18, fontFamily: DISPLAY, fontWeight: 800, fontSize: 56, color: '#04070f', overflow: 'hidden' }}>{place}</motion.div>
+    </div>
+  )
+}
+
+export function Podium({ rows }: { rows: PodiumRow[] }) {
   const top = rows.slice(0, 3)
-  const first = top[0]; const second = top[1]; const third = top[2]
-  const Block = ({ r, place, h, delay }: { r?: typeof first; place: number; h: number; delay: number }) => {
-    if (!r) return <div style={{ width: 200 }} />
-    const color = place === 1 ? '#facc15' : place === 2 ? '#cbd5e1' : '#d97706'
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 200 }}>
-        <motion.div initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: delay + 0.15, duration: 0.5, ease: EASE.entrance }}
-          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          {place === 1 && <motion.div initial={{ scale: 0, rotate: -20 }} animate={{ scale: 1, rotate: 0 }} transition={{ delay: delay + 0.45, ...SPRING_SNAPPY }} style={{ fontSize: 40, marginBottom: 2 }}>👑</motion.div>}
-          <Avatar index={r.avatarIndex} size={place === 1 ? 104 : 80} />
-          <div style={{ color: '#fff', fontWeight: 700, marginTop: 10, textAlign: 'center', fontSize: 20, maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.nickname}</div>
-          <AnimatedNumber value={Math.round(r.score)} style={{ color, fontWeight: 800, fontFamily: DISPLAY, fontSize: 24 }} />
-        </motion.div>
-        <motion.div initial={{ height: 0 }} animate={{ height: h }} transition={{ delay, duration: 0.7, ease: EASE.entrance }}
-          style={{ marginTop: 14, width: '100%', clipPath: 'polygon(14px 0, calc(100% - 14px) 0, 100% 100%, 0 100%)', background: `linear-gradient(180deg, ${color}, ${color}55)`, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', paddingTop: 18, fontFamily: DISPLAY, fontWeight: 800, fontSize: 56, color: '#04070f', overflow: 'hidden' }}>{place}</motion.div>
-      </div>
-    )
-  }
   return (
     <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: 18 }}>
-      <Block r={second} place={2} h={200} delay={0.55} />
-      <Block r={first} place={1} h={290} delay={1.0} />
-      <Block r={third} place={3} h={150} delay={0.15} />
+      <PodiumBlock r={top[1]} place={2} h={200} delay={0.55} />
+      <PodiumBlock r={top[0]} place={1} h={290} delay={1.0} />
+      <PodiumBlock r={top[2]} place={3} h={150} delay={0.15} />
     </div>
   )
 }
