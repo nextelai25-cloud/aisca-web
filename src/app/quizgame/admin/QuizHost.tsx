@@ -272,7 +272,8 @@ function Lobby({ view, code, joinUrl, qr, showQR }: { view: QuizView; code: stri
     <div style={{ width: '100%', maxWidth: 1240, display: 'grid', gridTemplateColumns: showQR ? '1fr auto' : '1fr', gap: 56, alignItems: 'center' }}>
       <div style={{ textAlign: 'center' }}>
         <p style={{ color: ACCENT_2, letterSpacing: '0.18em', textTransform: 'uppercase', fontSize: 18, marginBottom: 10, fontWeight: 700 }}>Join the quiz at</p>
-        <p style={{ color: '#fff', fontSize: 'clamp(20px, 2.4vw, 30px)', marginBottom: 24, fontWeight: 600 }}>{joinUrl.replace(/^https?:\/\//, '')}</p>
+        <p style={{ color: '#fff', fontSize: 'clamp(22px, 2.6vw, 34px)', marginBottom: 18, fontWeight: 700 }}>{joinUrl.replace(/^https?:\/\//, '').replace(/\?.*$/, '')}</p>
+        <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: 'clamp(15px, 1.6vw, 20px)', marginBottom: 8, fontWeight: 600 }}>then enter this code:</p>
         <div className="qg-code" style={{ fontFamily: DISPLAY, fontSize: 'clamp(64px, 13vw, 160px)', fontWeight: 800, letterSpacing: '0.06em', lineHeight: 1, marginBottom: 30, background: ACCENT_GRAD, WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent', filter: 'drop-shadow(0 12px 60px rgba(59,130,246,0.55))' }}>
           {code.slice(0, 3)} {code.slice(3)}
         </div>
