@@ -1,0 +1,51 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { supabaseAdmin } from '@/lib/supabase'
+import { rateLimit } from '@/lib/validate'
+
+// Payment receipt upload for RANGEELA 26 tickets.
+// Accepts a single image or PDF, capped at 15 MB, stored in the existing
+// `aisca-assets` bucket under rangeela-receipts/. Returns a public URL that the
+// ticket form then attaches to the ticket request.
+const ALLOWED: Record<string, string> = {
+  'image/jpeg': 'jpg',
+  'image/jpg': 'jpg',
+  'image/png': 'png',
+  'image/webp': 'webp',
+  'image/heic': 'heic',
+  'image/heif': 'heif',
+  'application/pdf': 'pdf',
+}
+const MAX_SIZE = 15 * 1024 * 1024
+
+export async function POST(req: NextRequest) {
+  if (!rateLimit(req, 'rangeela-upload', 600, 60 * 60 * 1000)) {
+    return NextResponse.json({ error: 'Too many uploads from this connection. Please wait a little and try again.' }, { status: 429 })
+  }
+
+  const formData = await req.formData()
+  const file = formData.get('file') as File | null
+  if (!file) return NextResponse.json({ error: 'No file provided.' }, { status: 400 })
+
+  const ext = ALLOWED[file.type]
+  if (!ext) {
+    return NextResponse.json({ error: 'Only JPG, PNG, WEBP, HEIC images or PDF files are allowed.' }, { status: 400 })
+  }
+  if (file.size > MAX_SIZE) {
+    return NextResponse.json({ error: 'File must be smaller than 15 MB.' }, { status: 400 })
+  }
+
+  const fileName = `rangeela-receipts/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+  const buffer = Buffer.from(await file.arrayBuffer())
+
+  const { error } = await supabaseAdmin.storage
+    .from('aisca-assets')
+    .upload(fileName, buffer, { contentType: file.type, upsert: false })
+
+  if (error) {
+    console.error('[rangeela/upload] storage error:', error.message)
+    return NextResponse.json({ error: 'Upload failed. Please try again.' }, { status: 500 })
+  }
+
+  const { data: urlData } = supabaseAdmin.storage.from('aisca-assets').getPublicUrl(fileName)
+  return NextResponse.json({ url: urlData.publicUrl, filename: file.name })
+}

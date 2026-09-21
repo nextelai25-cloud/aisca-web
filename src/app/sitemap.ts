@@ -74,6 +74,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.80
     },
     {
+      url: `${baseUrl}/rangeela26`,
+      lastModified: now,
+      changeFrequency: 'weekly',
+      priority: 0.95
+    },
+    {
       url: `${baseUrl}/ideanet`,
       lastModified: now,
       changeFrequency: 'hourly',
