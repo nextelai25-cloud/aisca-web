@@ -45,8 +45,8 @@ export async function POST(req: NextRequest) {
 
     const nic = String(b.nic ?? '').trim().toUpperCase().slice(0, 30)
     const nic_norm = normaliseId(nic)
-    if (nic_norm.length < 4) {
-      return NextResponse.json({ error: 'Please enter your NIC or school ID number.' }, { status: 400 })
+    if (!looksLikeNic(nic)) {
+      return NextResponse.json({ error: 'Please enter a valid NIC number (12 digits, or 9 digits followed by V or X).' }, { status: 400 })
     }
     const nic_is_nic = looksLikeNic(nic)
 
@@ -112,7 +112,7 @@ export async function POST(req: NextRequest) {
         `🎟️ *Ref*: ${ticket_number}\n` +
         `👤 *Name*: ${full_name}\n` +
         `🏫 *School*: ${school} (${al_batch})\n` +
-        `🪪 *NIC/ID*: ${nic}\n` +
+        `🪪 *NIC*: ${nic}\n` +
         `📱 *WhatsApp*: ${whatsapp}\n` +
         `📧 *Email*: ${email}\n` +
         `🧾 *Receipt*: ${receipt_url}\n` +

@@ -79,7 +79,7 @@ export default async function TicketPage({ params }: { params: Promise<{ token: 
                 )}
                 <div style={{ fontFamily: 'ui-monospace, monospace', fontSize: 18, fontWeight: 800, color: '#7B2FF7', marginTop: 12 }}>{t.ticket_number}</div>
                 <p style={{ fontSize: 12.5, lineHeight: 1.6, color: MUTED, margin: '8px 0 0' }}>
-                  Show this QR code at the entrance. It works for one entry only. Please bring your NIC or school ID.
+                  Show this QR code at the entrance. It works for one entry only. Please bring your NIC.
                 </p>
               </div>
               <div style={{ padding: '16px 24px 24px', textAlign: 'center' }}>

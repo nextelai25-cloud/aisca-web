@@ -25,7 +25,7 @@ export const RANGEELA_BANK = {
   branch: 'HOMAGAMA',
 } as const
 
-export const AL_BATCHES = ['2026', '2027', '2028', '2029', 'Already finished A/Ls', 'Not a student'] as const
+export const AL_BATCHES = ['2025', '2026', '2027', '2028', 'Other'] as const
 
 export function salesOpen(now = Date.now()): boolean {
   return now < Date.parse(RANGEELA.salesCloseISO)
