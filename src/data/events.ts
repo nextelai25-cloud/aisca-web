@@ -19,8 +19,8 @@ export interface Event {
 export const events: Event[] = [
   {
     id: '15',
-    slug: 'future-forum-2026',
-    name: 'AISCA Future Forum 2026',
+    slug: 'future-forum-forum-3',
+    name: 'AISCA Future Forum (Forum 3.0)',
     tag: 'Forum',
     year: '2026',
     date: 'September 05, 2026',
@@ -30,7 +30,7 @@ export const events: Event[] = [
       '/events/futureforum/oil-lamp.webp',
       '/events/futureforum/appreciation.webp'
     ],
-    description: `Clarity for the road after A/Ls. On 5 September 2026, AISCA hosted Future Forum 2026 at the National Olympic House Auditorium, Colombo 07. It was a career guidance programme built for students who had just completed their 2026 G.C.E. Advanced Level examinations, at the exact moment when the next decision feels the biggest.\n\nThe programme began at 9.00 AM with the traditional lighting of the oil lamp, and entry was free for every participant. Organised in collaboration with Lockbird Education, an ACCA Approved Learning Partner, and ACCA, the forum walked students through the choices in front of them: higher education, professional qualifications, and the career paths each one can open up. Students, and many of the parents who came with them, left with a clearer picture of how professional qualifications like ACCA sit alongside university pathways, and how to plan the next few years with confidence.\n\nThe forum closed with tokens of appreciation to the resource persons who made it possible. Future Forum carried the AISCA forum series forward after the Inaugural Edition and Forum 2.0, with one simple aim: no commerce student should have to figure out their future alone.`
+    description: `Clarity for the road after A/Ls. On 5 September 2026, AISCA hosted Future Forum, the third edition of the AISCA Forum series, at the National Olympic House Auditorium, Colombo 07. Forum 3.0 was a career guidance programme built for students who had just completed their 2026 G.C.E. Advanced Level examinations, at the exact moment when the next decision feels the biggest.\n\nThe programme began at 9.00 AM with the traditional lighting of the oil lamp, and entry was free for every participant. Organised in collaboration with Lockbird Education, an ACCA Approved Learning Partner, and ACCA, the forum walked students through the choices in front of them: higher education, professional qualifications, and the career paths each one can open up. Students, and many of the parents who came with them, left with a clearer picture of how professional qualifications like ACCA sit alongside university pathways, and how to plan the next few years with confidence.\n\nThe forum closed with tokens of appreciation to the resource persons who made it possible. Following the Inaugural Edition and Forum 2.0, Forum 3.0 carried the series forward with one simple aim: no commerce student should have to figure out their future alone.`
   },
   {
     id: '14',
