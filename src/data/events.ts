@@ -18,6 +18,50 @@ export interface Event {
 
 export const events: Event[] = [
   {
+    id: '15',
+    slug: 'future-forum-2026',
+    name: 'AISCA Future Forum 2026',
+    tag: 'Forum',
+    year: '2026',
+    date: 'September 05, 2026',
+    coverPhoto: '/events/futureforum/hall.webp',
+    photos: [
+      '/events/futureforum/hall.webp',
+      '/events/futureforum/oil-lamp.webp',
+      '/events/futureforum/appreciation.webp'
+    ],
+    description: `Clarity for the road after A/Ls. On 5 September 2026, AISCA hosted Future Forum 2026 at the National Olympic House Auditorium, Colombo 07. It was a career guidance programme built for students who had just completed their 2026 G.C.E. Advanced Level examinations, at the exact moment when the next decision feels the biggest.\n\nThe programme began at 9.00 AM with the traditional lighting of the oil lamp, and entry was free for every participant. Organised in collaboration with Lockbird Education, an ACCA Approved Learning Partner, and ACCA, the forum walked students through the choices in front of them: higher education, professional qualifications, and the career paths each one can open up. Students, and many of the parents who came with them, left with a clearer picture of how professional qualifications like ACCA sit alongside university pathways, and how to plan the next few years with confidence.\n\nThe forum closed with tokens of appreciation to the resource persons who made it possible. Future Forum carried the AISCA forum series forward after the Inaugural Edition and Forum 2.0, with one simple aim: no commerce student should have to figure out their future alone.`
+  },
+  {
+    id: '14',
+    slug: 'ask-the-expert-session-02',
+    name: 'Ask the Expert: Session 02',
+    tag: 'Speaker Session',
+    year: '2026',
+    date: 'August 24, 2026',
+    coverPhoto: '/events/askexpert2/group.webp',
+    photos: [
+      '/events/askexpert2/group.webp',
+      '/events/askexpert2/discussion.webp',
+      '/events/askexpert2/roundtable.webp'
+    ],
+    description: `Leadership lessons from decades at the top. The second session of Ask the Expert took place on 24 August 2026 at APIIT Sri Lanka, with Mr. Bandula Egodage as our guest. His career spans more than 37 years in local and international business, including senior leadership at Nestlé Lanka, the chairmanship of APIIT Sri Lanka and Commercial Credit and Finance PLC, and a term as Chairman of the Sri Lanka Export Development Board.\n\nSet up as a relaxed round table conversation, the session gave AISCA Associates the space to ask their own questions and hear honest answers about leadership, professional growth, and what the corporate world really expects from young people. The focus stayed practical: building the right habits early, and understanding why industry exposure matters long before the first job.\n\nLike every Ask the Expert session, it was open exclusively to AISCA Associates with limited seats, which kept the conversation close, personal, and genuinely useful.`
+  },
+  {
+    id: '13',
+    slug: 'ask-the-expert-session-01',
+    name: 'Ask the Expert: Session 01',
+    tag: 'Speaker Session',
+    year: '2026',
+    date: 'August 13, 2026',
+    coverPhoto: '/events/askexpert1/group.webp',
+    photos: [
+      '/events/askexpert1/group.webp',
+      '/events/askexpert1/studio.webp'
+    ],
+    description: `Where Ask the Expert began. AISCA launched its Ask the Expert initiative on 13 August 2026 with a first session at the Business Advisor office in Kandy. Our guest was Mr. Viraj Henegedera, Director of Business Advisor, Sri Lanka's first online business advisory platform, and a chartered accountant (FCA, CTA) who works with entrepreneurs through every stage of building a business.\n\nHe spoke with AISCA Associates about professional development, the career opportunities open to commerce students, and the realities of the business world, drawing on years of advising real companies. The visit also brought our Associates into the Business Advisor Junior studio, home of our NextUp partnership, for a closer look at how the team works behind the scenes.\n\nThe session was held exclusively for AISCA Associates with limited participation, and it set the tone for a series built on real conversations with real professionals, far beyond what a classroom can offer.`
+  },
+  {
     id: '12',
     slug: 'bs360-finals-2026',
     name: 'BS360 Quiz Competition - Grand Finals',

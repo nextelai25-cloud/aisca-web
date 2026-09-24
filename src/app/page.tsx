@@ -16,6 +16,7 @@ import GallerySection from '@/components/sections/GallerySection';
 import ProductsSection from '@/components/sections/ProductsSection';
 import RegisterSection from '@/components/sections/RegisterSection';
 import SpotlightSection from '@/components/sections/SpotlightSection';
+import StorySection from '@/components/sections/StorySection';
 
 const SmoothScrollProvider = dynamic(() => import('@/providers/SmoothScrollProvider'), { ssr: false });
 
@@ -37,6 +38,8 @@ export default function HomePage() {
           <SpotlightSection />
           <div className="sep" />
           <MissionVisionSection />
+          <div className="sep" />
+          <StorySection />
           <div className="sep" />
           <StatsSection />
           <div className="sep" />
