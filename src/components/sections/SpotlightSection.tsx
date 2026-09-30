@@ -74,7 +74,7 @@ export default function SpotlightSection() {
                   RANGEELA &apos;26
                 </div>
                 <div style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.75, fontWeight: 300, marginBottom: '8px' }}>
-                  One canvas. A thousand hues. A colour festival at Hyde Park Grounds, 3.00 PM onwards, with music, food stalls, games and colour packets included.
+                  One canvas. A thousand hues. A colour festival at Hyde Park Grounds, 2.00 PM onwards, with music, food stalls, games and colour packets included.
                 </div>
                 <div style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.85)', fontWeight: 500 }}>LKR 1,200 per ticket</div>
                 <div style={{ fontSize: '12px', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.9)', fontWeight: 600, paddingTop: '22px', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>

@@ -7,10 +7,10 @@ export const RANGEELA = {
   tagline: 'A Celebration of Hues',
   dateLabel: 'Saturday, 17th October 2026',
   dateShort: '17th October',
-  timeLabel: '3.00 PM onwards',
+  timeLabel: '2.00 PM onwards',
   venue: 'Hyde Park Grounds',
   venueArea: 'Colombo',
-  price: 1200,
+  price: 1200,          // standard online price (after early bird)
   // Online ticket sales close at this moment (Sri Lanka time).
   salesCloseISO: '2026-10-17T12:00:00+05:30',
   whatsappGroup: 'https://chat.whatsapp.com/HklcPlrIl3P6tKJsWDbxu8',
@@ -24,6 +24,41 @@ export const RANGEELA_BANK = {
   bank: 'SAMPATH BANK',
   branch: 'HOMAGAMA',
 } as const
+
+// ── Ticket pricing ──
+// Early bird runs until the end of 10 October (midnight, Sri Lanka time).
+// From 11 October until the event the online price is LKR 1,200.
+// Tickets bought at the gate on the day are LKR 1,500.
+export const PRICING = {
+  earlyBird: 1000,
+  standard: 1200,
+  gate: 1500,
+  earlyBirdEndsISO: '2026-10-11T00:00:00+05:30',
+  earlyBirdEndsLabel: '10th October, midnight',
+  eventStartISO: '2026-10-17T14:00:00+05:30',
+} as const
+
+export function isEarlyBird(now = Date.now()): boolean {
+  return now < Date.parse(PRICING.earlyBirdEndsISO)
+}
+
+/** The online ticket price right now. */
+export function currentPrice(now = Date.now()): number {
+  return isEarlyBird(now) ? PRICING.earlyBird : PRICING.standard
+}
+
+export function priceTier(now = Date.now()): 'early_bird' | 'standard' {
+  return isEarlyBird(now) ? 'early_bird' : 'standard'
+}
+
+/** Turns any Sri Lankan mobile format into 07XXXXXXXX, or null. Tickets go out by SMS, so this must be a mobile. */
+export function toLocalMobile(raw: string): string | null {
+  let d = String(raw || '').replace(/\D/g, '')
+  if (d.startsWith('0094')) d = d.slice(2)
+  if (d.length === 11 && d.startsWith('94')) d = '0' + d.slice(2)
+  if (d.length === 9 && d.startsWith('7')) d = '0' + d
+  return /^07\d{8}$/.test(d) ? d : null
+}
 
 export const AL_BATCHES = ['2025', '2026', '2027', '2028', 'Other'] as const
 

@@ -55,7 +55,7 @@ export function whatsappBlock(): string {
 </td></tr>`
 }
 
-export async function sendRangeelaReceivedEmail({ to, name, ticketNumber }: { to: string; name: string; ticketNumber: string }) {
+export async function sendRangeelaReceivedEmail({ to, name, ticketNumber, amount, earlyBird }: { to: string; name: string; ticketNumber: string; amount?: number; earlyBird?: boolean }) {
   const apiKey = process.env.RESEND_API_KEY
   if (!apiKey || !to) return
   const resend = new Resend(apiKey)
@@ -68,13 +68,14 @@ export async function sendRangeelaReceivedEmail({ to, name, ticketNumber }: { to
   <tr><td style="padding:26px 32px 4px;">
     <h1 style="margin:0 0 12px;font-size:24px;line-height:1.3;color:#2B1B2E;font-family:${FONT};">Hi ${first}, we got your request!</h1>
     <p style="margin:0 0 14px;font-size:14.5px;line-height:1.7;color:#5B4A58;font-family:${FONT};">Thank you for getting your ticket for RANGEELA '26. Your details and bank receipt are with us now.</p>
-    <p style="margin:0 0 20px;font-size:14.5px;line-height:1.7;color:#5B4A58;font-family:${FONT};">Our team will check your payment by hand. Once it is confirmed, your personal QR ticket will arrive in this inbox. Please keep an eye on your spam or promotions folder too, just in case.</p>
+    <p style="margin:0 0 20px;font-size:14.5px;line-height:1.7;color:#5B4A58;font-family:${FONT};">Our team will check your payment by hand. Once it is confirmed, your personal QR ticket will arrive in this inbox and by SMS to your phone. Please keep an eye on your spam or promotions folder too, just in case.</p>
   </td></tr>
   <tr><td style="padding:0 32px 18px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF7FB;border:1px dashed #E7A6CF;border-radius:14px;">
       <tr><td style="padding:18px 22px;">
         <p style="margin:0 0 4px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#A07A95;font-family:${FONT};">Your reference</p>
         <p style="margin:0 0 10px;font-size:22px;font-weight:bold;color:#7B2FF7;font-family:${FONT};">${esc(ticketNumber)}</p>
+        ${amount ? `<p style="margin:0 0 4px;font-size:13px;line-height:1.6;color:#5B4A58;font-family:${FONT};">Ticket price: <strong style="color:#2B1B2E;">LKR ${amount.toLocaleString()}</strong>${earlyBird ? ' (early bird)' : ''}</p>` : ''}
         <p style="margin:0;font-size:13px;line-height:1.6;color:#5B4A58;font-family:${FONT};">Status: <strong style="color:#C2410C;">Waiting for payment verification</strong></p>
       </td></tr>
     </table>
@@ -84,7 +85,7 @@ export async function sendRangeelaReceivedEmail({ to, name, ticketNumber }: { to
       <tr>
         <td width="33%" style="padding:10px 6px;text-align:center;background:#FFF1E6;border-radius:12px;"><p style="margin:0;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#A0826B;font-family:${FONT};">Date</p><p style="margin:4px 0 0;font-size:14px;font-weight:bold;color:#E0561B;font-family:${FONT};">17th October</p></td>
         <td width="4"></td>
-        <td width="33%" style="padding:10px 6px;text-align:center;background:#EEF6FF;border-radius:12px;"><p style="margin:0;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6B7FA0;font-family:${FONT};">Time</p><p style="margin:4px 0 0;font-size:14px;font-weight:bold;color:#2563EB;font-family:${FONT};">3.00 PM onwards</p></td>
+        <td width="33%" style="padding:10px 6px;text-align:center;background:#EEF6FF;border-radius:12px;"><p style="margin:0;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6B7FA0;font-family:${FONT};">Time</p><p style="margin:4px 0 0;font-size:14px;font-weight:bold;color:#2563EB;font-family:${FONT};">2.00 PM onwards</p></td>
         <td width="4"></td>
         <td width="33%" style="padding:10px 6px;text-align:center;background:#F5EEFF;border-radius:12px;"><p style="margin:0;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#8A76A8;font-family:${FONT};">Venue</p><p style="margin:4px 0 0;font-size:14px;font-weight:bold;color:#7B2FF7;font-family:${FONT};">Hyde Park Grounds</p></td>
       </tr>

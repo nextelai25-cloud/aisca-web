@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { randomInt } from 'crypto'
 import { supabaseAdmin } from '@/lib/supabase'
 import { sendTelegram } from '@/lib/telegram'
-import { isEmail, isPhone, optStr, rateLimit } from '@/lib/validate'
-import { RANGEELA, AL_BATCHES, salesOpen, normaliseId, looksLikeNic } from '@/lib/rangeela'
+import { isEmail, optStr, rateLimit } from '@/lib/validate'
+import { AL_BATCHES, salesOpen, normaliseId, looksLikeNic, currentPrice, isEarlyBird, toLocalMobile } from '@/lib/rangeela'
 import { sendRangeelaReceivedEmail } from '@/lib/rangeela-email'
 
 // POST /api/rangeela/register
@@ -26,14 +26,11 @@ export async function POST(req: NextRequest) {
     if (!full_name) return NextResponse.json({ error: 'Please enter your full name.' }, { status: 400 })
 
     const email = String(b.email ?? '').trim().toLowerCase()
-    const email_confirm = String(b.email_confirm ?? '').trim().toLowerCase()
     if (!isEmail(email)) return NextResponse.json({ error: 'Please enter a valid email address.' }, { status: 400 })
-    if (email !== email_confirm) {
-      return NextResponse.json({ error: 'The two email addresses do not match. Your ticket is sent to this email, so please check it again.' }, { status: 400 })
-    }
 
-    if (!isPhone(b.whatsapp)) return NextResponse.json({ error: 'Please enter a valid WhatsApp number.' }, { status: 400 })
-    const whatsapp = String(b.whatsapp).trim().slice(0, 30)
+    // Tickets are also sent by SMS, so this has to be a Sri Lankan mobile number.
+    const whatsapp = toLocalMobile(String(b.whatsapp ?? ''))
+    if (!whatsapp) return NextResponse.json({ error: 'Please enter a valid mobile number, for example 077 123 4567.' }, { status: 400 })
 
     const school = String(b.school ?? '').trim().slice(0, 200)
     if (!school) return NextResponse.json({ error: 'Please enter your school.' }, { status: 400 })
@@ -81,7 +78,7 @@ export async function POST(req: NextRequest) {
 
     const payload = {
       full_name, email, whatsapp, school, al_batch, nic, nic_norm, nic_is_nic,
-      payment_method: 'bank', amount: RANGEELA.price, source: 'online',
+      payment_method: 'bank', amount: currentPrice(), source: 'online',
       receipt_url, receipt_filename,
       notes: optStr(b.notes, 500) || null,
       status: 'pending',
@@ -104,16 +101,17 @@ export async function POST(req: NextRequest) {
     }
     if (!saved) return NextResponse.json({ error: 'Could not submit. Please try again.' }, { status: 500 })
 
-    await sendRangeelaReceivedEmail({ to: email, name: full_name, ticketNumber: ticket_number })
+    await sendRangeelaReceivedEmail({ to: email, name: full_name, ticketNumber: ticket_number, amount: payload.amount, earlyBird: isEarlyBird() })
 
     try {
       await sendTelegram(
         `🎨 *RANGEELA 26 TICKET REQUEST*\n\n` +
         `🎟️ *Ref*: ${ticket_number}\n` +
+        `💰 *Price*: LKR ${payload.amount.toLocaleString()}${isEarlyBird() ? ' (early bird)' : ''}\n` +
         `👤 *Name*: ${full_name}\n` +
         `🏫 *School*: ${school} (${al_batch})\n` +
         `🪪 *NIC*: ${nic}\n` +
-        `📱 *WhatsApp*: ${whatsapp}\n` +
+        `📱 *Phone*: ${whatsapp}\n` +
         `📧 *Email*: ${email}\n` +
         `🧾 *Receipt*: ${receipt_url}\n` +
         `⏳ Waiting for payment verification in the admin dashboard\n` +

@@ -6,7 +6,9 @@ import {
   CalendarDays, Clock, MapPin, Ticket, Upload, FileText, X, CheckCircle2, Copy, Check,
   Palette, Music, UtensilsCrossed, Gamepad2, Shirt, AlertTriangle, MessageCircle, ArrowLeft, ChevronRight,
 } from 'lucide-react'
-import { RANGEELA, RANGEELA_BANK, AL_BATCHES, salesOpen, looksLikeNic } from '@/lib/rangeela'
+import {
+  RANGEELA, RANGEELA_BANK, AL_BATCHES, PRICING, salesOpen, looksLikeNic, isEarlyBird, currentPrice, toLocalMobile,
+} from '@/lib/rangeela'
 
 // ── Holi palette taken from the RANGEELA '26 artwork ──
 const C = {
@@ -43,14 +45,17 @@ const EXPERIENCES = [
   { icon: Shirt, color: C.teal, title: 'Dress code: white', text: 'Come dressed in white. It is the best canvas for a thousand colours.' },
 ]
 
-const STEPS = [
-  { color: C.magenta, title: 'Transfer LKR 1,200', text: 'Deposit or transfer the ticket price to the AISCA bank account.' },
+const lkr = (n: number) => `LKR ${n.toLocaleString('en-US')}`
+
+const stepsFor = (price: number) => [
+  { color: C.magenta, title: `Transfer ${lkr(price)}`, text: 'Deposit or transfer the ticket price to the AISCA bank account.' },
   { color: C.orange, title: 'Fill the form', text: 'Enter your details and upload a photo or screenshot of your receipt.' },
   { color: C.teal, title: 'We verify', text: 'Our team checks every receipt by hand and emails you once your request is in.' },
-  { color: C.violet, title: 'QR ticket in your inbox', text: 'Once approved, your personal QR ticket arrives by email. Show it at the entrance.' },
+  { color: C.violet, title: 'Ticket by email and SMS', text: 'Once approved, your personal QR ticket comes to your email and your phone. Show it at the entrance.' },
 ]
 
 const GOOD_TO_KNOW = [
+  `Early bird tickets are ${lkr(PRICING.earlyBird)} until ${PRICING.earlyBirdEndsLabel}. After that, online tickets are ${lkr(PRICING.standard)} until the event, and tickets at the gate are ${lkr(PRICING.gate)}.`,
   'One ticket admits one person. Each person fills the form separately.',
   'Your QR code works only once. After it is scanned at the entrance it cannot be used again, so please do not share it.',
   'Bring your NIC. The name and NIC number on your ticket may be checked at the gate.',
@@ -61,10 +66,28 @@ const GOOD_TO_KNOW = [
 
 type Uploaded = { url: string; filename: string }
 
-const empty = { full_name: '', email: '', email_confirm: '', whatsapp: '', school: '', al_batch: '', nic: '' }
+// The form still sends the phone as "whatsapp" so the database column stays the same.
+const empty = { full_name: '', email: '', whatsapp: '', school: '', al_batch: '', nic: '' }
 
-export default function RangeelaClient() {
-  const open = salesOpen()
+/** Current time. Starts from the server's clock so the first paint matches, then ticks every second. */
+function useNow(serverNow: number) {
+  const [now, setNow] = useState(serverNow)
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => {
+    setMounted(true)
+    setNow(Date.now())
+    const id = window.setInterval(() => setNow(Date.now()), 1000)
+    return () => window.clearInterval(id)
+  }, [])
+  return { now, mounted }
+}
+
+export default function RangeelaClient({ serverNow }: { serverNow: number }) {
+  const { now, mounted } = useNow(serverNow)
+  const open = salesOpen(now)
+  const early = isEarlyBird(now)
+  const price = currentPrice(now)
+  const STEPS = stepsFor(price)
   const [f, setF] = useState({ ...empty })
   const [agree, setAgree] = useState(false)
   const [receipt, setReceipt] = useState<Uploaded | null>(null)
@@ -93,8 +116,7 @@ export default function RangeelaClient() {
   }, [])
 
   const set = (k: keyof typeof empty, v: string) => setF((p) => ({ ...p, [k]: v }))
-  const emailsMismatch =
-    f.email_confirm.length > 3 && f.email.trim().toLowerCase() !== f.email_confirm.trim().toLowerCase()
+  const phoneBad = f.whatsapp.replace(/\D/g, '').length >= 9 && !toLocalMobile(f.whatsapp)
   const nicBad = f.nic.trim().length >= 9 && !looksLikeNic(f.nic)
 
   function goTickets() {
@@ -138,9 +160,7 @@ export default function RangeelaClient() {
     setError('')
     if (!f.full_name.trim()) return fail('Please enter your full name.')
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(f.email.trim())) return fail('Please enter a valid email address.')
-    if (f.email.trim().toLowerCase() !== f.email_confirm.trim().toLowerCase())
-      return fail('The two email addresses do not match. Your ticket is sent here, so please check it again.')
-    if (f.whatsapp.replace(/\D/g, '').length < 9) return fail('Please enter a valid WhatsApp number.')
+    if (!toLocalMobile(f.whatsapp)) return fail('Please enter a valid mobile number, for example 077 123 4567. Your ticket is sent to it by SMS.')
     if (!looksLikeNic(f.nic)) return fail(NIC_MSG)
     if (!f.school.trim()) return fail('Please enter your school.')
     if (!f.al_batch) return fail('Please choose your A/L batch.')
@@ -214,9 +234,9 @@ export default function RangeelaClient() {
           <motion.div {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.08 }} className="lg-facts">
             {[
               { icon: CalendarDays, label: 'Date', value: RANGEELA.dateShort, sub: 'Saturday', color: C.orange },
-              { icon: Clock, label: 'Time', value: '3.00 PM', sub: 'onwards', color: C.magenta },
+              { icon: Clock, label: 'Time', value: '2.00 PM', sub: 'onwards', color: C.magenta },
               { icon: MapPin, label: 'Venue', value: 'Hyde Park', sub: 'Grounds, Colombo', color: C.blue },
-              { icon: Ticket, label: 'Ticket', value: `LKR ${RANGEELA.price.toLocaleString()}`, sub: 'per person', color: C.violet },
+              { icon: Ticket, label: early ? 'Early bird' : 'Ticket', value: lkr(price), sub: early ? 'until 10th Oct' : 'online, per person', color: C.violet },
             ].map((x) => (
               <div key={x.label} className="lg-glass lg-fact">
                 <span className="lg-fact-icon" style={{ color: x.color }}><x.icon size={18} strokeWidth={2.3} /></span>
@@ -226,6 +246,13 @@ export default function RangeelaClient() {
               </div>
             ))}
           </motion.div>
+
+          {early && open && (
+            <motion.div {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.1 }} className="lg-glass lg-eb-strip">
+              <span className="lg-eb-strip-label">Early bird {lkr(PRICING.earlyBird)} ends in</span>
+              <Countdown to={PRICING.earlyBirdEndsISO} now={now} mounted={mounted} compact />
+            </motion.div>
+          )}
 
           <motion.div {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.12 }} className="lg-cta-row">
             <button type="button" onClick={goTickets} className="lg-btn">Get your ticket <ChevronRight size={18} /></button>
@@ -277,17 +304,47 @@ export default function RangeelaClient() {
             <span className="lg-eyebrow">Tickets</span>
             <h2 className="lg-h2">Get your RANGEELA &apos;26 ticket</h2>
             <p className="lg-body lg-sub">
-              LKR {RANGEELA.price.toLocaleString()} per person. Pay by bank transfer, upload the receipt, and your QR ticket comes to your email once we confirm the payment.
+              {early
+                ? `Early bird price is ${lkr(PRICING.earlyBird)} per person. Pay by bank transfer, upload the receipt, and your QR ticket comes to your email and phone once we confirm the payment.`
+                : `${lkr(price)} per person online. Pay by bank transfer, upload the receipt, and your QR ticket comes to your email and phone once we confirm the payment.`}
             </p>
+          </motion.div>
+
+          {/* Pricing tiers + early bird countdown */}
+          <motion.div {...fadeUp} className="lg-glass lg-card lg-prices">
+            {early && (
+              <div className="lg-cd-wrap">
+                <div className="lg-cd-title">Early bird ends in</div>
+                <Countdown to={PRICING.earlyBirdEndsISO} now={now} mounted={mounted} />
+                <div className="lg-cd-note">Grab yours for {lkr(PRICING.earlyBird)} before {PRICING.earlyBirdEndsLabel}. The price goes up to {lkr(PRICING.standard)} after that.</div>
+              </div>
+            )}
+            <div className="lg-tiers">
+              {[
+                { key: 'early', name: 'Early bird', amount: PRICING.earlyBird, when: `Until ${PRICING.earlyBirdEndsLabel}`, color: C.magenta, active: early && open, over: !early },
+                { key: 'online', name: 'Online', amount: PRICING.standard, when: '11th October until the event', color: C.orange, active: !early && open, over: !open },
+                { key: 'gate', name: 'At the gate', amount: PRICING.gate, when: 'On the day, 17th October', color: C.violet, active: !open, over: false },
+              ].map((t) => (
+                <div key={t.key} className={`lg-tier ${t.active ? 'is-active' : ''} ${t.over ? 'is-over' : ''}`} style={t.active ? { borderColor: t.color, boxShadow: `0 14px 30px -16px ${t.color}` } : undefined}>
+                  {t.active && <span className="lg-tier-badge" style={{ background: t.color }}>Now</span>}
+                  {t.over && <span className="lg-tier-badge is-over">Ended</span>}
+                  <span className="lg-tier-name" style={{ color: t.color }}>{t.name}</span>
+                  <span className="lg-tier-amount">{lkr(t.amount)}</span>
+                  <span className="lg-tier-when">{t.when}</span>
+                </div>
+              ))}
+            </div>
           </motion.div>
 
           <div className="lg-ticket-grid">
             {/* Step 1: Pay */}
             <motion.div {...fadeUp} className="lg-glass lg-card lg-pay">
               <div className="lg-step-tag" style={{ background: `${C.magenta}14`, color: C.magenta }}>Step 1</div>
-              <div className="lg-card-h">Pay LKR {RANGEELA.price.toLocaleString()}</div>
+              <div className="lg-card-h">Pay {lkr(price)}</div>
               <p className="lg-small" style={{ margin: '0 0 16px' }}>
-                Transfer or deposit to this account. If your bank lets you add a reference, please use your name.
+                {early
+                  ? `Early bird price. Transfer or deposit to this account and submit the form before ${PRICING.earlyBirdEndsLabel}. If your bank lets you add a reference, please use your name.`
+                  : 'Transfer or deposit to this account. If your bank lets you add a reference, please use your name.'}
               </p>
               <div className="lg-bank">
                 {([
@@ -319,11 +376,11 @@ export default function RangeelaClient() {
             {/* Step 2: Form / success */}
             <motion.div {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.06 }} className="lg-glass lg-card lg-anchor" ref={formTop}>
               {done ? (
-                <SuccessCard ticketNumber={done} email={f.email} />
+                <SuccessCard ticketNumber={done} email={f.email} phone={toLocalMobile(f.whatsapp) || f.whatsapp} />
               ) : !open ? (
                 <div className="lg-center" style={{ padding: '26px 6px' }}>
                   <div className="lg-card-h">Online sales are closed</div>
-                  <p className="lg-body">Thank you for the amazing response. Online tickets for RANGEELA &apos;26 are no longer available. Please check the WhatsApp group for updates.</p>
+                  <p className="lg-body">Thank you for the amazing response. Online tickets for RANGEELA &apos;26 are no longer available. You can still buy a ticket at the gate for {lkr(PRICING.gate)}. Please check the WhatsApp group for updates.</p>
                 </div>
               ) : (
                 <>
@@ -343,34 +400,31 @@ export default function RangeelaClient() {
                     <div className="lg-email-box lg-full">
                       <div className="lg-email-note">
                         <AlertTriangle size={16} style={{ flexShrink: 0, marginTop: 2 }} />
-                        <span><strong>Please check your email twice.</strong> Your QR ticket is sent to this address. If the email is wrong, your ticket will not reach you.</span>
+                        <span><strong>Please type these two carefully.</strong> Your QR ticket is sent to both your email and your phone (by SMS). If either one is wrong, your ticket may not reach you.</span>
                       </div>
                       <div className="lg-form" style={{ gap: 12 }}>
                         <Field label="Email address">
                           <input className="lg-input" type="email" inputMode="email" autoComplete="email" autoCapitalize="off" autoCorrect="off" spellCheck={false} value={f.email} onChange={(e) => set('email', e.target.value)} placeholder="you@example.com" />
                         </Field>
-                        <Field label="Type your email again">
-                          <input className={`lg-input ${emailsMismatch ? 'is-bad' : ''}`} type="email" inputMode="email" autoComplete="off" autoCapitalize="off" autoCorrect="off" spellCheck={false} value={f.email_confirm} onChange={(e) => set('email_confirm', e.target.value)} onPaste={(e) => e.preventDefault()} placeholder="Type it once more" />
-                          {emailsMismatch && <span className="lg-err-text">These emails do not match yet.</span>}
+                        <Field label="Phone number" hint={phoneBad ? undefined : 'A mobile number that can receive SMS'}>
+                          <input className={`lg-input ${phoneBad ? 'is-bad' : ''}`} type="tel" inputMode="tel" autoComplete="tel" value={f.whatsapp} onChange={(e) => set('whatsapp', e.target.value)} placeholder="07X XXX XXXX" maxLength={20} />
+                          {phoneBad && <span className="lg-err-text">Please enter a Sri Lankan mobile number, like 077 123 4567.</span>}
                         </Field>
                       </div>
                     </div>
 
-                    <Field label="WhatsApp number">
-                      <input className="lg-input" type="tel" inputMode="tel" autoComplete="tel" value={f.whatsapp} onChange={(e) => set('whatsapp', e.target.value)} placeholder="07X XXX XXXX" maxLength={20} />
-                    </Field>
                     <Field label="NIC number" hint={nicBad ? undefined : '12 digits, or 9 digits followed by V or X'}>
                       <input className={`lg-input ${nicBad ? 'is-bad' : ''}`} autoCapitalize="characters" autoCorrect="off" spellCheck={false} value={f.nic} onChange={(e) => set('nic', e.target.value.toUpperCase())} placeholder="e.g. 200712345678" maxLength={14} />
                       {nicBad && <span className="lg-err-text">That does not look like a valid NIC number.</span>}
-                    </Field>
-                    <Field label="School">
-                      <input className="lg-input" value={f.school} onChange={(e) => set('school', e.target.value)} placeholder="Your school" maxLength={200} />
                     </Field>
                     <Field label="A/L batch">
                       <select className="lg-input lg-select" value={f.al_batch} onChange={(e) => set('al_batch', e.target.value)}>
                         <option value="">Choose your batch</option>
                         {AL_BATCHES.map((b) => <option key={b} value={b}>{/^\d+$/.test(b) ? `${b} A/L batch` : b}</option>)}
                       </select>
+                    </Field>
+                    <Field label="School" full>
+                      <input className="lg-input" value={f.school} onChange={(e) => set('school', e.target.value)} placeholder="Your school" maxLength={200} />
                     </Field>
 
                     <Field label="Bank receipt" hint="A clear photo, screenshot or PDF of your payment slip" full>
@@ -450,8 +504,8 @@ export default function RangeelaClient() {
         <div className={`lg-bottom ${showBar ? 'is-on' : ''}`} aria-hidden={!showBar}>
           <div className="lg-glass lg-bottom-inner">
             <div className="lg-bottom-text">
-              <span className="lg-bottom-price">LKR {RANGEELA.price.toLocaleString()}</span>
-              <span className="lg-bottom-sub">{RANGEELA.dateShort} · Hyde Park</span>
+              <span className="lg-bottom-price">{lkr(price)}{early && <span className="lg-bottom-eb">Early bird</span>}</span>
+              <span className="lg-bottom-sub">{early && mounted ? `Ends in ${shortLeft(Date.parse(PRICING.earlyBirdEndsISO) - now)}` : `${RANGEELA.dateShort} · Hyde Park`}</span>
             </div>
             <button type="button" onClick={goTickets} className="lg-btn lg-btn-sm" tabIndex={showBar ? 0 : -1}>Get ticket</button>
           </div>
@@ -591,6 +645,37 @@ export default function RangeelaClient() {
         .lg-help { text-align: center; font-size: 13px; color: ${C.muted}; margin: 14px 0 0; }
         .lg-help a { color: ${C.violet}; font-weight: 700; }
 
+        /* early bird strip under the facts */
+        .lg-eb-strip { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px 16px; margin: 14px auto 0; padding: 12px 18px; border-radius: 24px; max-width: 620px; }
+        .lg-eb-strip-label { font-family: ${DISPLAY}; font-weight: 800; font-size: 16px; color: ${C.magenta}; }
+
+        /* countdown */
+        .lg-cd { display: flex; justify-content: center; gap: 10px; }
+        .lg-cd-cell { display: flex; flex-direction: column; align-items: center; min-width: 74px; padding: 12px 8px 10px; border-radius: 20px; background: rgba(255,255,255,0.72); border: 1px solid rgba(255,255,255,0.95); box-shadow: inset 0 1px 0 #fff, 0 8px 20px -14px rgba(70,20,90,0.35); }
+        .lg-cd-num { font-family: ${DISPLAY}; font-weight: 800; font-size: 34px; line-height: 1; color: ${C.ink}; font-variant-numeric: tabular-nums; }
+        .lg-cd-lbl { font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; font-weight: 700; color: ${C.muted}; margin-top: 5px; }
+        .lg-cd.is-compact { gap: 6px; }
+        .lg-cd.is-compact .lg-cd-cell { min-width: 50px; padding: 7px 6px 6px; border-radius: 14px; }
+        .lg-cd.is-compact .lg-cd-num { font-size: 20px; }
+        .lg-cd.is-compact .lg-cd-lbl { font-size: 9px; margin-top: 3px; }
+
+        /* price tiers */
+        .lg-prices { margin-bottom: 18px; }
+        .lg-cd-wrap { text-align: center; padding: 4px 0 22px; margin-bottom: 20px; border-bottom: 1px solid rgba(36,22,40,0.07); }
+        .lg-cd-title { font-family: ${DISPLAY}; font-weight: 800; font-size: 20px; margin-bottom: 12px; background: ${RAINBOW}; -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .lg-cd-note { font-size: 13.5px; color: ${C.body}; margin-top: 12px; line-height: 1.55; }
+        .lg-tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .lg-tier { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 2px; padding: 18px 10px 16px; border-radius: 22px; background: rgba(255,255,255,0.55); border: 1.5px solid rgba(255,255,255,0.9); }
+        .lg-tier.is-active { background: rgba(255,255,255,0.9); }
+        .lg-tier.is-over { opacity: .55; }
+        .lg-tier.is-over .lg-tier-amount { text-decoration: line-through; text-decoration-thickness: 2px; }
+        .lg-tier-badge { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); color: #fff; font-size: 10.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; }
+        .lg-tier-badge.is-over { background: ${C.muted}; }
+        .lg-tier-name { font-size: 11.5px; letter-spacing: .16em; text-transform: uppercase; font-weight: 800; }
+        .lg-tier-amount { font-family: ${DISPLAY}; font-weight: 800; font-size: 25px; line-height: 1.15; color: ${C.ink}; }
+        .lg-tier-when { font-size: 12.5px; color: ${C.muted}; line-height: 1.4; }
+        .lg-bottom-eb { display: inline-block; margin-left: 7px; vertical-align: 2px; font-family: ${BODY}; font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #fff; background: ${C.magenta}; padding: 2px 7px; border-radius: 999px; }
+
         /* list */
         .lg-list { padding: 6px 22px; }
         .lg-list-row { display: flex; gap: 14px; padding: 15px 0; font-size: 15px; line-height: 1.62; color: ${C.body}; }
@@ -638,6 +723,17 @@ export default function RangeelaClient() {
           .lg-card { padding: 22px 16px; border-radius: 26px; }
           .lg-form { grid-template-columns: 1fr; gap: 16px; }
           .lg-email-box { padding: 14px; }
+          .lg-eb-strip { flex-direction: column; gap: 8px; padding: 12px; }
+          .lg-cd { gap: 7px; }
+          .lg-cd-cell { min-width: 0; flex: 1; padding: 10px 4px 8px; border-radius: 16px; }
+          .lg-cd-num { font-size: 27px; }
+          .lg-cd.is-compact .lg-cd-cell { min-width: 58px; flex: 0 0 auto; }
+          .lg-tiers { grid-template-columns: 1fr; gap: 14px; }
+          .lg-tier { flex-direction: row; flex-wrap: wrap; justify-content: space-between; text-align: left; padding: 14px 16px; column-gap: 10px; }
+          .lg-tier-name { order: 1; }
+          .lg-tier-amount { order: 2; font-size: 22px; }
+          .lg-tier-when { order: 3; flex-basis: 100%; }
+          .lg-tier-badge { left: auto; right: 14px; transform: none; }
           .lg-list { padding: 4px 16px; }
           .lg-list-row { font-size: 14.5px; }
           .lg-bank-acc { font-size: 17px; }
@@ -655,6 +751,38 @@ export default function RangeelaClient() {
   )
 }
 
+function splitTime(ms: number) {
+  const s = Math.max(0, Math.floor(ms / 1000))
+  return { d: Math.floor(s / 86400), h: Math.floor((s % 86400) / 3600), m: Math.floor((s % 3600) / 60), s: s % 60 }
+}
+
+function shortLeft(ms: number) {
+  const t = splitTime(ms)
+  return t.d > 0 ? `${t.d}d ${t.h}h ${t.m}m` : `${t.h}h ${t.m}m ${t.s}s`
+}
+
+/** Live countdown. Shows dashes until the page is running in the browser so nothing jumps on load. */
+function Countdown({ to, now, mounted, compact }: { to: string; now: number; mounted: boolean; compact?: boolean }) {
+  const t = splitTime(Date.parse(to) - now)
+  const pad = (n: number) => String(n).padStart(2, '0')
+  const parts: [string, string][] = [
+    [mounted ? String(t.d) : '--', t.d === 1 ? 'day' : 'days'],
+    [mounted ? pad(t.h) : '--', 'hrs'],
+    [mounted ? pad(t.m) : '--', 'min'],
+    [mounted ? pad(t.s) : '--', 'sec'],
+  ]
+  return (
+    <div className={`lg-cd ${compact ? 'is-compact' : ''}`} role="timer" aria-live="off">
+      {parts.map(([v, l]) => (
+        <div key={l === 'day' ? 'days' : l} className="lg-cd-cell">
+          <span className="lg-cd-num">{v}</span>
+          <span className="lg-cd-lbl">{l}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 function Field({ label, hint, full, children }: { label: string; hint?: string; full?: boolean; children: React.ReactNode }) {
   return (
     <div className={full ? 'lg-full' : undefined} style={{ minWidth: 0 }}>
@@ -665,7 +793,7 @@ function Field({ label, hint, full, children }: { label: string; hint?: string; 
   )
 }
 
-function SuccessCard({ ticketNumber, email }: { ticketNumber: string; email: string }) {
+function SuccessCard({ ticketNumber, email, phone }: { ticketNumber: string; email: string; phone: string }) {
   return (
     <div className="lg-center" style={{ padding: '6px 2px' }}>
       <div style={{ width: 66, height: 66, borderRadius: '50%', margin: '0 auto 16px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(233,249,239,0.9)', color: C.green, boxShadow: 'inset 0 1px 0 #fff' }}>
@@ -673,8 +801,9 @@ function SuccessCard({ ticketNumber, email }: { ticketNumber: string; email: str
       </div>
       <div className="lg-card-h" style={{ fontSize: 27 }}>Request received!</div>
       <p className="lg-body" style={{ fontSize: 15, margin: '6px auto 18px', maxWidth: 440 }}>
-        Thank you. Our team will check your receipt, and once it is confirmed your QR ticket will be emailed to{' '}
-        <strong style={{ color: C.ink, wordBreak: 'break-all' }}>{email.trim().toLowerCase()}</strong>.
+        Thank you. Our team will check your receipt, and once it is confirmed your QR ticket will be sent to{' '}
+        <strong style={{ color: C.ink, wordBreak: 'break-all' }}>{email.trim().toLowerCase()}</strong> and by SMS to{' '}
+        <strong style={{ color: C.ink, whiteSpace: 'nowrap' }}>{phone}</strong>.
       </p>
       <div style={{ display: 'inline-flex', flexDirection: 'column', gap: 4, padding: '14px 26px', borderRadius: 20, background: 'rgba(247,242,255,0.8)', border: '1.5px dashed rgba(123,47,247,0.4)', marginBottom: 20 }}>
         <span className="lg-label-xs">Your reference</span>
