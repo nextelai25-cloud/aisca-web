@@ -80,6 +80,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.95
     },
     {
+      url: `${baseUrl}/nextup`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.85
+    },
+    {
+      url: `${baseUrl}/nextup01`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.95
+    },
+    {
+      url: `${baseUrl}/nextup02`,
+      lastModified: now,
+      changeFrequency: 'weekly',
+      priority: 0.9
+    },
+    {
       url: `${baseUrl}/ideanet`,
       lastModified: now,
       changeFrequency: 'hourly',

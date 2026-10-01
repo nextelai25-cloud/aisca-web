@@ -6,6 +6,26 @@ import { optStr, isPhone, isEmail, rateLimit } from '@/lib/validate'
 
 interface Upload { url?: string; filename?: string }
 
+// Which NEXTUP edition this application is for. Applications from the
+// /nextup02 page send '02'. Older clients that send nothing count as '02' too,
+// because NEXTUP 01 applications are closed.
+function cleanEdition(v: unknown): string {
+  const e = String(v ?? '').replace(/\D/g, '').slice(0, 2)
+  return e ? e.padStart(2, '0') : '02'
+}
+
+// Insert, and if the `edition` column has not been added to the table yet
+// (supabase/nextup-edition.sql), save without it so no application is lost.
+async function insertApplication(payload: Record<string, unknown>) {
+  const first = await supabaseAdmin.from('nextup_applications').insert([payload])
+  if (first.error && /edition/i.test(first.error.message)) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { edition, ...rest } = payload
+    return supabaseAdmin.from('nextup_applications').insert([rest])
+  }
+  return first
+}
+
 export async function POST(req: NextRequest) {
   try {
     // Generous limit: many students share one school/mobile IP (NAT), so this
@@ -17,6 +37,7 @@ export async function POST(req: NextRequest) {
     const b = await req.json()
     const type = b.application_type === 'referral' ? 'referral' : b.application_type === 'self' ? 'self' : null
     if (!type) return NextResponse.json({ error: 'Please choose whether you are applying or referring.' }, { status: 400 })
+    const edition = cleanEdition(b.edition)
 
     // ─────────────────────────── Referral path ───────────────────────────
     if (type === 'referral') {
@@ -29,6 +50,7 @@ export async function POST(req: NextRequest) {
 
       const payload = {
         application_type: 'referral',
+        edition,
         referrer_name,
         referrer_phone: (b.referrer_phone as string).trim(),
         referrer_relationship: optStr(b.referrer_relationship, 300) || null,
@@ -37,7 +59,7 @@ export async function POST(req: NextRequest) {
         uploads: [],
       }
 
-      const { error } = await supabaseAdmin.from('nextup_applications').insert([payload])
+      const { error } = await insertApplication(payload)
       if (error) {
         console.error('[nextup/apply referral] insert error:', error.message)
         return NextResponse.json({ error: 'Could not submit. Please try again.' }, { status: 500 })
@@ -45,7 +67,7 @@ export async function POST(req: NextRequest) {
 
       try {
         await sendTelegram(
-          `⭐ *NEXTUP REFERRAL*\n\n` +
+          `⭐ *NEXTUP ${edition} REFERRAL*\n\n` +
           `🙋 *Referrer*: ${referrer_name} (${payload.referrer_phone})\n` +
           `🤝 *Relationship*: ${payload.referrer_relationship || 'N/A'}\n` +
           `🚀 *Founder*: ${referred_founder_name} (${payload.referred_founder_phone})\n` +
@@ -76,7 +98,7 @@ export async function POST(req: NextRequest) {
     const venture_description = String(b.venture_description ?? '').trim().slice(0, 3000)
     if (!venture_description) return NextResponse.json({ error: 'Please tell us what it does.' }, { status: 400 })
     const story = String(b.story ?? '').trim().slice(0, 20000)
-    if (!story) return NextResponse.json({ error: 'Please share your story — this is the part we care about most.' }, { status: 400 })
+    if (!story) return NextResponse.json({ error: 'Please share your story. This is the part we care about most.' }, { status: 400 })
     if (b.consent !== true) return NextResponse.json({ error: 'Please confirm the information is true and give permission to feature your story.' }, { status: 400 })
 
     const uploads: Upload[] = Array.isArray(b.uploads) ? b.uploads : []
@@ -90,6 +112,7 @@ export async function POST(req: NextRequest) {
 
     const payload = {
       application_type: 'self',
+      edition,
       full_name,
       age,
       school,
@@ -111,17 +134,17 @@ export async function POST(req: NextRequest) {
       uploads: cleanUploads,
     }
 
-    const { error } = await supabaseAdmin.from('nextup_applications').insert([payload])
+    const { error } = await insertApplication(payload)
     if (error) {
       console.error('[nextup/apply self] insert error:', error.message)
       return NextResponse.json({ error: 'Could not submit. Please try again.' }, { status: 500 })
     }
 
     // Confirmation email (best-effort) + Telegram
-    await sendNextUpReceivedEmail({ to: email, name: full_name })
+    await sendNextUpReceivedEmail({ to: email, name: full_name, edition })
     try {
       await sendTelegram(
-        `⭐ *NEXTUP APPLICATION*\n\n` +
+        `⭐ *NEXTUP ${edition} APPLICATION*\n\n` +
         `👤 *Name*: ${full_name}\n` +
         `🎓 *Category*: ${age}\n` +
         `🏫 *School*: ${school} · ${district}\n` +

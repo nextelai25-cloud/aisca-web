@@ -1,7 +1,7 @@
 import { Resend } from 'resend'
 
 // Confirmation email sent to a NextUp applicant after they submit.
-export async function sendNextUpReceivedEmail({ to, name }: { to: string; name: string }) {
+export async function sendNextUpReceivedEmail({ to, name, edition = '02' }: { to: string; name: string; edition?: string }) {
   const apiKey = process.env.RESEND_API_KEY
   if (!apiKey || !to) return
   const resend = new Resend(apiKey)
@@ -17,7 +17,7 @@ export async function sendNextUpReceivedEmail({ to, name }: { to: string; name: 
     await resend.emails.send({
       from: fromAddress,
       to,
-      subject: 'Your NextUp application has been received',
+      subject: `Your NEXTUP ${edition} application has been received`,
       html: `
 <!DOCTYPE html>
 <html>
@@ -26,11 +26,14 @@ export async function sendNextUpReceivedEmail({ to, name }: { to: string; name: 
     <div style="text-align:center;margin-bottom:8px;">
       <span style="display:inline-block;font-size:11px;letter-spacing:0.28em;color:#e11d2a;font-weight:700;text-transform:uppercase;">AISCA × Business Advisor Junior</span>
     </div>
-    <h1 style="text-align:center;font-size:40px;font-weight:800;letter-spacing:-0.02em;margin:6px 0 18px;color:#ffffff;">NEXTUP</h1>
+    <h1 style="text-align:center;font-size:40px;font-weight:800;letter-spacing:-0.02em;margin:6px 0 18px;color:#ffffff;">NEXTUP ${edition}</h1>
     <div style="background:#141414;border:1px solid rgba(225,29,42,0.35);border-radius:16px;padding:28px 24px;">
       <p style="font-size:16px;color:#ffffff;margin:0 0 14px;">Hi ${firstName},</p>
       <p style="font-size:14px;line-height:1.7;color:rgba(255,255,255,0.72);margin:0 0 14px;">
-        Thank you — your story is in. We read every single application, and our team will be in touch with the founders selected for NextUp.
+        Thank you, your story is in. We read every single application, and our team will be in touch with the founders selected for NEXTUP ${edition}.
+      </p>
+      <p style="font-size:14px;line-height:1.7;color:rgba(255,255,255,0.72);margin:0 0 14px;">
+        While you wait, read the founders who came before you in NEXTUP 01, The Young Founders Edition: <a href="https://aisca.lk/nextup01" style="color:#e11d2a;font-weight:700;text-decoration:none;">aisca.lk/nextup01</a>
       </p>
       <p style="font-size:14px;line-height:1.7;color:rgba(255,255,255,0.72);margin:0;">
         Keep building.

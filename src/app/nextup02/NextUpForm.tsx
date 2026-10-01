@@ -2,7 +2,8 @@
 
 import React, { useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Upload, X, FileText, CheckCircle2 } from 'lucide-react'
+import Link from 'next/link'
+import { Upload, X, FileText, CheckCircle2, BookOpen } from 'lucide-react'
 
 const RED = '#e11d2a'
 const DISPLAY = "'Anton', system-ui, sans-serif"
@@ -45,7 +46,7 @@ const emptyForm = {
   proud_achievement: '', story: '', work_links: '',
 }
 
-export default function NextUpForm() {
+export default function NextUpForm({ edition = '02' }: { edition?: string }) {
   const [mode, setMode] = useState<Mode>('')
   const [f, setF] = useState({ ...emptyForm })
   const [podcast, setPodcast] = useState<null | boolean>(null)
@@ -94,7 +95,7 @@ export default function NextUpForm() {
       if (!f.referred_founder_name.trim()) { setError("Please enter the founder's name."); return }
       if (f.referred_founder_phone.replace(/\D/g, '').length < 9) { setError("Please enter the founder's contact number."); return }
       body = {
-        application_type: 'referral',
+        application_type: 'referral', edition,
         referrer_name: f.referrer_name, referrer_phone: f.referrer_phone,
         referrer_relationship: f.referrer_relationship,
         referred_founder_name: f.referred_founder_name, referred_founder_phone: f.referred_founder_phone,
@@ -112,7 +113,7 @@ export default function NextUpForm() {
       if (uploads.length === 0) { setError('Please upload at least one photo of yourself and your work.'); return }
       if (!consent) { setError('Please tick the consent box to continue.'); return }
       body = {
-        application_type: 'self', ...f,
+        application_type: 'self', edition, ...f,
         willing_podcast: podcast === true, consent, guardian_consent: guardian, uploads,
       }
     }
@@ -155,8 +156,14 @@ export default function NextUpForm() {
               <p className="nx-intro" style={{ fontSize: 15, lineHeight: 1.75, color: 'rgba(255,255,255,0.7)', maxWidth: 620, margin: '0 auto' }}>
                 NextUp is a national initiative by AISCA, in partnership with Business Advisor Junior, spotlighting the country&apos;s boldest young entrepreneurs, changemakers, and innovators. If you are young and already building something real, this is your moment to be seen. Up to twenty young founders will be featured in a professionally produced AISCA e-magazine and a podcast-style video series with Business Advisor Junior.
               </p>
-              <div style={{ display: 'inline-block', marginTop: 18, padding: '9px 18px', borderRadius: 999, background: 'rgba(225,29,42,0.12)', border: `1px solid ${RED}66`, color: '#fff', fontSize: 12.5, fontWeight: 700, letterSpacing: '0.06em' }}>
-                Applications close on 31st August 2026
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 9, marginTop: 18, padding: '9px 18px', borderRadius: 999, background: 'rgba(225,29,42,0.12)', border: `1px solid ${RED}66`, color: '#fff', fontSize: 12.5, fontWeight: 700, letterSpacing: '0.06em' }}>
+                <span className="nx-live" />
+                Now accepting applications for NEXTUP {edition}
+              </div>
+              <div style={{ marginTop: 14 }}>
+                <Link href="/nextup01" className="nx-read">
+                  <BookOpen size={15} /> Read the NEXTUP 01 magazine
+                </Link>
               </div>
               <Support />
             </div>
@@ -332,6 +339,10 @@ export default function NextUpForm() {
       </div>
 
       <style>{`
+        .nx-live { width: 8px; height: 8px; border-radius: 50%; background: ${RED}; box-shadow: 0 0 0 0 rgba(225,29,42,0.7); animation: nxLive 1.6s ease-out infinite; }
+        @keyframes nxLive { 0% { box-shadow: 0 0 0 0 rgba(225,29,42,0.7); } 100% { box-shadow: 0 0 0 10px rgba(225,29,42,0); } }
+        .nx-read { display: inline-flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.75); font-size: 13px; font-weight: 600; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 3px; transition: color .2s, border-color .2s; }
+        .nx-read:hover { color: #fff; border-color: ${RED}; }
         .nx-aisca { height: 44px !important; width: auto !important; object-fit: contain; }
         .nx-ba { height: 74px !important; width: auto !important; object-fit: contain; }
         @media (max-width: 767px) {
