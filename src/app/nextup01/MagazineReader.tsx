@@ -54,15 +54,41 @@ const SECTIONS: { label: string; page: number }[] = [
   { label: 'Are you NEXTUP 02?', page: 58 },
 ]
 
+/* ── Phone (one page) reading order ──
+   In print, some founders have their story on the left and photo on the right.
+   On a phone that puts two photos back to back (Chatula 51, Idusha 52), so on
+   phones every person's photo comes first and their story right after. */
+type Person = { tag: string; name: string; photo: number; story: number }
+const PEOPLE: Person[] = [
+  { tag: "Chairman's note", name: 'Isira Chirayu', photo: 6, story: 7 },
+  { tag: 'Business Advisor Junior', name: 'Viraj Henegedera', photo: 9, story: 8 },
+  ...FOUNDERS.map(f => {
+    // the story is the other page of the printed spread
+    const mate = f.page % 2 === 0 ? f.page + 1 : f.page - 1
+    return { tag: `Founder ${f.n}`, name: f.name, photo: f.page, story: mate }
+  }),
+]
+const PERSON_OF: Record<number, { person: Person; kind: 'photo' | 'story' }> = {}
+PEOPLE.forEach(p => { PERSON_OF[p.photo] = { person: p, kind: 'photo' }; PERSON_OF[p.story] = { person: p, kind: 'story' } })
+
+const PHONE_ORDER: number[] = (() => {
+  const order = Array.from({ length: TOTAL }, (_, i) => i + 1)
+  PEOPLE.forEach(p => {
+    const a = order.indexOf(p.photo), b = order.indexOf(p.story)
+    if (a > b) { order[a] = p.story; order[b] = p.photo }
+  })
+  return order
+})()
+
 function buildViews(mode: Mode): View[] {
-  if (mode === 'single') return Array.from({ length: TOTAL }, (_, i) => [i + 1, 0] as View)
+  if (mode === 'single') return PHONE_ORDER.map(p => [p, 0] as View)
   const v: View[] = [[0, 1]]
   for (let p = 2; p < TOTAL; p += 2) v.push([p, p + 1 <= TOTAL ? p + 1 : 0])
   if (TOTAL % 2 === 0) v.push([TOTAL, 0])
   return v
 }
 function viewOfPage(mode: Mode, page: number): number {
-  return mode === 'single' ? page - 1 : Math.floor(page / 2)
+  return mode === 'single' ? Math.max(0, PHONE_ORDER.indexOf(page)) : Math.floor(page / 2)
 }
 
 const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)
@@ -73,6 +99,7 @@ export default function MagazineReader() {
   const shellRef = useRef<HTMLDivElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
   const controlsRef = useRef<HTMLDivElement>(null)
+  const tagRowRef = useRef<HTMLDivElement>(null)
   const [stage, setStage] = useState({ w: 0, h: 0, vh: 0 })
   const [isTouch, setIsTouch] = useState(false)
 
@@ -83,7 +110,7 @@ export default function MagazineReader() {
       // On phones the reader is sized from the screen height so the book,
       // the controls and the header all fit on one screen with no empty gaps.
       const top = shellRef.current ? shellRef.current.getBoundingClientRect().top + window.scrollY : 0
-      const controls = controlsRef.current ? controlsRef.current.offsetHeight : 90
+      const controls = (controlsRef.current ? controlsRef.current.offsetHeight : 90) + (tagRowRef.current ? tagRowRef.current.offsetHeight : 0)
       setIsTouch(window.matchMedia('(hover: none)').matches)
       setStage({ w: el.clientWidth, h: el.clientHeight, vh: Math.max(320, window.innerHeight - top - controls) })
     }
@@ -382,8 +409,10 @@ export default function MagazineReader() {
     }
   }
 
+  const who = mode === 'single' ? PERSON_OF[view[0]] : undefined
   const label = (() => {
     const shown = view.filter(Boolean)
+    if (who) return who.person.tag.startsWith('Founder') ? who.person.tag : who.person.name.split(' ')[0]
     if (shown.length === 1 && shown[0] === 1) return 'Cover'
     if (shown.length === 1 && shown[0] === TOTAL) return 'Back cover'
     return shown.map(pad).join(' · ')
@@ -399,6 +428,22 @@ export default function MagazineReader() {
   return (
     <div ref={shellRef} className="mz-shell">
       {/* ── reader ── */}
+      {/* phones: who you are reading, so photo and story always read as a pair */}
+      {mode === 'single' && stage.w > 0 && (
+        <div ref={tagRowRef} className="mz-tagrow">
+          {who && (
+            <div key={who.person.photo} className="mz-tag">
+              <span className="mz-tag-k">{who.person.tag}</span>
+              <span className="mz-tag-n">{who.person.name}</span>
+              <span className="mz-tag-dots" aria-label={who.kind === 'photo' ? 'Photo, story next' : 'Story'}>
+                <i className={who.kind === 'photo' ? 'on' : ''} />
+                <i className={who.kind === 'story' ? 'on' : ''} />
+              </span>
+            </div>
+          )}
+        </div>
+      )}
+
       <div ref={stageRef} className="mz-stage" style={narrow && pageH > 0 ? { flex: 'none', height: pageH + 20 } : undefined}>
         {pageW > 0 && (
           <div
@@ -503,7 +548,7 @@ export default function MagazineReader() {
           </button>
           <div className="mz-count">
             <span className="mz-count-now">{label}</span>
-            <span className="mz-count-of">/ {pad(TOTAL)}</span>
+            <span className="mz-count-of">{who ? (who.kind === 'photo' ? '· photo' : '· story') : `/ ${pad(TOTAL)}`}</span>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
             <button className="mz-tool" onClick={() => setZoom(narrow ? 2 : 1)} aria-label="Zoom in to read">
@@ -692,6 +737,14 @@ export default function MagazineReader() {
         .mz-zoom-pages img { display: block; height: auto; max-width: none; }
         .mz-shell button { min-height: 0; }
 
+        .mz-tagrow { flex-shrink: 0; height: 40px; display: flex; align-items: center; justify-content: center; padding: 8px 14px 0; }
+        .mz-tag { display: inline-flex; align-items: center; gap: 9px; max-width: 100%; padding: 7px 8px 7px 13px; border-radius: 999px; background: rgba(225,29,42,0.12); border: 1px solid rgba(225,29,42,0.55); white-space: nowrap; animation: mzTagIn .5s cubic-bezier(.22,1,.36,1) both; }
+        @keyframes mzTagIn { from { opacity: 0; transform: translateY(-8px) scale(.96); } to { opacity: 1; transform: none; } }
+        .mz-tag-k { font-family: ${DISPLAY}; color: ${RED}; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+        .mz-tag-n { font: 600 12.5px/1 ${BODY}; color: #fff; overflow: hidden; text-overflow: ellipsis; }
+        .mz-tag-dots { display: inline-flex; gap: 4px; padding: 4px 6px; border-radius: 999px; background: rgba(0,0,0,0.35); }
+        .mz-tag-dots i { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.55); transition: background .3s, transform .3s; }
+        .mz-tag-dots i.on { background: ${RED}; transform: scale(1.25); }
         @media (max-height: 520px) and (min-width: 720px) {
           .mz-shell { height: calc(100svh - 52px); }
           .mz-controls { padding: 4px 20px 8px; }
