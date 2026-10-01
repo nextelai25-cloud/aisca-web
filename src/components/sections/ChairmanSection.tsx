@@ -33,7 +33,7 @@ export default function ChairmanSection() {
               margin: '0 auto'
             }}>
               <img
-                src="/isira-chirayu.webp"
+                src="/isira-chirayu-bw.webp"
                 alt="Isira Chirayu — Founder & Chairman, AISCA"
                 style={{
                   width: '100%',
