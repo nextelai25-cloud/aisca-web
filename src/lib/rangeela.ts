@@ -19,10 +19,10 @@ export const RANGEELA = {
 } as const
 
 export const RANGEELA_BANK = {
-  account: '2076 1000 2552',
-  name: 'K K V N C KARIYAWASAM',
-  bank: 'PAN ASIA BANK',
-  branch: 'HOMAGAMA',
+  account: '328200180054659',
+  name: 'TBT JAYALATH ARACHCHIGE',
+  bank: "PEOPLE'S BANK",
+  branch: 'KOTTAWA',
 } as const
 
 // ── Ticket pricing ──
