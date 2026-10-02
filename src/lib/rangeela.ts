@@ -8,7 +8,7 @@ export const RANGEELA = {
   dateLabel: 'Saturday, 17th October 2026',
   dateShort: '17th October',
   timeLabel: '2.00 PM onwards',
-  venue: 'Hyde Park Grounds',
+  venue: 'Nawinna Grounds',
   venueArea: 'Colombo',
   price: 1200,          // standard online price (after early bird)
   // Online ticket sales close at this moment (Sri Lanka time).
@@ -19,9 +19,9 @@ export const RANGEELA = {
 } as const
 
 export const RANGEELA_BANK = {
-  account: '1069 6100 6902',
-  name: 'ALL ISLAND SCHOOLS COMMERCE ASSOCIATION',
-  bank: 'SAMPATH BANK',
+  account: '2076 1000 2552',
+  name: 'K K V N C KARIYAWASAM',
+  bank: 'PAN ASIA BANK',
   branch: 'HOMAGAMA',
 } as const
 

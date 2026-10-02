@@ -151,7 +151,7 @@ export default function TicketView(p: Props) {
               <a className="tk-btn tk-btn-wa" href={p.whatsappGroup} target="_blank" rel="noopener noreferrer">Join the WhatsApp group</a>
             </div>
             {saveError && <p className="tk-err">{saveError}</p>}
-            <p className="tk-foot">Saturday, 17th October 2026 · 2.00 PM onwards · Hyde Park Grounds</p>
+            <p className="tk-foot">Saturday, 17th October 2026 · 2.00 PM onwards · Nawinna Grounds</p>
           </>
         )}
       </div>

@@ -48,7 +48,7 @@ const EXPERIENCES = [
 const lkr = (n: number) => `LKR ${n.toLocaleString('en-US')}`
 
 const stepsFor = (price: number) => [
-  { color: C.magenta, title: `Transfer ${lkr(price)}`, text: 'Deposit or transfer the ticket price to the AISCA bank account.' },
+  { color: C.magenta, title: `Transfer ${lkr(price)}`, text: 'Deposit or transfer the ticket price to the account shown below.' },
   { color: C.orange, title: 'Fill the form', text: 'Enter your details and upload a photo or screenshot of your receipt.' },
   { color: C.teal, title: 'We verify', text: 'Our team checks every receipt by hand and emails you once your request is in.' },
   { color: C.violet, title: 'Ticket by email and SMS', text: 'Once approved, your personal QR ticket comes to your email and your phone. Show it at the entrance.' },
@@ -235,7 +235,7 @@ export default function RangeelaClient({ serverNow }: { serverNow: number }) {
             {[
               { icon: CalendarDays, label: 'Date', value: RANGEELA.dateShort, sub: 'Saturday', color: C.orange },
               { icon: Clock, label: 'Time', value: '2.00 PM', sub: 'onwards', color: C.magenta },
-              { icon: MapPin, label: 'Venue', value: 'Hyde Park', sub: 'Grounds, Colombo', color: C.blue },
+              { icon: MapPin, label: 'Venue', value: 'Nawinna', sub: 'Grounds', color: C.blue },
               { icon: Ticket, label: early ? 'Early bird' : 'Ticket', value: lkr(price), sub: early ? 'until 10th Oct' : 'online, per person', color: C.violet },
             ].map((x) => (
               <div key={x.label} className="lg-glass lg-fact">
@@ -505,7 +505,7 @@ export default function RangeelaClient({ serverNow }: { serverNow: number }) {
           <div className="lg-glass lg-bottom-inner">
             <div className="lg-bottom-text">
               <span className="lg-bottom-price">{lkr(price)}{early && <span className="lg-bottom-eb">Early bird</span>}</span>
-              <span className="lg-bottom-sub">{early && mounted ? `Ends in ${shortLeft(Date.parse(PRICING.earlyBirdEndsISO) - now)}` : `${RANGEELA.dateShort} · Hyde Park`}</span>
+              <span className="lg-bottom-sub">{early && mounted ? `Ends in ${shortLeft(Date.parse(PRICING.earlyBirdEndsISO) - now)}` : `${RANGEELA.dateShort} · Nawinna`}</span>
             </div>
             <button type="button" onClick={goTickets} className="lg-btn lg-btn-sm" tabIndex={showBar ? 0 : -1}>Get ticket</button>
           </div>

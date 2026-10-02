@@ -1,9 +1,11 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Container } from '@/components/layout/Container';
 import { SectionWrapper } from '@/components/layout/SectionWrapper';
+import { RANGEELA, PRICING, currentPrice, isEarlyBird } from '@/lib/rangeela';
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -57,6 +59,13 @@ const CARDS: Card[] = [
 ];
 
 export default function SpotlightSection() {
+  // The homepage is prerendered, so the live ticket price is worked out in the
+  // browser. Until then it shows the standard price rather than a wrong one.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const early = mounted && isEarlyBird();
+  const price = mounted ? currentPrice() : PRICING.standard;
+
   return (
     <SectionWrapper id="spotlight" spacing="compact" background="primary" className="border-y border-white/[0.04]">
       <Container>
@@ -84,15 +93,17 @@ export default function SpotlightSection() {
               </div>
               <div className="rangeela-copy">
                 <span className="section-eyebrow" style={{ textAlign: 'left', marginBottom: '10px' }}>
-                  Tickets on sale · 17th October
+                  {early ? `Early bird until ${PRICING.earlyBirdEndsLabel}` : `Tickets on sale · ${RANGEELA.dateShort}`}
                 </span>
                 <div style={{ fontSize: '1.6rem', fontWeight: 700, color: '#ffffff', marginBottom: '14px', lineHeight: 1.2 }}>
                   RANGEELA &apos;26
                 </div>
                 <div style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.75, fontWeight: 300, marginBottom: '8px' }}>
-                  One canvas. A thousand hues. A colour festival at Hyde Park Grounds, 2.00 PM onwards, with music, food stalls, games and colour packets included.
+                  One canvas. A thousand hues. A colour festival at {RANGEELA.venue}, {RANGEELA.timeLabel}, with music, food stalls, games and colour packets included.
                 </div>
-                <div style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.85)', fontWeight: 500 }}>LKR 1,200 per ticket</div>
+                <div style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.85)', fontWeight: 500 }}>
+                  LKR {price.toLocaleString()} per ticket{early ? ', early bird' : ''}
+                </div>
                 <div style={{ fontSize: '12px', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.9)', fontWeight: 600, paddingTop: '22px', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
                   Get your ticket <Arrow />
                 </div>
