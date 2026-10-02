@@ -235,7 +235,7 @@ export default function RangeelaClient({ serverNow }: { serverNow: number }) {
             {[
               { icon: CalendarDays, label: 'Date', value: RANGEELA.dateShort, sub: 'Saturday', color: C.orange },
               { icon: Clock, label: 'Time', value: '2.00 PM', sub: 'onwards', color: C.magenta },
-              { icon: MapPin, label: 'Venue', value: 'Nawinna', sub: 'Grounds', color: C.blue },
+              { icon: MapPin, label: 'Venue', value: 'Nawinna', sub: 'Grounds, Maharagama', color: C.blue },
               { icon: Ticket, label: early ? 'Early bird' : 'Ticket', value: lkr(price), sub: early ? 'until 10th Oct' : 'online, per person', color: C.violet },
             ].map((x) => (
               <div key={x.label} className="lg-glass lg-fact">

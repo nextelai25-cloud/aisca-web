@@ -87,7 +87,7 @@ export async function sendRangeelaReceivedEmail({ to, name, ticketNumber, amount
         <td width="4"></td>
         <td width="33%" style="padding:10px 6px;text-align:center;background:#EEF6FF;border-radius:12px;"><p style="margin:0;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6B7FA0;font-family:${FONT};">Time</p><p style="margin:4px 0 0;font-size:14px;font-weight:bold;color:#2563EB;font-family:${FONT};">2.00 PM onwards</p></td>
         <td width="4"></td>
-        <td width="33%" style="padding:10px 6px;text-align:center;background:#F5EEFF;border-radius:12px;"><p style="margin:0;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#8A76A8;font-family:${FONT};">Venue</p><p style="margin:4px 0 0;font-size:14px;font-weight:bold;color:#7B2FF7;font-family:${FONT};">Nawinna Grounds</p></td>
+        <td width="33%" style="padding:10px 6px;text-align:center;background:#F5EEFF;border-radius:12px;"><p style="margin:0;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#8A76A8;font-family:${FONT};">Venue</p><p style="margin:4px 0 0;font-size:14px;font-weight:bold;color:#7B2FF7;font-family:${FONT};">Nawinna Grounds, Maharagama</p></td>
       </tr>
     </table>
   </td></tr>

@@ -4,12 +4,12 @@ import { useState } from 'react'
 
 // The RANGEELA '26 ticket, drawn on the official ticket artwork with the
 // student's own QR code, name and ticket number in the empty space.
-// Positions are percentages of the artwork (802 x 1564) so it looks the
+// Positions are percentages of the artwork (802 x 1642) so it looks the
 // same on every screen, and "Save ticket" paints the same layout onto a
 // canvas so students can keep a copy in their photos.
 
 const W = 802
-const H = 1564
+const H = 1642
 const INK = '#241628'
 const ORANGE = '#D9480F'
 const VIOLET = '#7B2FF7'
@@ -18,11 +18,11 @@ const BODY = "'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif"
 
 // Layout on the artwork, in artwork pixels
 const L = {
-  nameY: 948,
-  schoolY: 992,
-  qrX: 214, qrY: 1020, qrSize: 374, qrPad: 20,
-  pillY: 1432,
-  noteY: 1482,
+  nameY: 1024,
+  schoolY: 1067,
+  qrX: 216, qrY: 1095, qrSize: 369, qrPad: 20,
+  pillY: 1503,
+  noteY: 1556,
 }
 
 type Props = {
@@ -151,7 +151,7 @@ export default function TicketView(p: Props) {
               <a className="tk-btn tk-btn-wa" href={p.whatsappGroup} target="_blank" rel="noopener noreferrer">Join the WhatsApp group</a>
             </div>
             {saveError && <p className="tk-err">{saveError}</p>}
-            <p className="tk-foot">Saturday, 17th October 2026 · 2.00 PM onwards · Nawinna Grounds</p>
+            <p className="tk-foot">Saturday, 17th October 2026 · 2.00 PM onwards · Nawinna Grounds, Maharagama</p>
           </>
         )}
       </div>

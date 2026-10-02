@@ -8,8 +8,8 @@ export const RANGEELA = {
   dateLabel: 'Saturday, 17th October 2026',
   dateShort: '17th October',
   timeLabel: '2.00 PM onwards',
-  venue: 'Nawinna Grounds',
-  venueArea: 'Colombo',
+  venue: 'Nawinna Grounds, Maharagama',
+  venueArea: 'Maharagama',
   price: 1200,          // standard online price (after early bird)
   // Online ticket sales close at this moment (Sri Lanka time).
   salesCloseISO: '2026-10-17T12:00:00+05:30',
