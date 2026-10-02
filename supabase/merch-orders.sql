@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS merch_orders (
 
   -- bank ledger bookkeeping (prevents double-posting on re-approve)
   ledger_posted   BOOLEAN NOT NULL DEFAULT false,
-  ledger_entry_id BIGINT,
+  ledger_entry_id UUID,          -- finance_ledger.id is a UUID
 
   created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
