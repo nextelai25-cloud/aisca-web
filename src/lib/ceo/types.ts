@@ -6,7 +6,7 @@ export type BizId = 'cafe' | 'restaurant' | 'tech' | 'fashion' | 'hotel'
 export const BIZ_IDS: BizId[] = ['cafe', 'restaurant', 'tech', 'fashion', 'hotel']
 
 export const TOTAL_ROUNDS = 15
-export const DEMO_ROUNDS = 4
+export const DEMO_ROUNDS = 8
 
 export interface BizCard {
   id: BizId

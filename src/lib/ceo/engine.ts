@@ -8,12 +8,13 @@ import type { BizId, PublicState, PublicScenario, Outcome, Briefing, GameView } 
 import { TOTAL_ROUNDS } from './types'
 import { CARDS } from './cards'
 import { START, BRIEFINGS } from './businesses'
-import { SCENARIOS } from './scenarios'
+import { SCENARIOS, DEMO_SCENARIOS } from './scenarios'
 
 export interface Sim {
   biz: BizId
   seed: number
   rounds: number // total decisions in this game
+  demo: boolean // demo games draw only from the demo scenario set
   round: number // decisions made
   week: number
   cash: number
@@ -76,6 +77,7 @@ export interface Scenario {
   id: string
   biz: BizId | 'any'
   rounds?: [number, number]
+  final?: boolean // always and only the last decision of a game
   weeks: number
   needs?: string[]
   not?: string[]
@@ -111,6 +113,7 @@ export function newSim(biz: BizId, seed: number, rounds = TOTAL_ROUNDS): Sim {
     biz,
     seed,
     rounds,
+    demo: rounds !== TOTAL_ROUNDS,
     round: 0,
     week: 0,
     ...b,
@@ -247,12 +250,12 @@ function eligible(s: Sim, sc: Scenario, strictRounds: boolean) {
   const r = s.round + 1
   if (sc.biz !== 'any' && sc.biz !== s.biz) return false
   if (s.used.includes(sc.id)) return false
-  if (sc.rounds) {
+  // Final scenarios are shown in the last round, and nothing else is.
+  if (sc.final) return r === s.rounds
+  if (r === s.rounds && poolFor(s).some(x => x.final && (x.biz === 'any' || x.biz === s.biz))) return false
+  if (sc.rounds && strictRounds) {
     const [lo, hi] = sc.rounds
-    // Final-round scenarios are only ever shown in the last round.
-    const lastOnly = lo >= TOTAL_ROUNDS
-    if (lastOnly && r !== s.rounds) return false
-    if (!lastOnly && strictRounds && (r < lo || r > hi)) return false
+    if (r < lo || r > hi) return false
   }
   if (sc.needs && !sc.needs.every(f => s.flags.includes(f))) return false
   if (sc.not && sc.not.some(f => s.flags.includes(f))) return false
@@ -260,16 +263,19 @@ function eligible(s: Sim, sc: Scenario, strictRounds: boolean) {
   return true
 }
 
+const poolFor = (s: Sim) => (s.demo ? DEMO_SCENARIOS : SCENARIOS)
+
 export function pickScenario(s: Sim): Scenario | null {
   if (s.round >= s.rounds) return null
-  let pool = SCENARIOS.filter(sc => eligible(s, sc, true))
-  if (!pool.length) pool = SCENARIOS.filter(sc => eligible(s, sc, false))
+  const all = poolFor(s)
+  let pool = all.filter(sc => eligible(s, sc, true))
+  if (!pool.length) pool = all.filter(sc => eligible(s, sc, false))
   if (!pool.length) return null
   const r = s.round + 1
   let best: Scenario | null = null
   let bestScore = -1
   for (const sc of pool) {
-    const isFinal = sc.rounds && sc.rounds[0] >= TOTAL_ROUNDS
+    const isFinal = !!sc.final
     const score =
       (isFinal ? 1000 : 1) *
       (sc.weight ?? 1) *

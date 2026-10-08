@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import Scene, { type SceneVibe } from './Scene'
 import { CARDS } from '@/lib/ceo/cards'
 import {
-  BIZ_IDS, TOTAL_ROUNDS, fmtLKR,
+  BIZ_IDS, DEMO_ROUNDS, TOTAL_ROUNDS, fmtLKR,
   type BizId, type Briefing, type GameView, type LeaderRow, type Outcome, type PublicState,
 } from '@/lib/ceo/types'
 
@@ -186,7 +186,7 @@ function Landing({ onEnter, onDemo, hasToken }: { onEnter: () => void; onDemo: (
             <button className="ceo-btn ceo-btn-primary" onClick={onEnter}>{hasToken ? 'Continue my game' : 'Enter the competition'}</button>
             <button className="ceo-btn ceo-btn-ghost" onClick={onDemo}>Try a demo</button>
           </div>
-          <p className="ceo-hero-note">The demo is four decisions and isn’t scored. The competition is one game of 15 decisions, about 15 minutes.</p>
+          <p className="ceo-hero-note">The demo is {DEMO_ROUNDS} decisions with its own situations, and isn’t scored. The competition is one game of 15 decisions, about 15 minutes.</p>
         </div>
         <div className="ceo-scene" key={biz}>
           <Scene biz={biz} vibe={HERO_VIBE} profit={-60_000} sceneKey={`hero-${biz}`} />
@@ -232,7 +232,7 @@ function Landing({ onEnter, onDemo, hasToken }: { onEnter: () => void; onDemo: (
         <h2 className="ceo-h2" id="rules">Rules</h2>
         <ul className="ceo-rules">
           <li>One official game per student. Once you start, your decisions are final.</li>
-          <li>You can play the demo as many times as you like. Demo games are not scored.</li>
+          <li>You can play the demo as many times as you like. It uses different situations from the competition and is not scored.</li>
           <li>Your game saves after every decision. If you close the page, continue from the same device, or sign in again with your email and mobile number.</li>
           <li>You can’t go bankrupt. If you run out of cash, the bank steps in, at a cost.</li>
           <li>Final results are announced at COMMERCE 360°.</li>
@@ -323,7 +323,7 @@ function Pick({ mode, onPick, onBack }: { mode: Mode; onPick: (b: BizId) => Prom
       <h1 className="ceo-h2">{mode === 'demo' ? 'Pick a business for the demo' : 'Pick your business'}</h1>
       <p className="ceo-sub">
         {mode === 'demo'
-          ? 'The demo gives you four decisions. Nothing is saved.'
+          ? `The demo gives you ${DEMO_ROUNDS} decisions with practice situations you won’t see in the competition. Nothing is saved.`
           : 'All five are losing money, and all five can be saved. You can’t change your business once you start.'}
       </p>
       <div className="ceo-biz-grid">
@@ -544,7 +544,7 @@ function Final({ game, mode, onDemoAgain, onEnter }: { game: Game; mode: Mode; o
   return (
     <main className="ceo-final">
       <div className="ceo-scene"><Scene biz={game.business} vibe={s.vibe} profit={s.profit} sceneKey="final" /></div>
-      <p className="ceo-final-lead">{mode === 'demo' ? 'After four decisions, your company is worth' : `After ${s.totalRounds} decisions and ${s.week} weeks, ${card.name} is worth`}</p>
+      <p className="ceo-final-lead">{mode === 'demo' ? `After ${DEMO_ROUNDS} decisions, your company is worth` : `After ${s.totalRounds} decisions and ${s.week} weeks, ${card.name} is worth`}</p>
       <p className="ceo-final-value"><Num value={s.valuation} /></p>
       <div className="ceo-final-meta">
         <span className="ceo-pill">{growth >= 1 ? `${growth.toFixed(1)}× what you started with` : `${Math.round(growth * 100)}% of where you started`}</span>

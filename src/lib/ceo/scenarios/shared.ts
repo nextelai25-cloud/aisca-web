@@ -289,7 +289,7 @@ export const SHARED = [
 
   // ── Final decision (always the last round) ──
   sc({
-    id: 'final_board', biz: 'any', rounds: [TOTAL_ROUNDS, TOTAL_ROUNDS], weeks: 4,
+    id: 'final_board', biz: 'any', rounds: [TOTAL_ROUNDS, TOTAL_ROUNDS], final: true, weeks: 4,
     title: s => (s.rounds >= TOTAL_ROUNDS ? 'One year later. The board wants your plan for next year.' : 'The board wants your plan for next year.'),
     story: s => [
       s.rounds >= TOTAL_ROUNDS ? 'Twelve months. Fifteen decisions. Here you are.' : 'Your last decision.',
