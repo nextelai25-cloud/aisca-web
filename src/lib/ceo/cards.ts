@@ -1,0 +1,55 @@
+import type { BizCard, BizId } from './types'
+
+// Public business cards (shown on the selection screen).
+export const CARDS: Record<BizId, BizCard> = {
+  cafe: {
+    id: 'cafe',
+    name: 'Brew Lane Café',
+    kind: 'Coffee shop',
+    place: 'Colombo 07',
+    teaser: 'A global chain opened down the road. Footfall is down 40%.',
+    unit: 'customers',
+    unitPer: 'a week',
+    accent: '#C8782E',
+  },
+  restaurant: {
+    id: 'restaurant',
+    name: "Amma's Kitchen",
+    kind: 'Family restaurant',
+    place: 'Kandy',
+    teaser: '22 years of rice and curry. Half the tables are empty.',
+    unit: 'diners',
+    unitPer: 'a week',
+    accent: '#D9482B',
+  },
+  tech: {
+    id: 'tech',
+    name: 'Nexora Solutions',
+    kind: 'Software company',
+    place: 'Colombo 03',
+    teaser: 'Its biggest client just walked out. Engineers are leaving.',
+    unit: 'billable hours',
+    unitPer: 'a week',
+    accent: '#3B7BF6',
+  },
+  fashion: {
+    id: 'fashion',
+    name: 'Thread & Co.',
+    kind: 'Clothing brand',
+    place: 'Two mall stores, Colombo',
+    teaser: 'Unsold stock is piling up. Instagram brands sell for less.',
+    unit: 'orders',
+    unitPer: 'a week',
+    accent: '#C2389A',
+  },
+  hotel: {
+    id: 'hotel',
+    name: 'Ella Ridge Hotel',
+    kind: 'Boutique hotel',
+    place: 'Ella',
+    teaser: '20 rooms, a perfect view, and 65% of them empty.',
+    unit: 'room-nights',
+    unitPer: 'a week',
+    accent: '#2E9E6B',
+  },
+}
