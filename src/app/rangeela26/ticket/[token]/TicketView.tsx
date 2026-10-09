@@ -114,9 +114,9 @@ export default function TicketView(p: Props) {
             <p>
               {p.state === 'missing'
                 ? "This link does not match any RANGEELA '26 ticket. Please open the link from your ticket email or SMS again."
-                : `Please message AISCA on WhatsApp (${p.helpLabel}) with your reference ${p.ticketNumber}.`}
+                : `Please WhatsApp ${p.helpLabel} with your reference ${p.ticketNumber}.`}
             </p>
-            <a className="tk-btn tk-btn-wa" href={`https://wa.me/${p.helpNumber}`}>Message AISCA</a>
+            <a className="tk-btn tk-btn-wa" href={`https://wa.me/${p.helpNumber}`}>Message Thulina on WhatsApp</a>
           </div>
         ) : (
           <>

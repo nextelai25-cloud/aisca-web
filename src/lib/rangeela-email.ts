@@ -33,7 +33,7 @@ export function rangeelaShell(inner: string, preheader: string): string {
   </td></tr>
   ${inner}
   <tr><td style="padding:26px 32px 28px;border-top:1px solid #F4EAF2;" align="center">
-    <p style="margin:0 0 6px;font-size:12px;color:#8A7A86;font-family:${FONT};">Questions? Message AISCA on WhatsApp: <a href="https://wa.me/${RANGEELA.helpWhatsapp}" style="color:#7B2FF7;text-decoration:none;font-weight:bold;">${RANGEELA.helpWhatsappLabel}</a></p>
+    <p style="margin:0 0 6px;font-size:12px;color:#8A7A86;font-family:${FONT};">Questions? WhatsApp ${RANGEELA.helpContacts.map(c => `<a href="https://wa.me/${c.whatsapp}" style="color:#7B2FF7;text-decoration:none;font-weight:bold;">${c.name} ${c.label}</a>`).join(' or ')}</p>
     <p style="margin:0;font-size:11px;color:#B3A5AF;font-family:${FONT};">All Island Schools Commerce Association · <a href="https://aisca.lk" style="color:#B3A5AF;">aisca.lk</a></p>
   </td></tr>
   <tr><td>${rainbowBar(6)}</td></tr>

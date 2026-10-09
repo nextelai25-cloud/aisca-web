@@ -457,8 +457,13 @@ export default function RangeelaClient({ serverNow }: { serverNow: number }) {
                     {submitting ? 'Submitting...' : 'Submit ticket request'}
                   </button>
                   <p className="lg-help">
-                    Need help? WhatsApp AISCA on{' '}
-                    <a href={`https://wa.me/${RANGEELA.helpWhatsapp}`} target="_blank" rel="noopener noreferrer">{RANGEELA.helpWhatsappLabel}</a>
+                    Need help? WhatsApp{' '}
+                    {RANGEELA.helpContacts.map((c, i) => (
+                      <span key={c.whatsapp}>
+                        {i > 0 && ' or '}
+                        <a href={`https://wa.me/${c.whatsapp}`} target="_blank" rel="noopener noreferrer">{c.name} {c.label}</a>
+                      </span>
+                    ))}
                   </p>
                 </>
               )}

@@ -14,8 +14,13 @@ export const RANGEELA = {
   // Online ticket sales close at this moment (Sri Lanka time).
   salesCloseISO: '2026-10-17T12:00:00+05:30',
   whatsappGroup: 'https://chat.whatsapp.com/HklcPlrIl3P6tKJsWDbxu8',
-  helpWhatsapp: '94778132137',
-  helpWhatsappLabel: '077 813 2137',
+  // RANGEELA help line: two organisers on WhatsApp.
+  helpContacts: [
+    { name: 'Thulina', whatsapp: '94760444058', label: '076 044 4058' },
+    { name: 'Chrishikesh', whatsapp: '94760470623', label: '076 047 0623' },
+  ],
+  helpWhatsapp: '94760444058',
+  helpWhatsappLabel: 'Thulina (076 044 4058) or Chrishikesh (076 047 0623)',
 } as const
 
 export const RANGEELA_BANK = {
