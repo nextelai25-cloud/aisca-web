@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic'
 export const metadata: Metadata = {
   title: "RANGEELA '26 | A Celebration of Hues",
   description:
-    "RANGEELA '26 by AISCA. One canvas, a thousand hues. Saturday 17th October 2026, 2.00 PM onwards at Nawinna Grounds, Maharagama. Early bird tickets LKR 1,000 until 10th October, then LKR 1,200 online and LKR 1,500 at the gate.",
+    "RANGEELA '26 by AISCA. One canvas, a thousand hues. Saturday 17th October 2026, 2.00 PM onwards at Nawinna Grounds, Maharagama. Early bird tickets LKR 1,000 until 9th October, then LKR 1,200 online and LKR 1,500 at the gate.",
   alternates: { canonical: 'https://aisca.lk/rangeela26' },
   openGraph: {
     type: 'website',

@@ -236,7 +236,7 @@ export default function RangeelaClient({ serverNow }: { serverNow: number }) {
               { icon: CalendarDays, label: 'Date', value: RANGEELA.dateShort, sub: 'Saturday', color: C.orange },
               { icon: Clock, label: 'Time', value: '2.00 PM', sub: 'onwards', color: C.magenta },
               { icon: MapPin, label: 'Venue', value: 'Nawinna', sub: 'Grounds, Maharagama', color: C.blue },
-              { icon: Ticket, label: early ? 'Early bird' : 'Ticket', value: lkr(price), sub: early ? 'until 10th Oct' : 'online, per person', color: C.violet },
+              { icon: Ticket, label: early ? 'Early bird' : 'Ticket', value: lkr(price), sub: early ? 'ends tonight' : 'online, per person', color: C.violet },
             ].map((x) => (
               <div key={x.label} className="lg-glass lg-fact">
                 <span className="lg-fact-icon" style={{ color: x.color }}><x.icon size={18} strokeWidth={2.3} /></span>
@@ -308,6 +308,9 @@ export default function RangeelaClient({ serverNow }: { serverNow: number }) {
                 ? `Early bird price is ${lkr(PRICING.earlyBird)} per person. Pay by bank transfer, upload the receipt, and your QR ticket comes to your email and phone once we confirm the payment.`
                 : `${lkr(price)} per person online. Pay by bank transfer, upload the receipt, and your QR ticket comes to your email and phone once we confirm the payment.`}
             </p>
+            <p className="lg-small" style={{ margin: '14px auto 0', maxWidth: 560, padding: '12px 16px', borderRadius: 16, background: `${C.violet}14`, color: C.violet, fontWeight: 700 }}>
+              Each ticket admits one person only. Coming with friends? Every person needs their own ticket, bought with their own form.
+            </p>
           </motion.div>
 
           {/* Pricing tiers + early bird countdown */}
@@ -322,7 +325,7 @@ export default function RangeelaClient({ serverNow }: { serverNow: number }) {
             <div className="lg-tiers">
               {[
                 { key: 'early', name: 'Early bird', amount: PRICING.earlyBird, when: `Until ${PRICING.earlyBirdEndsLabel}`, color: C.magenta, active: early && open, over: !early },
-                { key: 'online', name: 'Online', amount: PRICING.standard, when: '11th October until the event', color: C.orange, active: !early && open, over: !open },
+                { key: 'online', name: 'Online', amount: PRICING.standard, when: '10th October until the event', color: C.orange, active: !early && open, over: !open },
                 { key: 'gate', name: 'At the gate', amount: PRICING.gate, when: 'On the day, 17th October', color: C.violet, active: !open, over: false },
               ].map((t) => (
                 <div key={t.key} className={`lg-tier ${t.active ? 'is-active' : ''} ${t.over ? 'is-over' : ''}`} style={t.active ? { borderColor: t.color, boxShadow: `0 14px 30px -16px ${t.color}` } : undefined}>
@@ -386,7 +389,7 @@ export default function RangeelaClient({ serverNow }: { serverNow: number }) {
                 <>
                   <div className="lg-step-tag" style={{ background: `${C.violet}14`, color: C.violet }}>Step 2</div>
                   <div className="lg-card-h">Your details</div>
-                  <p className="lg-small" style={{ margin: '0 0 18px' }}>One form for each person. Every field is required.</p>
+                  <p className="lg-small" style={{ margin: '0 0 18px' }}>This ticket is for one person only: the person whose details you enter here. Every field is required.</p>
 
                   {error && (
                     <div role="alert" className="lg-alert"><AlertTriangle size={17} style={{ flexShrink: 0, marginTop: 1 }} /> <span>{error}</span></div>

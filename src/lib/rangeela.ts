@@ -26,15 +26,15 @@ export const RANGEELA_BANK = {
 } as const
 
 // ── Ticket pricing ──
-// Early bird runs until the end of 10 October (midnight, Sri Lanka time).
-// From 11 October until the event the online price is LKR 1,200.
+// Early bird runs until the end of 9 October (midnight, Sri Lanka time).
+// From 10 October until the event the online price is LKR 1,200.
 // Tickets bought at the gate on the day are LKR 1,500.
 export const PRICING = {
   earlyBird: 1000,
   standard: 1200,
   gate: 1500,
-  earlyBirdEndsISO: '2026-10-11T00:00:00+05:30',
-  earlyBirdEndsLabel: '10th October, midnight',
+  earlyBirdEndsISO: '2026-10-10T00:00:00+05:30',
+  earlyBirdEndsLabel: '9th October, midnight',
   eventStartISO: '2026-10-17T14:00:00+05:30',
 } as const
 
