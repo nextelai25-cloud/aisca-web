@@ -62,9 +62,15 @@ export default function SpotlightSection() {
   // The homepage is prerendered, so the live ticket price is worked out in the
   // browser. Until then it shows the standard price rather than a wrong one.
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  // Live price set by the chairman in the admin dashboard.
+  const [live, setLive] = useState<{ standard: number; gate: number } | null>(null);
+  useEffect(() => {
+    setMounted(true);
+    fetch('/api/rangeela/price', { cache: 'no-store' }).then((r) => (r.ok ? r.json() : null))
+      .then((d) => { if (d && d.standard > 0) setLive({ standard: d.standard, gate: d.gate }); }).catch(() => {});
+  }, []);
   const early = mounted && isEarlyBird();
-  const price = mounted ? currentPrice() : PRICING.standard;
+  const price = mounted ? currentPrice(Date.now(), live ?? undefined) : (live?.standard ?? PRICING.standard);
 
   return (
     <SectionWrapper id="spotlight" spacing="compact" background="primary" className="border-y border-white/[0.04]">

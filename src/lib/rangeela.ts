@@ -43,13 +43,17 @@ export const PRICING = {
   eventStartISO: '2026-10-17T14:00:00+05:30',
 } as const
 
+/** Prices the chairman can change in admin.aisca.lk. These are only the fallback. */
+export type RangeelaPrices = { standard: number; gate: number }
+export const DEFAULT_PRICES: RangeelaPrices = { standard: PRICING.standard, gate: PRICING.gate }
+
 export function isEarlyBird(now = Date.now()): boolean {
   return now < Date.parse(PRICING.earlyBirdEndsISO)
 }
 
 /** The online ticket price right now. */
-export function currentPrice(now = Date.now()): number {
-  return isEarlyBird(now) ? PRICING.earlyBird : PRICING.standard
+export function currentPrice(now = Date.now(), p: RangeelaPrices = DEFAULT_PRICES): number {
+  return isEarlyBird(now) ? PRICING.earlyBird : p.standard
 }
 
 export function priceTier(now = Date.now()): 'early_bird' | 'standard' {

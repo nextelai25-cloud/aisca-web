@@ -7,7 +7,7 @@ import {
   Palette, Music, UtensilsCrossed, Gamepad2, Shirt, AlertTriangle, MessageCircle, ArrowLeft, ChevronRight,
 } from 'lucide-react'
 import {
-  RANGEELA, RANGEELA_BANK, AL_BATCHES, PRICING, salesOpen, looksLikeNic, isEarlyBird, currentPrice, toLocalMobile,
+  RANGEELA, RANGEELA_BANK, AL_BATCHES, PRICING, salesOpen, looksLikeNic, isEarlyBird, currentPrice, toLocalMobile, type RangeelaPrices,
 } from '@/lib/rangeela'
 
 // ── Holi palette taken from the RANGEELA '26 artwork ──
@@ -54,8 +54,10 @@ const stepsFor = (price: number) => [
   { color: C.violet, title: 'Ticket by email and SMS', text: 'Once approved, your personal QR ticket comes to your email and your phone. Show it at the entrance.' },
 ]
 
-const GOOD_TO_KNOW = [
-  `Early bird tickets are ${lkr(PRICING.earlyBird)} until ${PRICING.earlyBirdEndsLabel}. After that, online tickets are ${lkr(PRICING.standard)} until the event, and tickets at the gate are ${lkr(PRICING.gate)}.`,
+const goodToKnow = (p: RangeelaPrices, early: boolean) => [
+  early
+    ? `Early bird tickets are ${lkr(PRICING.earlyBird)} until ${PRICING.earlyBirdEndsLabel}. After that, online tickets are ${lkr(p.standard)} until the event, and tickets at the gate are ${lkr(p.gate)}.`
+    : `Online tickets are ${lkr(p.standard)} until the event. Tickets at the gate are ${lkr(p.gate)}.`,
   'One ticket admits one person. Each person fills the form separately.',
   'Your QR code works only once. After it is scanned at the entrance it cannot be used again, so please do not share it.',
   'Bring your NIC. The name and NIC number on your ticket may be checked at the gate.',
@@ -82,11 +84,21 @@ function useNow(serverNow: number) {
   return { now, mounted }
 }
 
-export default function RangeelaClient({ serverNow }: { serverNow: number }) {
+export default function RangeelaClient({ serverNow, prices: serverPrices }: { serverNow: number; prices: RangeelaPrices }) {
   const { now, mounted } = useNow(serverNow)
+  // Live price from the admin dashboard. Re-checked every minute so an open page follows a change.
+  const [P, setP] = useState<RangeelaPrices>(serverPrices)
+  useEffect(() => {
+    const pull = () => fetch('/api/rangeela/price', { cache: 'no-store' }).then((r) => (r.ok ? r.json() : null))
+      .then((d) => { if (d && d.standard > 0 && d.gate > 0) setP((o) => (o.standard === d.standard && o.gate === d.gate ? o : { standard: d.standard, gate: d.gate })) })
+      .catch(() => {})
+    const id = window.setInterval(pull, 60_000)
+    return () => window.clearInterval(id)
+  }, [])
   const open = salesOpen(now)
   const early = isEarlyBird(now)
-  const price = currentPrice(now)
+  const price = currentPrice(now, P)
+  const GOOD_TO_KNOW = goodToKnow(P, early)
   const STEPS = stepsFor(price)
   const [f, setF] = useState({ ...empty })
   const [agree, setAgree] = useState(false)
@@ -172,7 +184,7 @@ export default function RangeelaClient({ serverNow }: { serverNow: number }) {
       const res = await fetch('/api/rangeela/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...f, receipt_url: receipt.url, receipt_filename: receipt.filename, agree }),
+        body: JSON.stringify({ ...f, receipt_url: receipt.url, receipt_filename: receipt.filename, agree, seen_amount: price }),
       })
       const data = await res.json()
       if (res.ok && data.success) {
@@ -319,14 +331,14 @@ export default function RangeelaClient({ serverNow }: { serverNow: number }) {
               <div className="lg-cd-wrap">
                 <div className="lg-cd-title">Early bird ends in</div>
                 <Countdown to={PRICING.earlyBirdEndsISO} now={now} mounted={mounted} />
-                <div className="lg-cd-note">Grab yours for {lkr(PRICING.earlyBird)} before {PRICING.earlyBirdEndsLabel}. The price goes up to {lkr(PRICING.standard)} after that.</div>
+                <div className="lg-cd-note">Grab yours for {lkr(PRICING.earlyBird)} before {PRICING.earlyBirdEndsLabel}. The price goes up to {lkr(P.standard)} after that.</div>
               </div>
             )}
             <div className="lg-tiers">
               {[
                 { key: 'early', name: 'Early bird', amount: PRICING.earlyBird, when: `Until ${PRICING.earlyBirdEndsLabel}`, color: C.magenta, active: early && open, over: !early },
-                { key: 'online', name: 'Online', amount: PRICING.standard, when: '10th October until the event', color: C.orange, active: !early && open, over: !open },
-                { key: 'gate', name: 'At the gate', amount: PRICING.gate, when: 'On the day, 17th October', color: C.violet, active: !open, over: false },
+                { key: 'online', name: 'Online', amount: P.standard, when: '10th October until the event', color: C.orange, active: !early && open, over: !open },
+                { key: 'gate', name: 'At the gate', amount: P.gate, when: 'On the day, 17th October', color: C.violet, active: !open, over: false },
               ].map((t) => (
                 <div key={t.key} className={`lg-tier ${t.active ? 'is-active' : ''} ${t.over ? 'is-over' : ''}`} style={t.active ? { borderColor: t.color, boxShadow: `0 14px 30px -16px ${t.color}` } : undefined}>
                   {t.active && <span className="lg-tier-badge" style={{ background: t.color }}>Now</span>}
@@ -383,7 +395,7 @@ export default function RangeelaClient({ serverNow }: { serverNow: number }) {
               ) : !open ? (
                 <div className="lg-center" style={{ padding: '26px 6px' }}>
                   <div className="lg-card-h">Online sales are closed</div>
-                  <p className="lg-body">Thank you for the amazing response. Online tickets for RANGEELA &apos;26 are no longer available. You can still buy a ticket at the gate for {lkr(PRICING.gate)}. Please check the WhatsApp group for updates.</p>
+                  <p className="lg-body">Thank you for the amazing response. Online tickets for RANGEELA &apos;26 are no longer available. You can still buy a ticket at the gate for {lkr(P.gate)}. Please check the WhatsApp group for updates.</p>
                 </div>
               ) : (
                 <>

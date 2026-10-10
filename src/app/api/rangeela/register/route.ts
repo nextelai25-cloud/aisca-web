@@ -5,6 +5,7 @@ import { sendTelegram } from '@/lib/telegram'
 import { isEmail, optStr, rateLimit } from '@/lib/validate'
 import { AL_BATCHES, salesOpen, normaliseId, looksLikeNic, currentPrice, isEarlyBird, toLocalMobile } from '@/lib/rangeela'
 import { sendRangeelaReceivedEmail } from '@/lib/rangeela-email'
+import { getRangeelaPrices } from '@/lib/rangeela-prices'
 
 // POST /api/rangeela/register
 // One form = one ticket request. It is saved as "pending" until an organiser
@@ -76,11 +77,18 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // Live price set by the chairman. If the buyer's page showed an older
+    // price (it changed while they were paying), flag it for the approver.
+    const amount = currentPrice(Date.now(), await getRangeelaPrices())
+    const seen = Number(b.seen_amount)
+    const priceNote = Number.isFinite(seen) && seen > 0 && seen !== amount
+      ? `Page showed LKR ${seen.toLocaleString()} when submitted (price is now LKR ${amount.toLocaleString()}). Check the receipt amount.`
+      : ''
     const payload = {
       full_name, email, whatsapp, school, al_batch, nic, nic_norm, nic_is_nic,
-      payment_method: 'bank', amount: currentPrice(), source: 'online',
+      payment_method: 'bank', amount, source: 'online',
       receipt_url, receipt_filename,
-      notes: optStr(b.notes, 500) || null,
+      notes: [optStr(b.notes, 500), priceNote].filter(Boolean).join(' · ') || null,
       status: 'pending',
     }
 
