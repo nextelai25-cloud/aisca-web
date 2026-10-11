@@ -41,7 +41,8 @@ const ADMINS = [
   { email: 'marketing@aisca.lk', name: 'AISCA Marketing', role: 'marketing_manager' },
   { email: 'finance@aisca.lk', name: 'AISCA Finance', role: 'cfo' },
   { email: 'secretary@aisca.lk', name: 'AISCA Secretary', role: 'co_secretary' },
-  { email: 'vishmi@aisca.lk', name: 'Vishmi Wijayamanne', role: 'co_secretary' }
+  { email: 'vishmi@aisca.lk', name: 'Vishmi Wijayamanne', role: 'co_secretary' },
+  { email: 'pr@aisca.lk', name: 'Lehara Rajapakse', role: 'public_relations' }
 ];
 
 const TEMP_PASSWORD = 'AISCA@2026!';
