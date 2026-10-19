@@ -83,7 +83,7 @@ export async function sendRangeelaReceivedEmail({ to, name, ticketNumber, amount
   <tr><td style="padding:0 32px 14px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
       <tr>
-        <td width="33%" style="padding:10px 6px;text-align:center;background:#FFF1E6;border-radius:12px;"><p style="margin:0;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#A0826B;font-family:${FONT};">Date</p><p style="margin:4px 0 0;font-size:14px;font-weight:bold;color:#E0561B;font-family:${FONT};">17th October</p></td>
+        <td width="33%" style="padding:10px 6px;text-align:center;background:#FFF1E6;border-radius:12px;"><p style="margin:0;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#A0826B;font-family:${FONT};">Date</p><p style="margin:4px 0 0;font-size:14px;font-weight:bold;color:#E0561B;font-family:${FONT};">31st October</p></td>
         <td width="4"></td>
         <td width="33%" style="padding:10px 6px;text-align:center;background:#EEF6FF;border-radius:12px;"><p style="margin:0;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6B7FA0;font-family:${FONT};">Time</p><p style="margin:4px 0 0;font-size:14px;font-weight:bold;color:#2563EB;font-family:${FONT};">2.00 PM onwards</p></td>
         <td width="4"></td>

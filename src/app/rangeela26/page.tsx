@@ -13,19 +13,19 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
   title: "RANGEELA '26 | A Celebration of Hues",
   description:
-    `RANGEELA '26 by AISCA. One canvas, a thousand hues. Saturday 17th October 2026, 2.00 PM onwards at Nawinna Grounds, Maharagama. ${priceLine}`,
+    `RANGEELA '26 by AISCA. One canvas, a thousand hues. Saturday 31st October 2026, 2.00 PM onwards at Nawinna Grounds, Maharagama. ${priceLine}`,
   alternates: { canonical: 'https://aisca.lk/rangeela26' },
   openGraph: {
     type: 'website',
     url: 'https://aisca.lk/rangeela26',
     title: "RANGEELA '26 | A Celebration of Hues",
-    description: `The colours are calling. 17th October, Nawinna Grounds, Maharagama, 2.00 PM onwards. ${priceLine}`,
+    description: `The colours are calling. 31st October, Nawinna Grounds, Maharagama, 2.00 PM onwards. ${priceLine}`,
     images: [{ url: 'https://aisca.lk/rangeela/og.jpg', width: 1200, height: 630, alt: "RANGEELA '26 A Celebration of Hues" }],
   },
   twitter: {
     card: 'summary_large_image',
     title: "RANGEELA '26 | A Celebration of Hues",
-    description: `The colours are calling. 17th October, Nawinna Grounds, Maharagama. ${priceLine}`,
+    description: `The colours are calling. 31st October, Nawinna Grounds, Maharagama. ${priceLine}`,
     images: ['https://aisca.lk/rangeela/og.jpg'],
   },
   }

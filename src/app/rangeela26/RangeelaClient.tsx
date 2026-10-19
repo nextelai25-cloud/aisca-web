@@ -222,6 +222,18 @@ export default function RangeelaClient({ serverNow, prices: serverPrices }: { se
       </div>
 
       <main className="lg-main">
+        {/* ── Date change notice ── */}
+        {RANGEELA.postponedNotice && (
+          <div className="lg-wrap lg-notice-wrap">
+            <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }} role="status" className="lg-glass lg-notice">
+              <span className="lg-notice-badge"><CalendarDays size={15} strokeWidth={2.4} /> New date</span>
+              <p className="lg-notice-text">
+                <strong>RANGEELA &apos;26 is postponed to {RANGEELA.dateLabel}.</strong> {RANGEELA.postponedNotice}
+              </p>
+            </motion.div>
+          </div>
+        )}
+
         {/* ── Hero ── */}
         <div className="lg-wrap lg-hero">
           <motion.div initial={{ opacity: 0, y: 14, scale: 0.985 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.9, ease }} className="lg-glass lg-hero-frame">
@@ -338,7 +350,7 @@ export default function RangeelaClient({ serverNow, prices: serverPrices }: { se
               {[
                 { key: 'early', name: 'Early bird', amount: PRICING.earlyBird, when: `Until ${PRICING.earlyBirdEndsLabel}`, color: C.magenta, active: early && open, over: !early },
                 { key: 'online', name: 'Online', amount: P.standard, when: '10th October until the event', color: C.orange, active: !early && open, over: !open },
-                { key: 'gate', name: 'At the gate', amount: P.gate, when: 'On the day, 17th October', color: C.violet, active: !open, over: false },
+                { key: 'gate', name: 'At the gate', amount: P.gate, when: `On the day, ${RANGEELA.dateShort}`, color: C.violet, active: !open, over: false },
               ].map((t) => (
                 <div key={t.key} className={`lg-tier ${t.active ? 'is-active' : ''} ${t.over ? 'is-over' : ''}`} style={t.active ? { borderColor: t.color, boxShadow: `0 14px 30px -16px ${t.color}` } : undefined}>
                   {t.active && <span className="lg-tier-badge" style={{ background: t.color }}>Now</span>}
@@ -661,6 +673,13 @@ export default function RangeelaClient({ serverNow, prices: serverPrices }: { se
         .lg-icon-btn { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border: none; background: rgba(255,255,255,0.7); border-radius: 50%; color: ${C.muted}; cursor: pointer; flex-shrink: 0; }
         .lg-check { display: flex; gap: 12px; align-items: flex-start; margin-top: 20px; cursor: pointer; font-size: 14px; line-height: 1.6; color: ${C.body}; }
         .lg-check input { width: 22px; height: 22px; margin-top: 1px; accent-color: ${C.violet}; flex-shrink: 0; }
+        .lg-notice-wrap { padding-bottom: 14px; }
+        .lg-notice { position: relative; display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-radius: 22px; overflow: hidden; }
+        .lg-notice::before { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px; background: linear-gradient(100deg, #E6007E, #FF7A00, #FFC400, #00A8E8, #7B2FF7); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+        .lg-notice-badge { flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 999px; color: #fff; font-size: 12.5px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; background: linear-gradient(100deg, #E6007E, #FF7A00); box-shadow: 0 8px 18px -8px rgba(230,0,126,0.6); }
+        .lg-notice-text { margin: 0; font-size: 14.5px; line-height: 1.55; color: #3B2A38; }
+        .lg-notice-text strong { color: #D9480F; font-weight: 800; }
+        @media (max-width: 640px) { .lg-notice { flex-direction: column; align-items: flex-start; gap: 10px; padding: 14px 16px; } .lg-notice-text { font-size: 14px; } }
         .lg-alert { display: flex; gap: 10px; align-items: flex-start; padding: 13px 15px; border-radius: 18px; background: rgba(255,240,240,0.9); border: 1px solid #FBC6C6; color: #B42318; font-size: 14px; line-height: 1.55; margin-bottom: 18px; }
         .lg-help { text-align: center; font-size: 13px; color: ${C.muted}; margin: 14px 0 0; }
         .lg-help a { color: ${C.violet}; font-weight: 700; }

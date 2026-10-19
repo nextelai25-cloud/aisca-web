@@ -1,15 +1,16 @@
 'use client'
 
 import { useState } from 'react'
+import { RANGEELA } from '@/lib/rangeela'
 
 // The RANGEELA '26 ticket, drawn on the official ticket artwork with the
 // student's own QR code, name and ticket number in the empty space.
-// Positions are percentages of the artwork (802 x 1642) so it looks the
+// Positions are percentages of the artwork (802 x 1577) so it looks the
 // same on every screen, and "Save ticket" paints the same layout onto a
 // canvas so students can keep a copy in their photos.
 
 const W = 802
-const H = 1642
+const H = 1577
 const INK = '#241628'
 const ORANGE = '#D9480F'
 const VIOLET = '#7B2FF7'
@@ -18,11 +19,11 @@ const BODY = "'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif"
 
 // Layout on the artwork, in artwork pixels
 const L = {
-  nameY: 1024,
-  schoolY: 1067,
-  qrX: 216, qrY: 1095, qrSize: 369, qrPad: 20,
-  pillY: 1503,
-  noteY: 1556,
+  nameY: 987,
+  schoolY: 1029,
+  qrX: 223, qrY: 1056, qrSize: 356, qrPad: 20,
+  pillY: 1449,
+  noteY: 1499,
 }
 
 type Props = {
@@ -120,6 +121,12 @@ export default function TicketView(p: Props) {
           </div>
         ) : (
           <>
+            {RANGEELA.postponedNotice && (
+              <div className="tk-glass tk-notice" role="status">
+                <strong>New date: {RANGEELA.dateLabel}</strong>
+                <span>This ticket is valid for the new date.</span>
+              </div>
+            )}
             <div className="tk-ticket" role="img" aria-label={`RANGEELA '26 ticket for ${p.name}, ${p.ticketNumber}`}>
               <img src="/rangeela/ticket-bg.webp" alt="" className="tk-art" />
               <div className="tk-name" style={{ top: pct(L.nameY, H), fontSize: `${Math.min(5.4, 118 / Math.max(1, (p.name || '').length))}cqw` }}>{p.name}</div>
@@ -151,7 +158,7 @@ export default function TicketView(p: Props) {
               <a className="tk-btn tk-btn-wa" href={p.whatsappGroup} target="_blank" rel="noopener noreferrer">Join the WhatsApp group</a>
             </div>
             {saveError && <p className="tk-err">{saveError}</p>}
-            <p className="tk-foot">Saturday, 17th October 2026 · 2.00 PM onwards · Nawinna Grounds, Maharagama</p>
+            <p className="tk-foot">{RANGEELA.dateLabel} · {RANGEELA.timeLabel} · {RANGEELA.venue}</p>
           </>
         )}
       </div>
@@ -178,6 +185,8 @@ export default function TicketView(p: Props) {
         .tk-note { font-size: 2.1cqw; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: ${INK}; opacity: .7; }
 
         .tk-glass { background: rgba(255,255,255,0.55); border: 1px solid rgba(255,255,255,0.8); -webkit-backdrop-filter: blur(22px) saturate(170%); backdrop-filter: blur(22px) saturate(170%); box-shadow: 0 10px 30px -14px rgba(60,20,80,0.25), inset 0 1px 0 rgba(255,255,255,0.95); border-radius: 22px; }
+        .tk-notice { display: flex; flex-direction: column; gap: 2px; margin-bottom: 14px; padding: 11px 16px; text-align: center; font-size: 13.5px; line-height: 1.45; color: #4E3E4B; border-color: rgba(230,0,126,0.35); }
+        .tk-notice strong { font-family: ${DISPLAY}; font-size: 16px; font-weight: 800; color: ${ORANGE}; }
         .tk-info { margin-top: 18px; padding: 14px 16px; font-size: 14px; line-height: 1.6; color: #4E3E4B; text-align: center; }
         .tk-info-used { color: #B42318; font-weight: 600; }
         .tk-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }

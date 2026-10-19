@@ -5,14 +5,16 @@
 export const RANGEELA = {
   name: "RANGEELA '26",
   tagline: 'A Celebration of Hues',
-  dateLabel: 'Saturday, 17th October 2026',
-  dateShort: '17th October',
+  dateLabel: 'Saturday, 31st October 2026',
+  dateShort: '31st October',
+  // Shown as a notice on the page and ticket. Set to '' once it is no longer needed.
+  postponedNotice: 'Same time, same venue. Tickets you already have are valid for the new date, there is nothing you need to do.',
   timeLabel: '2.00 PM onwards',
   venue: 'Nawinna Grounds, Maharagama',
   venueArea: 'Maharagama',
   price: 1200,          // standard online price (after early bird)
   // Online ticket sales close at this moment (Sri Lanka time).
-  salesCloseISO: '2026-10-17T12:00:00+05:30',
+  salesCloseISO: '2026-10-31T12:00:00+05:30',
   whatsappGroup: 'https://chat.whatsapp.com/HklcPlrIl3P6tKJsWDbxu8',
   // RANGEELA help line: two organisers on WhatsApp.
   helpContacts: [
@@ -40,7 +42,7 @@ export const PRICING = {
   gate: 1500,
   earlyBirdEndsISO: '2026-10-10T00:00:00+05:30',
   earlyBirdEndsLabel: '9th October, midnight',
-  eventStartISO: '2026-10-17T14:00:00+05:30',
+  eventStartISO: '2026-10-31T14:00:00+05:30',
 } as const
 
 /** Prices the chairman can change in admin.aisca.lk. These are only the fallback. */
