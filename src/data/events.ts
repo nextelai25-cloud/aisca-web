@@ -18,6 +18,35 @@ export interface Event {
 
 export const events: Event[] = [
   {
+    id: '17',
+    slug: 'ask-the-expert-session-04',
+    name: 'Ask the Expert: Session 04',
+    tag: 'Speaker Session',
+    year: '2026',
+    date: 'October 23, 2026',
+    coverPhoto: '/events/askexpert4/group.webp',
+    photos: [
+      '/events/askexpert4/group.webp',
+      '/events/askexpert4/conversation.webp'
+    ],
+    description: `From the stage to the boardroom. On 23 October 2026, the fourth session of Ask the Expert brought AISCA Associates together with Mr. Peter D'Almeida, Managing Director and CEO of N-able, the Sri Lankan technology solutions company he co-founded in 2008 and grew into a team of more than 200 people. Many also know him from Sri Lankan theatre and television, including his celebrated return to the teledrama Koombiyo.\n\nFew careers move between acting, theatre and running a technology company, and that was exactly what our Associates wanted to understand. In a relaxed, living-room style conversation, he spoke about leaving a secure job to start a business, what it really takes to lead as a CEO, and how curiosity, not a fixed plan, shaped every turn of his career.\n\nAs with every Ask the Expert session, it was open exclusively to AISCA Associates, keeping the group small enough for every question to get a real answer.`
+  },
+  {
+    id: '16',
+    slug: 'ask-the-expert-session-03',
+    name: 'Ask the Expert: Session 03',
+    tag: 'Speaker Session',
+    year: '2026',
+    date: 'October 14, 2026',
+    coverPhoto: '/events/askexpert3/group.webp',
+    photos: [
+      '/events/askexpert3/group.webp',
+      '/events/askexpert3/team.webp',
+      '/events/askexpert3/discussion.webp'
+    ],
+    description: `A conversation with a leader of the accounting profession. The third session of Ask the Expert took place on 14 October 2026, with Mr. Heshana Kuruppu as our guest. A chartered accountant with more than two decades in accounting and finance, he served as the 27th President of the Institute of Chartered Accountants of Sri Lanka (CA Sri Lanka), led the South Asian Federation of Accountants as its President in 2024, and has served as a Commissioner of the Securities and Exchange Commission of Sri Lanka.\n\nOver coffee around one table, AISCA Associates asked him about the accounting profession, what it takes to rise within it, and how technology and change are reshaping the skills young professionals will need. His message was clear: stay future ready, keep learning long after qualifying, and build the trust that every finance career depends on.\n\nThe session was held exclusively for AISCA Associates with limited seats, continuing a series built on honest, close conversations with the people at the top of their fields.`
+  },
+  {
     id: '15',
     slug: 'future-forum-forum-3',
     name: 'AISCA Future Forum (Forum 3.0)',
