@@ -87,8 +87,8 @@ export default function SpotlightSection() {
                 <img src="/memora/logo-band.webp" alt="MEMORA '26 A Day to Remember" />
               </div>
               <div className="memora-copy">
-                <span className="section-eyebrow" style={{ textAlign: 'left', marginBottom: '10px', color: '#F2C14E' }}>
-                  Tickets on sale · {MEMORA.dateShort}
+                <span className="section-eyebrow memora-eyebrow" style={{ textAlign: 'left', marginBottom: '10px', color: '#F2C14E', whiteSpace: 'nowrap' }}>
+                  On sale · {MEMORA.dateShort}
                 </span>
                 <div style={{ fontSize: '1.6rem', fontWeight: 700, color: '#ffffff', marginBottom: '14px', lineHeight: 1.2 }}>
                   MEMORA &apos;26
@@ -212,7 +212,9 @@ export default function SpotlightSection() {
         @keyframes memora-rise { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: .9; } 85% { opacity: .9; } 100% { transform: translateY(-460px); opacity: 0; } }
         @media (prefers-reduced-motion: reduce) { .memora-lanterns { display: none; } }
         .memora-inner { position: relative; display: grid; grid-template-columns: 1fr; gap: 24px; padding: 36px 32px; align-items: center; }
-        .memora-logo img { width: 100%; max-width: 460px; height: auto; display: block; margin: 0 auto; -webkit-mask-image: radial-gradient(ellipse 72% 70% at 50% 50%, #000 55%, transparent 100%); mask-image: radial-gradient(ellipse 72% 70% at 50% 50%, #000 55%, transparent 100%); }
+        .memora-logo { margin: 0 -12px; }
+        .memora-logo img { width: 100% !important; max-width: 520px; height: auto !important; display: block; margin: 0 auto; filter: drop-shadow(0 0 18px rgba(255,170,70,0.28)) drop-shadow(0 0 2px rgba(255,220,150,0.35)) brightness(1.12) saturate(1.15); }
+        @media (max-width: 640px) { .memora-inner { padding: 30px 22px 32px; gap: 18px; } .memora-logo { margin: 0 -14px; } .memora-eyebrow { letter-spacing: .16em !important; } }
         @media (min-width: 768px) { .memora-inner { grid-template-columns: 1fr 1fr; gap: 40px; padding: 40px 44px; } }
       `}</style>
     </SectionWrapper>
