@@ -1,11 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Container } from '@/components/layout/Container';
 import { SectionWrapper } from '@/components/layout/SectionWrapper';
-import { RANGEELA, PRICING, currentPrice, isEarlyBird } from '@/lib/rangeela';
+import { MEMORA, lkr } from '@/lib/memora';
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -59,19 +58,6 @@ const CARDS: Card[] = [
 ];
 
 export default function SpotlightSection() {
-  // The homepage is prerendered, so the live ticket price is worked out in the
-  // browser. Until then it shows the standard price rather than a wrong one.
-  const [mounted, setMounted] = useState(false);
-  // Live price set by the chairman in the admin dashboard.
-  const [live, setLive] = useState<{ standard: number; gate: number } | null>(null);
-  useEffect(() => {
-    setMounted(true);
-    fetch('/api/rangeela/price', { cache: 'no-store' }).then((r) => (r.ok ? r.json() : null))
-      .then((d) => { if (d && d.standard > 0) setLive({ standard: d.standard, gate: d.gate }); }).catch(() => {});
-  }, []);
-  const early = mounted && isEarlyBird();
-  const price = mounted ? currentPrice(Date.now(), live ?? undefined) : (live?.standard ?? PRICING.standard);
-
   return (
     <SectionWrapper id="spotlight" spacing="compact" background="primary" className="border-y border-white/[0.04]">
       <Container>
@@ -79,11 +65,11 @@ export default function SpotlightSection() {
           <span className="section-eyebrow">Happening Now</span>
           <h2 className="section-title">Get Involved</h2>
           <p className="section-subtitle">
-            RANGEELA &apos;26 is almost here. Grab your ticket, and see what else AISCA has going on.
+            MEMORA &apos;26 is almost here. Grab your ticket, and see what else AISCA has going on.
           </p>
         </div>
 
-        {/* Featured: RANGEELA '26 */}
+        {/* Featured: MEMORA '26 */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -91,26 +77,29 @@ export default function SpotlightSection() {
           transition={{ duration: 0.8, ease }}
           style={{ marginBottom: '16px' }}
         >
-          <Link href="/rangeela26" className="spotlight-card rangeela-card">
-            <div className="rangeela-glow" aria-hidden />
-            <div className="rangeela-inner">
-              <div className="rangeela-logo">
-                <img src="/rangeela/logo.webp" alt="RANGEELA '26 A Celebration of Hues" />
+          <Link href="/memora26" className="spotlight-card memora-card">
+            <div className="memora-glow" aria-hidden />
+            <div className="memora-lanterns" aria-hidden>
+              {[8, 22, 71, 86, 93].map((x, i) => <span key={x} style={{ left: `${x}%`, animationDelay: `${-i * 3.1}s`, animationDuration: `${14 + i * 2}s` }} />)}
+            </div>
+            <div className="memora-inner">
+              <div className="memora-logo">
+                <img src="/memora/logo-band.webp" alt="MEMORA '26 A Day to Remember" />
               </div>
-              <div className="rangeela-copy">
-                <span className="section-eyebrow" style={{ textAlign: 'left', marginBottom: '10px' }}>
-                  {early ? `Early bird until ${PRICING.earlyBirdEndsLabel}` : `Tickets on sale · ${RANGEELA.dateShort}`}
+              <div className="memora-copy">
+                <span className="section-eyebrow" style={{ textAlign: 'left', marginBottom: '10px', color: '#F2C14E' }}>
+                  Tickets on sale · {MEMORA.dateShort}
                 </span>
                 <div style={{ fontSize: '1.6rem', fontWeight: 700, color: '#ffffff', marginBottom: '14px', lineHeight: 1.2 }}>
-                  RANGEELA &apos;26
+                  MEMORA &apos;26
                 </div>
                 <div style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.75, fontWeight: 300, marginBottom: '8px' }}>
-                  One canvas. A thousand hues. A colour festival at {RANGEELA.venue}, {RANGEELA.timeLabel}, with music, food stalls, games and colour packets included.
+                  The date is locked, the vibe is matched. The most awaited night of the year, {MEMORA.timeLabel} at {MEMORA.venue}.
                 </div>
                 <div style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.85)', fontWeight: 500 }}>
-                  LKR {price.toLocaleString()} per ticket{early ? ', early bird' : ''}
+                  {lkr(MEMORA.price)} per ticket · Limited seats
                 </div>
-                <div style={{ fontSize: '12px', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.9)', fontWeight: 600, paddingTop: '22px', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ fontSize: '12px', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#F2C14E', fontWeight: 600, paddingTop: '22px', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
                   Get your ticket <Arrow />
                 </div>
               </div>
@@ -213,13 +202,18 @@ export default function SpotlightSection() {
         @media (max-width: 480px) { .nextup-cover { width: 58px; top: 22px; right: 20px; } .nextup-title, .nextup-eyebrow { padding-right: 64px; } .nextup-title { font-size: 1.35rem !important; } }
         .spotlight-card { transition: border-color 0.3s ease, background 0.3s ease; }
         .spotlight-card:hover { border-color: rgba(255,255,255,0.18); background: rgba(255,255,255,0.055); }
-        .rangeela-card { position: relative; overflow: hidden; display: block; text-decoration: none; border-radius: 16px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); }
-        .rangeela-card::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: linear-gradient(90deg, #E6007E, #FF4D2E, #FF7A00, #FFC300, #0FB5AE, #2F6BFF, #7B2FF7); }
-        .rangeela-glow { position: absolute; inset: -40%; background: radial-gradient(circle at 20% 50%, rgba(230,0,126,0.16), transparent 40%), radial-gradient(circle at 45% 30%, rgba(255,195,0,0.10), transparent 35%), radial-gradient(circle at 30% 80%, rgba(47,107,255,0.14), transparent 40%); pointer-events: none; transition: opacity .4s ease; opacity: .8; }
-        .rangeela-card:hover .rangeela-glow { opacity: 1; }
-        .rangeela-inner { position: relative; display: grid; grid-template-columns: 1fr; gap: 24px; padding: 36px 32px; align-items: center; }
-        .rangeela-logo img { width: 100%; max-width: 380px; height: auto; display: block; margin: 0 auto; }
-        @media (min-width: 768px) { .rangeela-inner { grid-template-columns: 1fr 1fr; gap: 40px; padding: 40px 44px; } }
+        .memora-card { position: relative; overflow: hidden; display: block; text-decoration: none; border-radius: 16px; background: linear-gradient(160deg, rgba(14,20,52,0.9), rgba(5,8,23,0.95)); border: 1px solid rgba(242,193,78,0.18); }
+        .memora-card:hover { border-color: rgba(242,193,78,0.4); }
+        .memora-card::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: linear-gradient(90deg, transparent, #F2C14E 30%, #5AA9E6 70%, transparent); z-index: 1; }
+        .memora-glow { position: absolute; inset: -40%; background: radial-gradient(circle at 25% 70%, rgba(255,150,50,0.16), transparent 40%), radial-gradient(circle at 70% 25%, rgba(90,169,230,0.12), transparent 38%); pointer-events: none; transition: opacity .4s ease; opacity: .8; }
+        .memora-card:hover .memora-glow { opacity: 1; }
+        .memora-lanterns { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+        .memora-lanterns span { position: absolute; bottom: -20px; width: 9px; height: 12px; border-radius: 3px 3px 5px 5px; background: linear-gradient(180deg, #FFE9B8, #FF9F43); box-shadow: 0 0 10px 3px rgba(255,160,60,0.5); animation: memora-rise linear infinite; opacity: 0; }
+        @keyframes memora-rise { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: .9; } 85% { opacity: .9; } 100% { transform: translateY(-460px); opacity: 0; } }
+        @media (prefers-reduced-motion: reduce) { .memora-lanterns { display: none; } }
+        .memora-inner { position: relative; display: grid; grid-template-columns: 1fr; gap: 24px; padding: 36px 32px; align-items: center; }
+        .memora-logo img { width: 100%; max-width: 460px; height: auto; display: block; margin: 0 auto; -webkit-mask-image: radial-gradient(ellipse 72% 70% at 50% 50%, #000 55%, transparent 100%); mask-image: radial-gradient(ellipse 72% 70% at 50% 50%, #000 55%, transparent 100%); }
+        @media (min-width: 768px) { .memora-inner { grid-template-columns: 1fr 1fr; gap: 40px; padding: 40px 44px; } }
       `}</style>
     </SectionWrapper>
   );
