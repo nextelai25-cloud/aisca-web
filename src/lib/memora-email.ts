@@ -35,6 +35,19 @@ export function memoraShell(inner: string, preheader: string): string {
 </body></html>`
 }
 
+export function memoraWhatsappBlock(): string {
+  if (!MEMORA.whatsappGroup) return ''
+  return `<tr><td style="padding:6px 32px 8px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0E2A1C;border:1px solid #1F6B43;border-radius:14px;">
+    <tr><td style="padding:18px 22px;">
+      <p style="margin:0 0 6px;font-size:15px;font-weight:bold;color:#BBF7D0;font-family:${SANS};">Join the MEMORA '26 WhatsApp group</p>
+      <p style="margin:0 0 14px;font-size:13px;line-height:1.6;color:#A7C7B4;font-family:${SANS};">All event updates, reminders and last minute details are shared here first. Please join even before your ticket arrives.</p>
+      <a href="${MEMORA.whatsappGroup}" style="display:inline-block;background:#25D366;color:#FFFFFF;padding:11px 22px;border-radius:999px;font-size:13px;font-weight:bold;text-decoration:none;font-family:${SANS};">Join the WhatsApp group</a>
+    </td></tr>
+  </table>
+</td></tr>`
+}
+
 export async function sendMemoraReceivedEmail({ to, name, ticketNumber, amount }: { to: string; name: string; ticketNumber: string; amount: number }) {
   const apiKey = process.env.RESEND_API_KEY
   if (!apiKey || !to) return
@@ -67,6 +80,7 @@ export async function sendMemoraReceivedEmail({ to, name, ticketNumber, amount }
       ${cell('Date', MEMORA.dateShort)}<td width="4"></td>${cell('Time', MEMORA.timeLabel)}<td width="4"></td>${cell('Venue', MEMORA.venue)}
     </tr></table>
   </td></tr>
+  ${memoraWhatsappBlock()}
   <tr><td style="padding:14px 32px 8px;">
     <p style="margin:0;font-size:13.5px;line-height:1.7;color:#C3C9E4;font-family:${SANS};">A night to remember is on its way.<br/><strong style="color:#FFFFFF;">Team AISCA</strong></p>
   </td></tr>`

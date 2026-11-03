@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion'
 import {
   CalendarDays, Clock, MapPin, Ticket, Upload, FileText, X, CheckCircle2, Copy, Check,
-  Music, Flame, UtensilsCrossed, Camera, AlertTriangle, ArrowLeft, ChevronRight, Sparkles,
+  Music, Flame, UtensilsCrossed, Camera, AlertTriangle, ArrowLeft, ChevronRight, Sparkles, MessageCircle,
 } from 'lucide-react'
 import {
   MEMORA, MEMORA_BANK, MEMORA_AL_BATCHES, memoraSalesOpen, looksLikeNic, toLocalMobile, lkr,
@@ -53,7 +53,8 @@ const STEPS = [
 ]
 
 const GOOD_TO_KNOW = [
-  `Tickets are ${lkr(MEMORA.price)} per person. Seats are limited, so get yours early.`,
+  `Tickets are ${lkr(MEMORA.price)} per person. Ticket sales close on ${MEMORA.salesCloseLabel}, and seats are limited, so get yours early.`,
+  'After you buy, join the MEMORA \'26 WhatsApp group. All updates and reminders are shared there.',
   'One ticket admits one person. Each person fills the form separately.',
   'Your QR code works only once. After it is scanned at the entrance it cannot be used again, so please do not share it.',
   'Bring your NIC. The name and NIC number on your ticket may be checked at the entrance.',
@@ -318,7 +319,7 @@ export default function MemoraClient({ serverNow }: { serverNow: number }) {
 
             <div className="mm-cta-row">
               <button type="button" onClick={goTickets} className="mm-btn">{open ? 'Get your ticket' : 'Ticket details'} <ChevronRight size={18} /></button>
-              <span className="mm-limited"><span className="mm-pulse" /> Limited seats available</span>
+              <span className="mm-limited"><span className="mm-pulse" /> {open ? `Ticket sales close ${MEMORA.salesCloseLabel}` : 'Ticket sales are closed'}</span>
             </div>
           </motion.div>
         </div>
@@ -365,7 +366,7 @@ export default function MemoraClient({ serverNow }: { serverNow: number }) {
             <span className="mm-eyebrow">Tickets</span>
             <h2 className="mm-h2">Reserve your night</h2>
             <p className="mm-body mm-sub">
-              {lkr(MEMORA.price)} per person. Pay by bank transfer, upload the receipt, and your QR ticket comes to your email and phone once we confirm the payment.
+              {lkr(MEMORA.price)} per person. Pay by bank transfer, upload the receipt, and your QR ticket comes to your email and phone once we confirm the payment. Ticket sales close on {MEMORA.salesCloseLabel}.
             </p>
             <p className="mm-onlyone">Each ticket admits one person only. Coming with friends? Every person needs their own ticket, bought with their own form.</p>
           </motion.div>
@@ -396,6 +397,7 @@ export default function MemoraClient({ serverNow }: { serverNow: number }) {
                   </div>
                 ))}
               </div>
+              <WhatsAppBox text="Whether you have just filled the form or already have your ticket, please join. All updates are shared here." />
               <div className="mm-ticket-peek" aria-hidden>
                 <img src="/memora/ticket-bg.webp" alt="" />
               </div>
@@ -408,7 +410,8 @@ export default function MemoraClient({ serverNow }: { serverNow: number }) {
               ) : !open ? (
                 <div className="mm-center" style={{ padding: '26px 6px' }}>
                   <div className="mm-card-h">Online sales are closed</div>
-                  <p className="mm-body">Thank you for the amazing response. Online tickets for MEMORA &apos;26 are no longer available. For help, message {MEMORA.helpWhatsappLabel} on WhatsApp.</p>
+                  <p className="mm-body">Thank you for the amazing response. Ticket sales for MEMORA &apos;26 closed on {MEMORA.salesCloseLabel}. Already have a ticket? Join the WhatsApp group for updates. For help, message {MEMORA.helpWhatsappLabel}.</p>
+                  <div style={{ marginTop: 18 }}><WhatsAppBox text="All MEMORA '26 updates and reminders are shared here." /></div>
                 </div>
               ) : (
                 <>
@@ -679,6 +682,11 @@ export default function MemoraClient({ serverNow }: { serverNow: number }) {
         .mm-root .mm-ticket-peek img { width: 100% !important; height: auto !important; display: block; }
         @keyframes mm-float { from { transform: rotate(-4deg) translateY(0); } to { transform: rotate(-2deg) translateY(-10px); } }
 
+        .mm-wa { margin-top: 16px; padding: 16px; border-radius: 20px; background: rgba(37,211,102,0.08); border: 1px solid rgba(37,211,102,0.3); }
+        .mm-wa-title { font-weight: 700; color: #BBF7D0; font-size: 14.5px; margin-bottom: 4px; }
+        .mm-wa-text { font-size: 13px; line-height: 1.6; color: #A7C7B4; margin-bottom: 12px; }
+        .mm-wa-btn { display: inline-flex; align-items: center; gap: 7px; background: #25D366; color: #fff; padding: 10px 18px; border-radius: 999px; font-size: 14px; font-weight: 700; text-decoration: none; box-shadow: 0 8px 18px -8px rgba(37,211,102,0.8); }
+
         /* form */
         .mm-form { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .mm-full { grid-column: 1 / -1; }
@@ -814,6 +822,17 @@ function Field({ label, hint, full, children }: { label: string; hint?: string; 
   )
 }
 
+function WhatsAppBox({ title = "Join the MEMORA '26 WhatsApp group", text }: { title?: string; text: string }) {
+  if (!MEMORA.whatsappGroup) return null
+  return (
+    <div className="mm-wa">
+      <div className="mm-wa-title">{title}</div>
+      <div className="mm-wa-text">{text}</div>
+      <a href={MEMORA.whatsappGroup} target="_blank" rel="noopener noreferrer" className="mm-wa-btn"><MessageCircle size={16} /> Join the WhatsApp group</a>
+    </div>
+  )
+}
+
 function SuccessCard({ ticketNumber, email, phone }: { ticketNumber: string; email: string; phone: string }) {
   return (
     <div className="mm-center" style={{ padding: '6px 2px' }}>
@@ -830,7 +849,8 @@ function SuccessCard({ ticketNumber, email, phone }: { ticketNumber: string; ema
         <span className="mm-label-xs">Your reference</span>
         <span style={{ fontFamily: "ui-monospace, 'SF Mono', Menlo, monospace", fontSize: 22, fontWeight: 800, color: C.gold }}>{ticketNumber}</span>
       </div>
-      <p className="mm-help" style={{ marginTop: 4 }}>We also sent a confirmation to your email. If you cannot find it, check your spam or promotions folder.</p>
+      <div style={{ textAlign: 'left' }}><WhatsAppBox title="One more thing: join the WhatsApp group" text="All MEMORA '26 updates, reminders and last minute details are shared in this group." /></div>
+      <p className="mm-help" style={{ marginTop: 14 }}>We also sent a confirmation to your email. If you cannot find it, check your spam or promotions folder.</p>
     </div>
   )
 }

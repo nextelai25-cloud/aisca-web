@@ -97,7 +97,7 @@ export default function SpotlightSection() {
                   The date is locked, the vibe is matched. The most awaited night of the year, {MEMORA.timeLabel} at {MEMORA.venue}.
                 </div>
                 <div style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.85)', fontWeight: 500 }}>
-                  {lkr(MEMORA.price)} per ticket · Limited seats
+                  {lkr(MEMORA.price)} per ticket · Sales close 12th November
                 </div>
                 <div style={{ fontSize: '12px', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#F2C14E', fontWeight: 600, paddingTop: '22px', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
                   Get your ticket <Arrow />

@@ -124,6 +124,7 @@ export default function TicketView(p: Props) {
                   {saving ? 'Preparing...' : 'Save ticket to photos'}
                 </button>
               )}
+              {MEMORA.whatsappGroup && <a className="mt-btn mt-btn-wa" href={MEMORA.whatsappGroup} target="_blank" rel="noopener noreferrer">Join the WhatsApp group</a>}
             </div>
             {saveError && <p className="mt-err">{saveError}</p>}
             {p.school && <p className="mt-foot">{p.name} · {p.school}</p>}

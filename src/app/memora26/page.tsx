@@ -4,7 +4,7 @@ import MemoraClient from './MemoraClient'
 // Render fresh on every visit so "sales closed" and the countdown start from the real time.
 export const dynamic = 'force-dynamic'
 
-const DESC = "MEMORA '26 by AISCA. The most awaited night of the year. Sunday 15th November 2026, 4.00 PM onwards at Rock House, Piliyandala. Tickets LKR 3,500."
+const DESC = "MEMORA '26 by AISCA. The most awaited night of the year. Sunday 15th November 2026, 4.00 PM onwards at Rock House, Piliyandala. Tickets LKR 3,500, sales close 12th November."
 
 export const metadata: Metadata = {
   title: "MEMORA '26 | A Day to Remember",
