@@ -54,7 +54,7 @@ const STEPS = [
 
 const GOOD_TO_KNOW = [
   `Tickets are ${lkr(MEMORA.price)} per person. Ticket sales close on ${MEMORA.salesCloseLabel}, and seats are limited, so get yours early.`,
-  'After you buy, join the MEMORA \'26 WhatsApp group. All updates and reminders are shared there.',
+  'After you submit your request, you get the link to the MEMORA \'26 WhatsApp group. All updates and reminders are shared there.',
   'One ticket admits one person. Each person fills the form separately.',
   'Your QR code works only once. After it is scanned at the entrance it cannot be used again, so please do not share it.',
   'Bring your NIC. The name and NIC number on your ticket may be checked at the entrance.',
@@ -150,6 +150,7 @@ export default function MemoraClient({ serverNow }: { serverNow: number }) {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
   const [done, setDone] = useState<string | null>(null)
+  const [group, setGroup] = useState('')
   const [copied, setCopied] = useState('')
   const [showBar, setShowBar] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
@@ -236,6 +237,7 @@ export default function MemoraClient({ serverNow }: { serverNow: number }) {
       const data = await res.json()
       if (res.ok && data.success) {
         setDone(data.ticketNumber)
+        setGroup(typeof data.whatsappGroup === 'string' ? data.whatsappGroup : '')
         setTimeout(() => formTop.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60)
       } else {
         fail(data.error || 'Could not submit. Please try again.')
@@ -397,7 +399,6 @@ export default function MemoraClient({ serverNow }: { serverNow: number }) {
                   </div>
                 ))}
               </div>
-              <WhatsAppBox text="Whether you have just filled the form or already have your ticket, please join. All updates are shared here." />
               <div className="mm-ticket-peek" aria-hidden>
                 <img src="/memora/ticket-bg.webp" alt="" />
               </div>
@@ -406,12 +407,11 @@ export default function MemoraClient({ serverNow }: { serverNow: number }) {
             {/* Step 2: Form / success */}
             <motion.div {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.08 }} className="mm-glass mm-card mm-anchor" ref={formTop}>
               {done ? (
-                <SuccessCard ticketNumber={done} email={f.email} phone={toLocalMobile(f.whatsapp) || f.whatsapp} />
+                <SuccessCard ticketNumber={done} email={f.email} phone={toLocalMobile(f.whatsapp) || f.whatsapp} group={group} />
               ) : !open ? (
                 <div className="mm-center" style={{ padding: '26px 6px' }}>
                   <div className="mm-card-h">Online sales are closed</div>
-                  <p className="mm-body">Thank you for the amazing response. Ticket sales for MEMORA &apos;26 closed on {MEMORA.salesCloseLabel}. Already have a ticket? Join the WhatsApp group for updates. For help, message {MEMORA.helpWhatsappLabel}.</p>
-                  <div style={{ marginTop: 18 }}><WhatsAppBox text="All MEMORA '26 updates and reminders are shared here." /></div>
+                  <p className="mm-body">Thank you for the amazing response. Ticket sales for MEMORA &apos;26 closed on {MEMORA.salesCloseLabel}. Already have a ticket? The WhatsApp group link is in your ticket email and on your ticket page. For help, message {MEMORA.helpWhatsappLabel}.</p>
                 </div>
               ) : (
                 <>
@@ -822,18 +822,18 @@ function Field({ label, hint, full, children }: { label: string; hint?: string; 
   )
 }
 
-function WhatsAppBox({ title = "Join the MEMORA '26 WhatsApp group", text }: { title?: string; text: string }) {
-  if (!MEMORA.whatsappGroup) return null
+function WhatsAppBox({ link, title = "Join the MEMORA '26 WhatsApp group", text }: { link: string; title?: string; text: string }) {
+  if (!link) return null
   return (
     <div className="mm-wa">
       <div className="mm-wa-title">{title}</div>
       <div className="mm-wa-text">{text}</div>
-      <a href={MEMORA.whatsappGroup} target="_blank" rel="noopener noreferrer" className="mm-wa-btn"><MessageCircle size={16} /> Join the WhatsApp group</a>
+      <a href={link} target="_blank" rel="noopener noreferrer" className="mm-wa-btn"><MessageCircle size={16} /> Join the WhatsApp group</a>
     </div>
   )
 }
 
-function SuccessCard({ ticketNumber, email, phone }: { ticketNumber: string; email: string; phone: string }) {
+function SuccessCard({ ticketNumber, email, phone, group }: { ticketNumber: string; email: string; phone: string; group: string }) {
   return (
     <div className="mm-center" style={{ padding: '6px 2px' }}>
       <div style={{ width: 66, height: 66, borderRadius: '50%', margin: '0 auto 16px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(52,211,153,0.12)', color: C.green, border: '1px solid rgba(52,211,153,0.35)' }}>
@@ -849,7 +849,7 @@ function SuccessCard({ ticketNumber, email, phone }: { ticketNumber: string; ema
         <span className="mm-label-xs">Your reference</span>
         <span style={{ fontFamily: "ui-monospace, 'SF Mono', Menlo, monospace", fontSize: 22, fontWeight: 800, color: C.gold }}>{ticketNumber}</span>
       </div>
-      <div style={{ textAlign: 'left' }}><WhatsAppBox title="One more thing: join the WhatsApp group" text="All MEMORA '26 updates, reminders and last minute details are shared in this group." /></div>
+      <div style={{ textAlign: 'left' }}><WhatsAppBox link={group} title="One more thing: join the WhatsApp group" text="All MEMORA '26 updates, reminders and last minute details are shared in this group." /></div>
       <p className="mm-help" style={{ marginTop: 14 }}>We also sent a confirmation to your email. If you cannot find it, check your spam or promotions folder.</p>
     </div>
   )

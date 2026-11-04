@@ -1,5 +1,6 @@
 import { Resend } from 'resend'
 import { MEMORA } from './memora'
+import { MEMORA_WHATSAPP_GROUP } from './memora-private'
 import { esc } from './rangeela-email'
 
 // Email sent right after someone submits the MEMORA '26 ticket form.
@@ -36,13 +37,13 @@ export function memoraShell(inner: string, preheader: string): string {
 }
 
 export function memoraWhatsappBlock(): string {
-  if (!MEMORA.whatsappGroup) return ''
+  if (!MEMORA_WHATSAPP_GROUP) return ''
   return `<tr><td style="padding:6px 32px 8px;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0E2A1C;border:1px solid #1F6B43;border-radius:14px;">
     <tr><td style="padding:18px 22px;">
       <p style="margin:0 0 6px;font-size:15px;font-weight:bold;color:#BBF7D0;font-family:${SANS};">Join the MEMORA '26 WhatsApp group</p>
       <p style="margin:0 0 14px;font-size:13px;line-height:1.6;color:#A7C7B4;font-family:${SANS};">All event updates, reminders and last minute details are shared here first. Please join even before your ticket arrives.</p>
-      <a href="${MEMORA.whatsappGroup}" style="display:inline-block;background:#25D366;color:#FFFFFF;padding:11px 22px;border-radius:999px;font-size:13px;font-weight:bold;text-decoration:none;font-family:${SANS};">Join the WhatsApp group</a>
+      <a href="${MEMORA_WHATSAPP_GROUP}" style="display:inline-block;background:#25D366;color:#FFFFFF;padding:11px 22px;border-radius:999px;font-size:13px;font-weight:bold;text-decoration:none;font-family:${SANS};">Join the WhatsApp group</a>
     </td></tr>
   </table>
 </td></tr>`

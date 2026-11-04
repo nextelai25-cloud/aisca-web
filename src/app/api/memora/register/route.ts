@@ -5,6 +5,7 @@ import { sendTelegram } from '@/lib/telegram'
 import { isEmail, optStr, rateLimit } from '@/lib/validate'
 import { MEMORA, MEMORA_AL_BATCHES, memoraSalesOpen, normaliseId, looksLikeNic, toLocalMobile } from '@/lib/memora'
 import { sendMemoraReceivedEmail } from '@/lib/memora-email'
+import { MEMORA_WHATSAPP_GROUP } from '@/lib/memora-private'
 
 // POST /api/memora/register
 // One form = one ticket request. It is saved as "pending" until an organiser
@@ -114,7 +115,7 @@ export async function POST(req: NextRequest) {
       )
     } catch {}
 
-    return NextResponse.json({ success: true, ticketNumber: ticket_number })
+    return NextResponse.json({ success: true, ticketNumber: ticket_number, whatsappGroup: MEMORA_WHATSAPP_GROUP })
   } catch (err) {
     console.error('[memora/register] internal error:', err)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })

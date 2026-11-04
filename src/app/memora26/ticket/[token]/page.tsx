@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import QRCode from 'qrcode'
 import { supabaseAdmin } from '@/lib/supabase'
 import { MEMORA } from '@/lib/memora'
+import { MEMORA_WHATSAPP_GROUP } from '@/lib/memora-private'
 import TicketView from './TicketView'
 
 // Online copy of a MEMORA '26 ticket, linked from the ticket email and SMS.
@@ -44,6 +45,7 @@ export default async function MemoraTicketPage({ params }: { params: Promise<{ t
       school={t.school}
       ticketNumber={t.ticket_number}
       qr={qr}
+      whatsappGroup={MEMORA_WHATSAPP_GROUP}
       usedAt={t.checked_in_at
         ? new Date(t.checked_in_at).toLocaleString('en-LK', { timeZone: 'Asia/Colombo', dateStyle: 'medium', timeStyle: 'short' })
         : undefined}
