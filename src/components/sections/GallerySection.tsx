@@ -291,10 +291,15 @@ export default function GallerySection() {
           .ev-filters { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; scrollbar-width: none; padding: 0 16px 4px; }
           .ev-filters::-webkit-scrollbar { display: none; }
           .ev-chip { flex-shrink: 0; }
-          .ev-grid { grid-template-columns: 1fr; grid-auto-rows: 260px; gap: 14px; padding: 0 16px; }
-          .ev-card.is-big { grid-column: auto; grid-row: span 2; }
+          .ev-grid { grid-template-columns: 1fr; grid-auto-rows: auto; gap: 16px; padding: 0 16px; }
+          .ev-card, .ev-card.is-big { grid-column: auto; grid-row: auto; display: flex; flex-direction: column; background: #0f0f0f; }
+          .ev-card-img { position: relative; inset: auto; width: 100%; aspect-ratio: var(--ar, 4 / 3); max-height: 125vw; overflow: hidden; transform: none !important; }
+          .ev-card-img img { transform: none; filter: none; }
+          .ev-card:hover .ev-card-img img { transform: none; }
+          .ev-card-shade { inset: 0 0 auto 0; height: 70px; background: linear-gradient(180deg, rgba(0,0,0,0.55), transparent); }
+          .ev-card-info { position: relative; transform: none; padding: 16px 18px 18px; }
+          .ev-card-name, .ev-card.is-big .ev-card-name { font-size: 18px; }
           .ev-card-cta { opacity: 1; transform: none; }
-          .ev-card-info { transform: none; }
           .ev-modal { padding: 0; align-items: stretch; }
           .ev-modal-inner { border-radius: 0; min-height: 100%; border: none; }
           .ev-modal-photo { height: 52vh; }
@@ -308,6 +313,7 @@ export default function GallerySection() {
 function Card({ e, i, big, onOpen, reduce }: { e: Event; i: number; big: boolean; onOpen: () => void; reduce: boolean }) {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
+  const [ar, setAr] = useState('4 / 3')
   const onMove = (ev: React.MouseEvent) => {
     const el = ref.current
     if (!el) return
@@ -327,6 +333,7 @@ function Card({ e, i, big, onOpen, reduce }: { e: Event; i: number; big: boolean
       ref={ref}
       layout
       className={`ev-card ${big ? 'is-big' : ''}`}
+      style={{ ['--ar' as string]: ar } as React.CSSProperties}
       initial={{ opacity: 0, y: 40, clipPath: 'inset(18% 0% 0% 0% round 20px)' }}
       animate={inView ? { opacity: 1, y: 0, clipPath: 'inset(0% 0% 0% 0% round 20px)' } : {}}
       exit={{ opacity: 0, scale: 0.94, transition: { duration: 0.25 } }}
@@ -341,7 +348,7 @@ function Card({ e, i, big, onOpen, reduce }: { e: Event; i: number; big: boolean
     >
       <div className="ev-card-img" style={{ transition: 'transform .6s cubic-bezier(.22,1,.36,1)' }}>
         {e.coverPhoto
-          ? <img src={e.coverPhoto} alt={e.name} loading={i < 3 ? 'eager' : 'lazy'} />
+          ? <img src={e.coverPhoto} alt={e.name} loading={i < 3 ? 'eager' : 'lazy'} onLoad={(ev) => { const im = ev.currentTarget; if (im.naturalWidth && im.naturalHeight) setAr(`${im.naturalWidth} / ${im.naturalHeight}`) }} />
           : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '4rem', fontWeight: 800, color: 'rgba(255,255,255,0.06)' }}>AISCA</div>}
       </div>
       <div className="ev-card-shade" />
