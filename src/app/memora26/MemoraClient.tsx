@@ -53,7 +53,7 @@ const STEPS = [
 ]
 
 const GOOD_TO_KNOW = [
-  `Tickets are ${lkr(MEMORA.price)} per person. Ticket sales close on ${MEMORA.salesCloseLabel}, and seats are limited, so get yours early.`,
+  `Tickets are ${lkr(MEMORA.price)} per person. Sales have been extended until ${MEMORA.salesCloseLabel}, but only a few seats are left, so get yours now.`,
   'After you submit your request, you get the link to the MEMORA \'26 WhatsApp group. All updates and reminders are shared there.',
   'One ticket admits one person. Each person fills the form separately.',
   'Your QR code works only once. After it is scanned at the entrance it cannot be used again, so please do not share it.',
@@ -321,7 +321,7 @@ export default function MemoraClient({ serverNow }: { serverNow: number }) {
 
             <div className="mm-cta-row">
               <button type="button" onClick={goTickets} className="mm-btn">{open ? 'Get your ticket' : 'Ticket details'} <ChevronRight size={18} /></button>
-              <span className="mm-limited"><span className="mm-pulse" /> {open ? `Ticket sales close ${MEMORA.salesCloseLabel}` : 'Ticket sales are closed'}</span>
+              <span className="mm-limited"><span className="mm-pulse" /> {open ? MEMORA.salesBanner : 'Ticket sales are closed'}</span>
             </div>
           </motion.div>
         </div>
@@ -368,7 +368,7 @@ export default function MemoraClient({ serverNow }: { serverNow: number }) {
             <span className="mm-eyebrow">Tickets</span>
             <h2 className="mm-h2">Reserve your night</h2>
             <p className="mm-body mm-sub">
-              {lkr(MEMORA.price)} per person. Pay by bank transfer, upload the receipt, and your QR ticket comes to your email and phone once we confirm the payment. Ticket sales close on {MEMORA.salesCloseLabel}.
+              {lkr(MEMORA.price)} per person. Pay by bank transfer, upload the receipt, and your QR ticket comes to your email and phone once we confirm the payment. Sales extended until {MEMORA.salesCloseLabel}, while seats last.
             </p>
             <p className="mm-onlyone">Each ticket admits one person only. Coming with friends? Every person needs their own ticket, bought with their own form.</p>
           </motion.div>

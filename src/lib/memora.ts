@@ -14,9 +14,11 @@ export const MEMORA = {
   timeLabel: '4.00 PM onwards',
   venue: 'Rock House, Piliyandala',
   price: 3500,
-  // Ticket sales close at the end of 12 November (Sri Lanka time).
-  salesCloseISO: '2026-11-13T00:00:00+05:30',
-  salesCloseLabel: '12th November, 11.59 PM',
+  // Sales reopened after the 12 Nov deadline: online sales now run until noon on the event day (Sri Lanka time).
+  salesCloseISO: '2026-11-15T12:00:00+05:30',
+  salesCloseLabel: '15th November, 12 noon',
+  // Shown at the top of the page while sales are open.
+  salesBanner: 'Sales extended! Last few tickets available',
   eventStartISO: '2026-11-15T16:00:00+05:30',
   helpContacts: [
     { name: 'Ravinu', whatsapp: '94740558725', label: '074 055 8725' },
