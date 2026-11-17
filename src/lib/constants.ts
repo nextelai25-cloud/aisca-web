@@ -143,7 +143,7 @@ export const boardTeams = [
     members: [
       { initials: 'UN', name: 'Udula Nimsara', role: 'Operations Manager', photo: '/board/Udula.webp' },
       { initials: 'SR', name: 'Sachindra Ratnayake', role: 'Operations Manager', photo: '/board/Sachindra.webp' },
-      { initials: 'MS', name: 'Marisha Samaratunge', role: 'Operations Manager', photo: '/board/Marisha.jpg' },
+      { initials: 'MS', name: 'Marisha Samaratunge', role: 'Operations Manager', photo: '/board/Marisha.webp' },
     ]
   },
   {
