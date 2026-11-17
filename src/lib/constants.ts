@@ -96,72 +96,72 @@ export const boardTeams = [
     id: 'core',
     label: 'Core Leadership',
     members: [
-      { initials: 'RG', name: 'Risindi Gunesekara', role: 'Deputy Chairwoman', photo: '/board/Risindi.webp' },
-      { initials: 'SG', name: 'Sathis Gangaboda', role: 'Deputy Chairman', photo: '/board/Sathis.webp' },
-      { initials: 'NB', name: 'Nipun Baranage', role: 'Co Secretary', photo: '/board/nipun.webp' },
-      { initials: 'JW', name: 'Janiru Wijekoon', role: 'Co Secretary', photo: '/board/Janiru.webp' },
+      { initials: 'RG', name: 'Risindi Gunesekara', role: 'Deputy Chairwoman', photo: '/board/Risindi.webp?v=1117' },
+      { initials: 'SG', name: 'Sathis Gangaboda', role: 'Deputy Chairman', photo: '/board/Sathis.webp?v=1117' },
+      { initials: 'NB', name: 'Nipun Baranage', role: 'Co Secretary', photo: '/board/nipun.webp?v=1117' },
+      { initials: 'JW', name: 'Janiru Wijekoon', role: 'Co Secretary', photo: '/board/Janiru.webp?v=1117' },
     ]
   },
   {
     id: 'marketing',
     label: 'Marketing Team',
     members: [
-      { initials: 'GA', name: 'Gavin Aluwihare', role: 'Marketing Manager', photo: '/board/Gavin.webp' },
-      { initials: 'KN', name: 'Kaviesha Navinan', role: 'Marketing Manager', photo: '/board/Kaviesha.webp' },
-      { initials: 'RP', name: 'Risandu Pethiyagoda', role: 'Digital Media Manager', photo: '/board/Risandu.webp' },
-      { initials: 'KG', name: 'Kovida Guwani', role: 'Digital Media Manager', photo: '/board/Kovida.webp' },
+      { initials: 'GA', name: 'Gavin Aluwihare', role: 'Marketing Manager', photo: '/board/Gavin.webp?v=1117' },
+      { initials: 'KN', name: 'Kaviesha Navinan', role: 'Marketing Manager', photo: '/board/Kaviesha.webp?v=1117' },
+      { initials: 'RP', name: 'Risandu Pethiyagoda', role: 'Digital Media Manager', photo: '/board/Risandu.webp?v=1117' },
+      { initials: 'KG', name: 'Kovida Guwani', role: 'Digital Media Manager', photo: '/board/Kovida.webp?v=1117' },
     ]
   },
   {
     id: 'finance',
     label: 'Finance Team',
     members: [
-      { initials: 'OW', name: 'Okitha Wijesiri', role: 'Chief Financial Officer', photo: '/board/Okitha.webp' },
-      { initials: 'MR', name: 'Matheesha Ranasinghe', role: 'Chief Financial Officer', photo: '/board/Matheesha.webp' },
+      { initials: 'OW', name: 'Okitha Wijesiri', role: 'Chief Financial Officer', photo: '/board/Okitha.webp?v=1117' },
+      { initials: 'MR', name: 'Matheesha Ranasinghe', role: 'Chief Financial Officer', photo: '/board/Matheesha.webp?v=1117' },
     ]
   },
   {
     id: 'admin',
     label: 'Administration Team',
     members: [
-      { initials: 'VW', name: 'Vishmi Wijayamanne', role: 'Administration Manager', photo: '/board/Vishmi.webp' },
-      { initials: 'SG2', name: 'Sehandu Ganganath', role: 'Administration Manager', photo: '/board/Sehandu.webp' },
+      { initials: 'VW', name: 'Vishmi Wijayamanne', role: 'Administration Manager', photo: '/board/Vishmi.webp?v=1117' },
+      { initials: 'SG2', name: 'Sehandu Ganganath', role: 'Administration Manager', photo: '/board/Sehandu.webp?v=1117' },
     ]
   },
   {
     id: 'hr',
     label: 'HR Team',
     members: [
-      { initials: 'DS', name: 'Dileepa Sandaras', role: 'Human Resource Manager', photo: '/board/dileepa.webp' },
-      { initials: 'CA', name: 'Chathuni Abeysinghe', role: 'Human Resource Manager', photo: '/board/Chathuni.webp' },
-      { initials: 'ID', name: 'Imandi De Almeida', role: 'Human Resource Manager', photo: '/board/Imandi.webp' },
+      { initials: 'DS', name: 'Dileepa Sandaras', role: 'Human Resource Manager', photo: '/board/dileepa.webp?v=1117' },
+      { initials: 'CA', name: 'Chathuni Abeysinghe', role: 'Human Resource Manager', photo: '/board/Chathuni.webp?v=1117' },
+      { initials: 'ID', name: 'Imandi De Almeida', role: 'Human Resource Manager', photo: '/board/Imandi.webp?v=1117' },
     ]
   },
   {
     id: 'operations',
     label: 'Operations Team',
     members: [
-      { initials: 'UN', name: 'Udula Nimsara', role: 'Operations Manager', photo: '/board/Udula.webp' },
-      { initials: 'SR', name: 'Sachindra Ratnayake', role: 'Operations Manager', photo: '/board/Sachindra.webp' },
-      { initials: 'MS', name: 'Marisha Samaratunge', role: 'Operations Manager', photo: '/board/Marisha.webp' },
+      { initials: 'UN', name: 'Udula Nimsara', role: 'Operations Manager', photo: '/board/Udula.webp?v=1117' },
+      { initials: 'SR', name: 'Sachindra Ratnayake', role: 'Operations Manager', photo: '/board/Sachindra.webp?v=1117' },
+      { initials: 'MS', name: 'Marisha Samaratunge', role: 'Operations Manager', photo: '/board/Marisha.webp?v=1117' },
     ]
   },
   {
     id: 'pr',
     label: 'Public Relations Team',
     members: [
-      { initials: 'LR', name: 'Lehara Rajapakse', role: 'Public Relations Manager', photo: '/board/Lehara.webp' },
-      { initials: 'RT', name: 'Ranuth Thewmitha', role: 'Public Relations Manager', photo: '/board/Ranuth.webp' },
-      { initials: 'TI', name: 'Thulja Imandi', role: 'Public Relations Manager', photo: '/board/Thulja.webp' },
+      { initials: 'LR', name: 'Lehara Rajapakse', role: 'Public Relations Manager', photo: '/board/Lehara.webp?v=1117' },
+      { initials: 'RT', name: 'Ranuth Thewmitha', role: 'Public Relations Manager', photo: '/board/Ranuth.webp?v=1117' },
+      { initials: 'TI', name: 'Thulja Imandi', role: 'Public Relations Manager', photo: '/board/Thulja.webp?v=1117' },
     ]
   },
   {
     id: 'events',
     label: 'Events Team',
     members: [
-      { initials: 'ON', name: 'Ometh Nethdula', role: 'Event Manager', photo: '/board/Ometh.webp' },
-      { initials: 'RD', name: 'Risin Dissanayake', role: 'Event Manager', photo: '/board/risin.webp' },
-      { initials: 'TG', name: 'Thesanya Gamage', role: 'Event Manager', photo: '/board/Thesanya.webp' },
+      { initials: 'ON', name: 'Ometh Nethdula', role: 'Event Manager', photo: '/board/Ometh.webp?v=1117' },
+      { initials: 'RD', name: 'Risin Dissanayake', role: 'Event Manager', photo: '/board/risin.webp?v=1117' },
+      { initials: 'TG', name: 'Thesanya Gamage', role: 'Event Manager', photo: '/board/Thesanya.webp?v=1117' },
     ]
   },
 ];
