@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Container } from '@/components/layout/Container';
 import { SectionWrapper } from '@/components/layout/SectionWrapper';
-import { MEMORA, lkr } from '@/lib/memora';
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -65,47 +64,9 @@ export default function SpotlightSection() {
           <span className="section-eyebrow">Happening Now</span>
           <h2 className="section-title">Get Involved</h2>
           <p className="section-subtitle">
-            MEMORA &apos;26 is almost here. Grab your ticket, and see what else AISCA has going on.
+            See what AISCA has going on right now.
           </p>
         </div>
-
-        {/* Featured: MEMORA '26 */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: 0.8, ease }}
-          style={{ marginBottom: '16px' }}
-        >
-          <Link href="/memora26" className="spotlight-card memora-card">
-            <div className="memora-glow" aria-hidden />
-            <div className="memora-lanterns" aria-hidden>
-              {[8, 22, 71, 86, 93].map((x, i) => <span key={x} style={{ left: `${x}%`, animationDelay: `${-i * 3.1}s`, animationDuration: `${14 + i * 2}s` }} />)}
-            </div>
-            <div className="memora-inner">
-              <div className="memora-logo">
-                <img src="/memora/logo-band.webp" alt="MEMORA '26 A Day to Remember" />
-              </div>
-              <div className="memora-copy">
-                <span className="section-eyebrow memora-eyebrow" style={{ textAlign: 'left', marginBottom: '10px', color: '#F2C14E', whiteSpace: 'nowrap' }}>
-                  On sale · {MEMORA.dateShort}
-                </span>
-                <div style={{ fontSize: '1.6rem', fontWeight: 700, color: '#ffffff', marginBottom: '14px', lineHeight: 1.2 }}>
-                  MEMORA &apos;26
-                </div>
-                <div style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.75, fontWeight: 300, marginBottom: '8px' }}>
-                  The date is locked, the vibe is matched. The most awaited night of the year, {MEMORA.timeLabel} at {MEMORA.venue}.
-                </div>
-                <div style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.85)', fontWeight: 500 }}>
-                  {lkr(MEMORA.price)} per ticket · Sales extended, last few seats
-                </div>
-                <div style={{ fontSize: '12px', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#F2C14E', fontWeight: 600, paddingTop: '22px', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-                  Get your ticket <Arrow />
-                </div>
-              </div>
-            </div>
-          </Link>
-        </motion.div>
 
         <div className="vision-grid">
           {CARDS.map((card, i) => (
@@ -202,20 +163,6 @@ export default function SpotlightSection() {
         @media (max-width: 480px) { .nextup-cover { width: 58px; top: 22px; right: 20px; } .nextup-title, .nextup-eyebrow { padding-right: 64px; } .nextup-title { font-size: 1.35rem !important; } }
         .spotlight-card { transition: border-color 0.3s ease, background 0.3s ease; }
         .spotlight-card:hover { border-color: rgba(255,255,255,0.18); background: rgba(255,255,255,0.055); }
-        .memora-card { position: relative; overflow: hidden; display: block; text-decoration: none; border-radius: 16px; background: linear-gradient(160deg, rgba(14,20,52,0.9), rgba(5,8,23,0.95)); border: 1px solid rgba(242,193,78,0.18); }
-        .memora-card:hover { border-color: rgba(242,193,78,0.4); }
-        .memora-card::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: linear-gradient(90deg, transparent, #F2C14E 30%, #5AA9E6 70%, transparent); z-index: 1; }
-        .memora-glow { position: absolute; inset: -40%; background: radial-gradient(circle at 25% 70%, rgba(255,150,50,0.16), transparent 40%), radial-gradient(circle at 70% 25%, rgba(90,169,230,0.12), transparent 38%); pointer-events: none; transition: opacity .4s ease; opacity: .8; }
-        .memora-card:hover .memora-glow { opacity: 1; }
-        .memora-lanterns { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
-        .memora-lanterns span { position: absolute; bottom: -20px; width: 9px; height: 12px; border-radius: 3px 3px 5px 5px; background: linear-gradient(180deg, #FFE9B8, #FF9F43); box-shadow: 0 0 10px 3px rgba(255,160,60,0.5); animation: memora-rise linear infinite; opacity: 0; }
-        @keyframes memora-rise { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: .9; } 85% { opacity: .9; } 100% { transform: translateY(-460px); opacity: 0; } }
-        @media (prefers-reduced-motion: reduce) { .memora-lanterns { display: none; } }
-        .memora-inner { position: relative; display: grid; grid-template-columns: 1fr; gap: 24px; padding: 36px 32px; align-items: center; }
-        .memora-logo { margin: 0 -12px; }
-        .memora-logo img { width: 100% !important; max-width: 520px; height: auto !important; display: block; margin: 0 auto; filter: drop-shadow(0 0 18px rgba(255,170,70,0.28)) drop-shadow(0 0 2px rgba(255,220,150,0.35)) brightness(1.12) saturate(1.15); }
-        @media (max-width: 640px) { .memora-inner { padding: 30px 22px 32px; gap: 18px; } .memora-logo { margin: 0 -14px; } .memora-eyebrow { letter-spacing: .16em !important; } }
-        @media (min-width: 768px) { .memora-inner { grid-template-columns: 1fr 1fr; gap: 40px; padding: 40px 44px; } }
       `}</style>
     </SectionWrapper>
   );

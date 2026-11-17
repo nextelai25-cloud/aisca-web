@@ -116,10 +116,8 @@ export const boardTeams = [
     id: 'finance',
     label: 'Finance Team',
     members: [
-      { initials: 'IW', name: 'Imeesh Weerasinghe', role: 'Chief Financial Officer', photo: '/board/imesh.webp' },
       { initials: 'OW', name: 'Okitha Wijesiri', role: 'Chief Financial Officer', photo: '/board/Okitha.webp' },
-      { initials: 'TG', name: 'Thesanya Gamage', role: 'Finance Manager', photo: '/board/Thesanya.webp' },
-      { initials: 'MR', name: 'Matheesha Ranasinghe', role: 'Finance Manager', photo: '/board/Matheesha.webp' },
+      { initials: 'MR', name: 'Matheesha Ranasinghe', role: 'Chief Financial Officer', photo: '/board/Matheesha.webp' },
     ]
   },
   {
@@ -135,7 +133,6 @@ export const boardTeams = [
     label: 'HR Team',
     members: [
       { initials: 'DS', name: 'Dileepa Sandaras', role: 'Human Resource Manager', photo: '/board/dileepa.webp' },
-      { initials: 'JC', name: 'Jayan Chandupa', role: 'Human Resource Manager', photo: '/board/Jayan.webp' },
       { initials: 'CA', name: 'Chathuni Abeysinghe', role: 'Human Resource Manager', photo: '/board/Chathuni.webp' },
       { initials: 'ID', name: 'Imandi De Almeida', role: 'Human Resource Manager', photo: '/board/Imandi.webp' },
     ]
@@ -153,10 +150,9 @@ export const boardTeams = [
     id: 'pr',
     label: 'Public Relations Team',
     members: [
-      { initials: 'TI', name: 'Thulja Imandi', role: 'Public Relations Manager', photo: '/board/Thulja.webp' },
-      { initials: 'PY', name: 'Pawani Yashoda', role: 'Public Relations Manager', photo: '/board/Pawani.webp' },
-      { initials: 'RT', name: 'Ranuth Thewmitha', role: 'Public Relations Manager', photo: '/board/Ranuth.webp' },
       { initials: 'LR', name: 'Lehara Rajapakse', role: 'Public Relations Manager', photo: '/board/Lehara.webp' },
+      { initials: 'RT', name: 'Ranuth Thewmitha', role: 'Public Relations Manager', photo: '/board/Ranuth.webp' },
+      { initials: 'TI', name: 'Thulja Imandi', role: 'Public Relations Manager', photo: '/board/Thulja.webp' },
     ]
   },
   {
@@ -165,6 +161,7 @@ export const boardTeams = [
     members: [
       { initials: 'ON', name: 'Ometh Nethdula', role: 'Event Manager', photo: '/board/Ometh.webp' },
       { initials: 'RD', name: 'Risin Dissanayake', role: 'Event Manager', photo: '/board/risin.webp' },
+      { initials: 'TG', name: 'Thesanya Gamage', role: 'Event Manager', photo: '/board/Thesanya.webp' },
     ]
   },
 ];
