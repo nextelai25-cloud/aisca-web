@@ -106,10 +106,8 @@ export const boardTeams = [
     id: 'marketing',
     label: 'Marketing Team',
     members: [
-      { initials: 'GA', name: 'Gavin Aluwihare', role: 'Marketing Manager', photo: '/board/Gavin.webp?v=1117' },
       { initials: 'KN', name: 'Kaviesha Navinan', role: 'Marketing Manager', photo: '/board/Kaviesha.webp?v=1117' },
-      { initials: 'RP', name: 'Risandu Pethiyagoda', role: 'Digital Media Manager', photo: '/board/Risandu.webp?v=1117' },
-      { initials: 'KG', name: 'Kovida Guwani', role: 'Digital Media Manager', photo: '/board/Kovida.webp?v=1117' },
+      { initials: 'RP', name: 'Risandu Pethiyagoda', role: 'Marketing Manager', photo: '/board/Risandu.webp?v=1117' },
     ]
   },
   {
@@ -135,6 +133,7 @@ export const boardTeams = [
       { initials: 'DS', name: 'Dileepa Sandaras', role: 'Human Resource Manager', photo: '/board/dileepa.webp?v=1117' },
       { initials: 'CA', name: 'Chathuni Abeysinghe', role: 'Human Resource Manager', photo: '/board/Chathuni.webp?v=1117' },
       { initials: 'ID', name: 'Imandi De Almeida', role: 'Human Resource Manager', photo: '/board/Imandi.webp?v=1117' },
+      { initials: 'KG', name: 'Kovida Guwani', role: 'Human Resource Manager', photo: '/board/Kovida.webp?v=1117' },
     ]
   },
   {
